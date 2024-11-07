@@ -13901,4 +13901,47 @@ fieldset:disabled .btn {
     }
 }
 
+.left{
+    margin-left: 30px;
+}
+
+.card-menu-container {
+    cursor: pointer;
+    width: 9rem;
+    height: 12rem;
+    border-radius: 8px;
+    background-color: var(--icon-color);
+    display: flex; /* ใช้ flexbox */
+    flex-direction: column; /* จัดเรียงองค์ประกอบในแนวตั้ง */
+    justify-content: space-between; /* ใช้เพื่อเว้นระยะระหว่าง card-circle และ card-title */
+    align-items: center; /* จัดให้ทั้งหมดอยู่กลางแนวนอน */
+    padding: 0.5rem; /* เพิ่มระยะห่างด้านใน */
+  }
+  
+  .card-menu-circle {
+    width: 7rem;
+    height: 7rem;
+    background-color: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card-menu-title {
+    flex: 0 0 27%; /* กำหนดความสูง 30% ของ card-container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white; /* ให้ข้อความใน card-title มีสีขาว */
+    width: 100%; /* ให้ card-title ใช้พื้นที่ทั้งหมด */
+  }
+  
+  .icon {
+    font-size: 5rem;
+    color: var(--icon-color);
+  }
+  
 /*# sourceMappingURL=bootstrap.min.css.map */
