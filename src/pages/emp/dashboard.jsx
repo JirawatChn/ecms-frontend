@@ -4,7 +4,7 @@ export const Dashboard = () => {
   return (
     <div>
       <Header content={"Employee Course Management Systems"} />
-      <div>examplee</div>
+      <div>exampleee</div>
     </div>
   );
 };
