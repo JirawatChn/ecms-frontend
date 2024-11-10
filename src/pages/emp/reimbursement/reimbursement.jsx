@@ -88,7 +88,7 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw,s
                   />
                 </Col>
                 <Col md={2} className="d-flex justify-content-center">
-                  <Button variant="dark">ส่งคำร้องขอเบิกค่าอบรม</Button>
+                  <Button variant="dark" onClick={()=>navigate('/reimbursement/request')}>ส่งคำร้องขอเบิกค่าอบรม</Button>
                 </Col>
               </Row>
             </Container>

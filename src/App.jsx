@@ -10,6 +10,7 @@ import { TrainingResult } from "./pages/emp/course/trainingresult";
 import { EmpData } from "./pages/emp/empdata";
 import { Reimbursement } from "./pages/emp/reimbursement/reimbursement";
 import { ReimbursementDetails } from "./pages/emp/reimbursement/reimbursementdetails";
+import { RequestReimbursement } from "./pages/emp/reimbursement/request";
 
 function App() {
   const [empDataRaw, setEmpDataRaw] = useState({});
@@ -71,7 +72,7 @@ function App() {
       },
       {
         requestID: "REQ002",
-        courseID: "TLS123",
+        courseID: "TLS122",
         empID: "EMP001",
         empName: "Sooyoung",
         department: "Sales",
@@ -150,6 +151,17 @@ function App() {
             path="/reimbursement/details"
             element={
               <ReimbursementDetails
+                empDataRaw={empDataRaw}
+                setEmpDataRaw={setEmpDataRaw}
+                reimbursementDataRaw={reimbursementDataRaw}
+                setReimbursementDataRaw={setReimbursementDataRaw}
+              />
+            }
+          />
+           <Route
+            path="/reimbursement/request"
+            element={
+              <RequestReimbursement
                 empDataRaw={empDataRaw}
                 setEmpDataRaw={setEmpDataRaw}
                 reimbursementDataRaw={reimbursementDataRaw}
