@@ -20,7 +20,7 @@ function App() {
   const fetchEmpData = () => {
     const data = {
       empID: "EMP001",
-      empName: "Sooyoung",
+      empName: "HSY",
       department: "Sales",
       cardID: "1000000000000",
       tel: "06612345678",
