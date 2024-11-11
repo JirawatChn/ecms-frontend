@@ -40,16 +40,7 @@ export const RequestReimbursement = ({
     "REQ" + (requestIDLenght + 1).toString().padStart(3, "0");
   // console.log(createRequestID);
 
-  const [validated, setValidated] = useState(false);
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-      setValidated(true);
-  };
 
   const requestID = useRef();
   const courseID = useRef();
@@ -60,6 +51,29 @@ export const RequestReimbursement = ({
   const cardID = useRef();
   const bankAccount = useRef();
   const amount = useRef();
+
+  const [sendData,setSendData] = useState({})
+
+  const handleSubmit = () => {
+    createRequest()
+  };
+  
+  const createRequest = async () =>{
+    const newData = {
+      requestID: requestID.current.value,
+      courseID: courseID.current.value,
+      empID: empID.current.value,
+      empName: empName.current.value,
+      department: department.current.value,
+      sendDate: sendDate.current.value,
+      cardID: cardID.current.value,
+      bankAccount: bankAccount.current.value,
+      amount: amount.current.value
+    };
+    setSendData(newData);
+    console.log(sendData);
+    // sessionStorage.setItem('data',JSON.stringify(newData))
+  }
 
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
@@ -125,9 +139,7 @@ export const RequestReimbursement = ({
                           </Col>
                           <Col md={3}>
                             <Form.Label>รหัสคอร์ส</Form.Label>
-                            <Form.Select
-                              ref={courseID}
-                            >
+                            <Form.Select ref={courseID}>
                               {filteredData.map((data, i) => (
                                 <option key={i} value={data ?? "ไม่มีข้อมูล"}>
                                   {data}
@@ -137,23 +149,21 @@ export const RequestReimbursement = ({
                           </Col>
                           <Col md={3}>
                             <Form.Label>รหัสพนักงาน</Form.Label>
-                            <Form.Control type="text" ref={empID} required />
-                            <Form.Control.Feedback type="invalid">
-                              กรุณากรอกรหัสพนักงาน
-                            </Form.Control.Feedback>
+                            <Form.Control type="text" ref={empID} disabled value={empData.empID ?? "ไม่มีข้อมูล"} required />
                           </Col>
                         </Row>
                         <Row className="mt-3">
                           <Col md={4}>
                             <Form.Label>ชื่อพนักงาน</Form.Label>
-                            <Form.Control type="text" ref={empName} required />
+                            <Form.Control type="text" disabled value={empData.empName ?? "ไม่มีข้อมูล"} ref={empName}/>
                           </Col>
                           <Col md={4}>
                             <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
                             <Form.Control
                               type="text"
+                              disabled
+                              value={empData.department ?? "ไม่มีข้อมูล"}
                               ref={department}
-                              required
                             />
                           </Col>
                         </Row>
@@ -186,9 +196,6 @@ export const RequestReimbursement = ({
                                   ref={cardID}
                                   required
                                 />
-                                <Form.Control.Feedback type="invalid">
-                                  กรุณากรอกเลขประจำตัวประชาชน
-                                </Form.Control.Feedback>
                               </Col>
                               <Col md={4}>
                                 <Form.Label>
@@ -199,13 +206,10 @@ export const RequestReimbursement = ({
                                   ref={bankAccount}
                                   required
                                 />
-                                <Form.Control.Feedback type="invalid">
-                                  กรุณากรอกเลขที่บัญชีเงินฝากธนาคาร
-                                </Form.Control.Feedback>
                               </Col>
                             </Row>
                           </ListGroup.Item>
-                          <ListGroup.Item variant="dark">
+                          <ListGroup.Item variant="dark" className="mt-3">
                             รายการขอเบิก
                           </ListGroup.Item>
                           <ListGroup.Item>
@@ -213,13 +217,10 @@ export const RequestReimbursement = ({
                               <Col md={4}>
                                 <Form.Label>จำนวนเงิน (บาท)</Form.Label>
                                 <Form.Control
-                                  type="text"
+                                  type="number"
                                   ref={amount}
                                   required
                                 />
-                                <Form.Control.Feedback type="invalid">
-                                  กรุณากรอกจำนวนเงิน (บาท)
-                                </Form.Control.Feedback>
                               </Col>
                             </Row>
                           </ListGroup.Item>

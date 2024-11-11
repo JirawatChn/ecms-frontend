@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router";
 import { Dashboard } from "./pages/emp/dashboard";
 import { BrowserRouter } from "react-router-dom";
 import "./bootstrap.min.css";
-import { Course } from "./pages/emp/course/courselist";
+import { CourseList } from "./pages/emp/course/courselist";
 import { RegisterCourse } from "./pages/emp/course/registercourse";
 import { ManageCourse } from "./pages/emp/course/managecourse";
 import { useEffect, useState } from "react";
@@ -14,13 +14,13 @@ import { RequestReimbursement } from "./pages/emp/reimbursement/request";
 
 function App() {
   const [empDataRaw, setEmpDataRaw] = useState({});
-  const [courseDataRaw, setCourseDataRaw] = useState([]);
+  const [registerCourseDataRaw, setregisterCourseDataRaw] = useState([]);
   const [reimbursementDataRaw, setReimbursementDataRaw] = useState([]);
 
   const fetchEmpData = () => {
     const data = {
       empID: "EMP001",
-      empName: "HSY",
+      empName: "Han Sooyoung",
       department: "Sales",
       cardID: "1000000000000",
       tel: "06612345678",
@@ -52,7 +52,7 @@ function App() {
         trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
       },
     ];
-    setCourseDataRaw(data);
+    setregisterCourseDataRaw(data);
   };
 
   const fetchReimbursementData = () => {
@@ -67,7 +67,7 @@ function App() {
         amount: "500",
         cardID: "100000000000",
         bankAccount: "123123213",
-        status: "Processing",
+        status: "Approve",
         vertifier: "hr_name",
       },
       {
@@ -81,7 +81,7 @@ function App() {
         cardID: "100000000000",
         bankAccount: "123123213",
         status: "Processing",
-        vertifier: "hr_name",
+        vertifier: "",
       },
     ];
     setReimbursementDataRaw(data);
@@ -103,12 +103,17 @@ function App() {
               <Dashboard
                 empDataRaw={empDataRaw}
                 setEmpDataRaw={setEmpDataRaw}
-                courseDataRaw={courseDataRaw}
-                setCourseDataRaw={setCourseDataRaw}
+                registerCourseDataRaw={registerCourseDataRaw}
+                setregisterCourseDataRaw={setregisterCourseDataRaw}
               />
             }
           />
-          <Route path="/course" element={<Course />} />
+          <Route
+            path="/course"
+            element={
+              <CourseList empDataRaw={empDataRaw} setEmpDataRaw={empDataRaw} />
+            }
+          />
           <Route path="/course/register" element={<RegisterCourse />} />
           <Route
             path="/course/manage"
@@ -116,8 +121,8 @@ function App() {
               <ManageCourse
                 empDataRaw={empDataRaw}
                 setEmpDataRaw={empDataRaw}
-                courseDataRaw={courseDataRaw}
-                setCourseDataRaw={setCourseDataRaw}
+                registerCourseDataRaw={registerCourseDataRaw}
+                setregisterCourseDataRaw={setregisterCourseDataRaw}
               />
             }
           />
@@ -148,7 +153,7 @@ function App() {
             }
           />
           <Route
-            path="/reimbursement/details"
+            path="/reimbursement/details/:requestID"
             element={
               <ReimbursementDetails
                 empDataRaw={empDataRaw}
@@ -158,7 +163,7 @@ function App() {
               />
             }
           />
-           <Route
+          <Route
             path="/reimbursement/request"
             element={
               <RequestReimbursement

@@ -2,7 +2,7 @@ import { Header } from "../../../components/header";
 import { MdArrowBackIosNew } from "react-icons/md";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import { useLocation, useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useCallback, useEffect, useState } from "react";
 import { Col, Container, Form, ListGroup, Row } from "react-bootstrap";
 
@@ -25,8 +25,7 @@ export const ReimbursementDetails = ({
     setReimbursementData(reimbursementDataRaw);
   }, [reimbursementDataRaw]);
 
-  const location = useLocation();
-  const requestID = location.state?.requestID;
+  const { requestID } = useParams();  // ดึง requestID จาก URL path parameters
 
   const fetchReimbursementData = useCallback(() => {
     if (!requestID) return;
@@ -263,7 +262,7 @@ export const ReimbursementDetails = ({
                             </Col>
                           </Row>
                         </ListGroup.Item>
-                        <ListGroup.Item variant="dark">
+                        <ListGroup.Item variant="dark" className="mt-3">
                           รายการขอเบิก
                         </ListGroup.Item>
                         <ListGroup.Item>
@@ -288,7 +287,7 @@ export const ReimbursementDetails = ({
                             </Col>
                           </Row>
                         </ListGroup.Item>
-                        <ListGroup.Item variant="dark">
+                        <ListGroup.Item variant="dark" className="mt-3">
                           สถานะการเบิก
                         </ListGroup.Item>
                         <ListGroup.Item>
@@ -313,20 +312,22 @@ export const ReimbursementDetails = ({
                             </Col>
                             <Col md={4}>
                               <Form>
-                                <Form.Group className="mb-3">
-                                  <Form.Label>ผู้อนุมัติการเบิก</Form.Label>
-                                  <Form.Control
-                                    type="text"
-                                    disabled
-                                    value={
-                                      filterData.length > 0
-                                        ? filterData
-                                            .map((item) => item.vertifier)
-                                            .join(",")
-                                        : "ไม่มีข้อมูล"
-                                    }
-                                  />
-                                </Form.Group>
+                              {filterData.length > 0 && filterData.some(item => item.vertifier !== "") ? (
+                                  <Form.Group className="mb-3">
+                                    <Form.Label>ผู้อนุมัติการเบิก</Form.Label>
+                                    <Form.Control
+                                      type="text"
+                                      disabled
+                                      value={
+                                        filterData.length > 0
+                                          ? filterData
+                                              .map((item) => item.vertifier)
+                                              .join(",")
+                                          : "ไม่มีข้อมูล"
+                                      }
+                                    />
+                                  </Form.Group>
+                                ) : ""}
                               </Form>
                             </Col>
                           </Row>

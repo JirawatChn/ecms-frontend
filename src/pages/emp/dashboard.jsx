@@ -15,8 +15,8 @@ import { useEffect, useState } from "react";
 export const Dashboard = ({
   empDataRaw,
   setEmpDataRaw,
-  courseDataRaw,
-  setCourseDataRaw,
+  registerCourseDataRaw,
+  setregisterCourseDataRaw,
 }) => {
   const navigate = useNavigate();
 
@@ -50,8 +50,8 @@ export const Dashboard = ({
   }, [empDataRaw]);
 
   useEffect(() => {
-    setCourseData(courseDataRaw);
-  }, [courseDataRaw]);
+    setCourseData(registerCourseDataRaw);
+  }, [registerCourseDataRaw]);
 
   useEffect(() => {
     setCourseDetails(courseDetailsRaw);

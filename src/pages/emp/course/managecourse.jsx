@@ -9,8 +9,8 @@ import Modal from "react-bootstrap/Modal";
 import { Badge, Col, Container, Row } from "react-bootstrap";
 
 export const ManageCourse = ({
-  courseDataRaw,
-  setCourseDataRaw,
+  registerCourseDataRaw,
+  setregisterCourseDataRaw,
   empDataRaw,
   setEmpDataRaw,
 }) => {
@@ -23,8 +23,8 @@ export const ManageCourse = ({
   }, [empDataRaw]);
 
   useEffect(() => {
-    setCourseData(courseDataRaw);
-  }, [courseDataRaw]);
+    setCourseData(registerCourseDataRaw);
+  }, [registerCourseDataRaw]);
 
   const [course, setCourse] = useState({});
 
@@ -165,7 +165,7 @@ export const ManageCourse = ({
                     </td>
                   </tr>
                 )}
-                {tableData.length > 0 && (
+                {tableData.length >= 0 && (
                   <tr className="strip-table">
                     <td colSpan={8}>
                       <Button
@@ -187,7 +187,7 @@ export const ManageCourse = ({
               </tbody>
             </Table>
             <div className="mx-2 d-flex justify-content-end text-light">
-              คอร์สจะถูกลบหลังผู้มีสิทธิ์ยืนยันการถอน
+              *คอร์สจะถูกลบหลังผู้มีสิทธิ์ยืนยันการถอน
             </div>
           </Card>
         </div>

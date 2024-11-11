@@ -11,8 +11,8 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw,s
   const [empData, setEmpData] = useState({});
   const [reimbursementData, setReimbursementData] = useState([]);
 
-  const sendData = (location, id) =>{
-    navigate(location, {state:{requestID:id}})
+  const sendData = (id) =>{
+    navigate(`/reimbursement/details/${id}`);
   }
 
   useEffect(() => {
@@ -33,16 +33,16 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw,s
         <td className="text-center">{data.sendDate}</td>
         <td className="text-center">{data.amount}</td>
         <td className="text-center">
-          {data.status === "Pass"
+          {data.status === "Approve"
             ? "ผ่าน"
-            : data.status === "Fail"
+            : data.status === "Deny"
             ? "ไม่ผ่าน"
             : data.status === "Processing"
             ? "กำลังตรวจสอบ"
             : "ไม่มีข้อมูล"}
         </td>
         <td className="text-center">
-          <Button variant="link" onClick={()=>sendData('/reimbursement/details',data.requestID)}>เปิด</Button>
+          <Button variant="link" onClick={()=>sendData(data.requestID)}>เปิด</Button>
         </td>
       </tr>
     );
@@ -87,7 +87,7 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw,s
                     className="mx-1"
                   />
                 </Col>
-                <Col md={2} className="d-flex justify-content-center">
+                <Col md={2} className="d-flex justify-content-end">
                   <Button variant="dark" onClick={()=>navigate('/reimbursement/request')}>ส่งคำร้องขอเบิกค่าอบรม</Button>
                 </Col>
               </Row>
