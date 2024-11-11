@@ -1,3 +1,4 @@
+import { Button } from "react-bootstrap";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 
@@ -10,7 +11,7 @@ export const Header = ({content}) => {
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text>
-              Logout
+              <Button variant="dark">Logout</Button>
             </Navbar.Text>
           </Navbar.Collapse>
         </Container>
