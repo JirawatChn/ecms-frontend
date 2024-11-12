@@ -11,6 +11,7 @@ import { EmpData } from "./pages/emp/empdata";
 import { Reimbursement } from "./pages/emp/reimbursement/reimbursement";
 import { ReimbursementDetails } from "./pages/emp/reimbursement/reimbursementdetails";
 import { RequestReimbursement } from "./pages/emp/reimbursement/request";
+import { Login } from "./pages/login";
 
 function App() {
   const [empDataRaw, setEmpDataRaw] = useState({});
@@ -97,6 +98,12 @@ function App() {
     <div>
       <BrowserRouter basename="ecms">
         <Routes>
+        <Route
+            path="/"
+            element={
+              <Login/>
+            }
+          />
           <Route
             path="/dashboard"
             element={
