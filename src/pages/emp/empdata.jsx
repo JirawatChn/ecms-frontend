@@ -22,7 +22,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
         <div style={{ width: "80rem" }} className="mt-4">
           <Button
             variant="outline-primary"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/emp/dashboard")}
             className="shadow"
           >
             <MdArrowBackIosNew /> กลับสู่หน้าหลัก

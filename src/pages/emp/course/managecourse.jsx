@@ -43,12 +43,13 @@ export const ManageCourse = ({
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
         <td>{data.courseID}</td>
+        <td>{data.sessionID}</td>
         <td>{data.courseName}</td>
         <td className="text-center">{data.trainingDate}</td>
         <td className="text-center">{data.periods}</td>
         <td>{data.trainingLocation}</td>
         <td className="text-center">
-          {data.status === "withdraw" ? (
+          {data.status === "pending" ? (
             <Badge pill bg="danger">
               รอยืนยันการถอน
             </Badge>
@@ -108,7 +109,7 @@ export const ManageCourse = ({
         <div style={{ width: "80rem" }} className="mt-4">
           <Button
             variant="outline-primary"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/emp/dashboard")}
             className="shadow"
           >
             <MdArrowBackIosNew /> กลับสู่หน้าหลัก
@@ -120,7 +121,7 @@ export const ManageCourse = ({
             </Card>
             <Container>
               <Row className="d-flex justify-content-start">
-                <Col md={10}>
+                <Col md={10} className="d-flex align-items-center">
                   รหัสพนักงาน:
                   <input
                     disabled
@@ -147,6 +148,7 @@ export const ManageCourse = ({
                 <tr>
                   <th className="text-center">#</th>
                   <th>รหัสคอร์ส</th>
+                  <th>รอบ</th>
                   <th>ชื่อคอร์ส</th>
                   <th className="text-center">วันที่อบรม</th>
                   <th className="text-center">เวลา</th>
@@ -160,18 +162,18 @@ export const ManageCourse = ({
                   tableData
                 ) : (
                   <tr>
-                    <td colSpan={8} className="text-center">
+                    <td colSpan={9} className="text-center">
                       ไม่มีคอร์สที่ได้ลงทะเบียนไว้
                     </td>
                   </tr>
                 )}
                 {tableData.length >= 0 && (
                   <tr className="strip-table">
-                    <td colSpan={8}>
+                    <td colSpan={9}>
                       <Button
                         variant="primary"
                         className="text-decoration-none"
-                        onClick={() => navigate("/course")}
+                        onClick={() => navigate("/emp/course")}
                       >
                         + ลงทะเบียนคอร์สเพิ่ม
                       </Button>
@@ -180,14 +182,14 @@ export const ManageCourse = ({
                 )}
                 {tableData.length > 0 && (
                   <tr>
-                    <td colSpan={7}>รวม</td>
+                    <td colSpan={8}>รวม</td>
                     <td className="text-center">{tableData.length}</td>
                   </tr>
                 )}
               </tbody>
             </Table>
             <div className="mx-2 d-flex justify-content-end text-light">
-              *คอร์สจะถูกลบหลังผู้มีสิทธิ์ยืนยันการถอน
+              *คอร์สจะถูกลบหลังผู้มีสิทธิ์อนุมัติการถอน
             </div>
           </Card>
         </div>

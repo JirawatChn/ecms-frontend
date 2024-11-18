@@ -25,7 +25,7 @@ export const ReimbursementDetails = ({
     setReimbursementData(reimbursementDataRaw);
   }, [reimbursementDataRaw]);
 
-  const { requestID } = useParams();  // ดึง requestID จาก URL path parameters
+  const { requestID } = useParams();
 
   const fetchReimbursementData = useCallback(() => {
     if (!requestID) return;
@@ -46,7 +46,7 @@ export const ReimbursementDetails = ({
         <div style={{ width: "80rem" }} className="mt-4">
           <Button
             variant="outline-primary"
-            onClick={() => navigate("/reimbursement")}
+            onClick={() => navigate("/emp/reimbursement")}
           >
             <MdArrowBackIosNew /> กลับหน้าเบิกค่าอบรม
           </Button>
@@ -67,7 +67,7 @@ export const ReimbursementDetails = ({
             </Card>
             <Container>
               <Row>
-                <Col md={10}>
+                <Col md={10} className="d-flex align-items-center">
                   รหัสพนักงาน:
                   <input
                     disabled
@@ -312,7 +312,36 @@ export const ReimbursementDetails = ({
                             </Col>
                             <Col md={4}>
                               <Form>
-                              {filterData.length > 0 && filterData.some(item => item.vertifier !== "") ? (
+                                {filterData.length > 0 &&
+                                filterData.some(
+                                  (item) =>
+                                    item.approvedDate !== "" &&
+                                    item.approvedDate
+                                ) ? (
+                                  <Form.Group className="mb-3">
+                                    <Form.Label>วันที่ยืนยัน</Form.Label>
+                                    <Form.Control
+                                      type="text"
+                                      disabled
+                                      value={
+                                        filterData.length > 0
+                                          ? filterData
+                                              .map((item) => item.approvedDate)
+                                              .join(",")
+                                          : "ไม่มีข้อมูล"
+                                      }
+                                    />
+                                  </Form.Group>
+                                ) : null}
+                              </Form>
+                            </Col>
+                            <Col md={4}>
+                              <Form>
+                                {filterData.length > 0 &&
+                                filterData.some(
+                                  (item) => item.vertifier !== "" &&
+                                  item.vertifier
+                                ) ? (
                                   <Form.Group className="mb-3">
                                     <Form.Label>ผู้อนุมัติการเบิก</Form.Label>
                                     <Form.Control
@@ -327,7 +356,9 @@ export const ReimbursementDetails = ({
                                       }
                                     />
                                   </Form.Group>
-                                ) : ""}
+                                ) : (
+                                  ""
+                                )}
                               </Form>
                             </Col>
                           </Row>

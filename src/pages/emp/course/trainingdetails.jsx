@@ -1,4 +1,4 @@
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { Badge, Card, Col, Container, Row } from "react-bootstrap";
 import { Header } from "../../../components/header";
 import Button from "react-bootstrap/Button";
 import Table from "react-bootstrap/Table";
@@ -6,7 +6,7 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-export const TrainingResult = ({ empDataRaw, setEmpDataRaw }) => {
+export const TrainingDetails = ({ empDataRaw, setEmpDataRaw }) => {
   const navigate = useNavigate();
 
   const [empData, setEmpData] = useState({});
@@ -17,23 +17,33 @@ export const TrainingResult = ({ empDataRaw, setEmpDataRaw }) => {
     const data = [
       {
         courseID: "TLS123",
-        applicantID: "APP099",
+        sessionID: "S099",
         courseName: "เตรียมความพร้อมสู่การทำงาน 3",
         trainingDate: "20-10-01",
         completeDate: "20-10-01",
         periods: "10:00-17:00",
         trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-        status: "Pass",
+        status: "pass",
       },
       {
         courseID: "TLS122",
-        applicantID: "APP007",
+        sessionID: "S007",
         courseName: "เตรียมความพร้อมสู่การทำงาน 4",
         trainingDate: "10-08-01",
         completeDate: "10-08-01",
         periods: "10:00-17:00",
         trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-        status: "Fail",
+        status: "fail",
+      },
+      {
+        courseID: "TLS121",
+        sessionID: "S007",
+        courseName: "เตรียมความพร้อมสู่การทำงาน 4",
+        trainingDate: "10-08-01",
+        completeDate: "10-08-01",
+        periods: "10:00-17:00",
+        trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
+        status: "processing",
       },
     ];
     setCourseDetailsRaw(data);
@@ -56,19 +66,17 @@ export const TrainingResult = ({ empDataRaw, setEmpDataRaw }) => {
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
         <td>{data.courseID}</td>
-        <td>{data.applicantID}</td>
+        <td>{data.sessionID}</td>
         <td>{data.courseName}</td>
         <td className="text-center">{data.trainingDate}</td>
         <td className="text-center">{data.completeDate}</td>
-        <td className="text-center">{data.periods}</td>
-        <td>{data.trainingLocation}</td>
         <td className="text-center">
-          {data.status === "Pass"
-            ? "ผ่าน"
-            : data.status === "Fail"
-            ? "ไม่ผ่าน"
-            : data.status === "Processing"
-            ? "กำลังตรวจสอบ"
+          {data.status === "pass"
+            ? <Badge pill bg="success">ผ่าน</Badge>
+            : data.status === "fail"
+            ? <Badge pill bg="danger">ไม่ผ่าน</Badge>
+            : data.status === "processing"
+            ? <Badge pill bg="warning">กำลังตรวจสอบ</Badge>
             : "ไม่มีข้อมูล"}
         </td>
       </tr>
@@ -82,7 +90,7 @@ export const TrainingResult = ({ empDataRaw, setEmpDataRaw }) => {
         <div style={{ width: "80rem" }} className="mt-4">
           <Button
             variant="outline-primary"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/emp/dashboard")}
             className="shadow"
           >
             <MdArrowBackIosNew /> กลับสู่หน้าหลัก
@@ -120,12 +128,10 @@ export const TrainingResult = ({ empDataRaw, setEmpDataRaw }) => {
                 <tr>
                   <th className="text-center">#</th>
                   <th>รหัสคอร์ส</th>
-                  <th>รหัสสมัคร</th>
+                  <th>รอบ</th>
                   <th>ชื่อคอร์ส</th>
                   <th className="text-center">วันที่อบรม</th>
                   <th className="text-center">วันที่อบรมสำเร็จ</th>
-                  <th className="text-center">เวลา</th>
-                  <th>สถานที่</th>
                   <th className="text-center">สถานะ</th>
                 </tr>
               </thead>
@@ -134,7 +140,7 @@ export const TrainingResult = ({ empDataRaw, setEmpDataRaw }) => {
                   tableData
                 ) : (
                   <tr>
-                    <td colSpan="6" className="text-center">
+                    <td colSpan="9" className="text-center">
                       ไม่มีคอร์สที่เคยอบรม
                     </td>
                   </tr>

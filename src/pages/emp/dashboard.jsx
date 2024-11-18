@@ -12,7 +12,7 @@ import { useNavigate } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import { useEffect, useState } from "react";
 
-export const Dashboard = ({
+export const EmpDashboard = ({
   empDataRaw,
   setEmpDataRaw,
   registerCourseDataRaw,
@@ -148,7 +148,7 @@ export const Dashboard = ({
                     "--icon-color": "#B64848",
                     "--icon-hover": "#9b3e3e",
                   }}
-                  onClick={() => navigate("/course")}
+                  onClick={() => navigate("/emp/course")}
                 >
                   <div className="card-menu-circle">
                     <MdAssignment className="icon" />
@@ -164,7 +164,7 @@ export const Dashboard = ({
                     "--icon-color": "#B67248",
                     "--icon-hover": "#9b5f3f",
                   }}
-                  onClick={() => navigate("/course/manage")}
+                  onClick={() => navigate("/emp/course/manage")}
                 >
                   <div className="card-menu-circle">
                     <MdOutlineWifiProtectedSetup className="icon" />
@@ -184,7 +184,7 @@ export const Dashboard = ({
                     "--icon-color": "#77B648",
                     "--icon-hover": "#6a9e3f",
                   }}
-                  onClick={() => navigate('/reimbursement')}
+                  onClick={() => navigate('/emp/reimbursement')}
                 >
                   <div className="card-menu-circle">
                     <MdOutlineAttachMoney className="icon" />
@@ -200,12 +200,12 @@ export const Dashboard = ({
                     "--icon-color": "#4895B6",
                     "--icon-hover": "#3c7a99",
                   }}
-                  onClick={() => navigate("/course/results")}
+                  onClick={() => navigate("/emp/course/trainings")}
                 >
                   <div className="card-menu-circle">
                     <MdInsertChart className="icon" />
                   </div>
-                  <div className="card-menu-title">ผลลัพธ์การอบรม</div>
+                  <div className="card-menu-title">การอบรม</div>
                 </Card>
               </Col>
               <Col xl={1}>

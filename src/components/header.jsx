@@ -9,7 +9,7 @@ export const Header = ({content}) => {
     <div>
       <Navbar bg="primary" data-bs-theme="dark" fixed="top" className="shadow">
         <Container fluid>
-          <Navbar.Brand className="me-auto fw-bold">E<span className="fw-bold" style={{color:"#FFBB00"}}>C</span>MS : {content}</Navbar.Brand>
+          <Navbar.Brand className="me-auto fw-bold">E<span className="fw-bold color">C</span>MS : {content}</Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text>
@@ -18,6 +18,7 @@ export const Header = ({content}) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
+      <div style={{paddingBottom: "56px"}}></div>
     </div>
   );
 };

@@ -10,12 +10,16 @@ export const Login = () => {
     console.log("Email:", email);
     console.log("Password:", password);
     
-    navigate('/dashboard');
+    if(email === "hr"){
+      navigate('/hr/dashboard')
+    }else if(email === "emp"){
+      navigate('/emp/dashboard')
+    }
   };
 
   return (
     <div className="login-form">
-      <div className="wrapper">
+      <div className="login-wrapper">
         <div className="title">ECMS Login</div>
         <form onSubmit={handleSubmit}>
           <div className="field">
@@ -35,7 +39,7 @@ export const Login = () => {
             <label>Password</label>
           </div>
           <div className="field">
-            <input type="submit" value="Login" />
+            <input type="submit" value="Login" className="mt-3"/>
           </div>
         </form>
       </div>

@@ -3,16 +3,16 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router";
-import { Col, Container, Row, Table } from "react-bootstrap";
+import { Badge, Col, Container, Row, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
 export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw,setReimbursementDataRaw}) => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
-  const [reimbursementData, setReimbursementData] = useState([]);
+  const [reimbursementData, setReimbursementData] = useState([]); 
 
   const sendData = (id) =>{
-    navigate(`/reimbursement/details/${id}`);
+    navigate(`/emp/reimbursement/details/${id}`);
   }
 
   useEffect(() => {
@@ -33,12 +33,12 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw,s
         <td className="text-center">{data.sendDate}</td>
         <td className="text-center">{data.amount}</td>
         <td className="text-center">
-          {data.status === "Approve"
-            ? "ผ่าน"
-            : data.status === "Deny"
-            ? "ไม่ผ่าน"
-            : data.status === "Processing"
-            ? "กำลังตรวจสอบ"
+          {data.status === "approve"
+            ? <Badge pill bg="success">อนุมัติ</Badge>
+            : data.status === "deny"
+            ? <Badge pill bg="danger">ไม่อนุมัติ</Badge>
+            : data.status === "processing"
+            ? <Badge pill bg="warning">รออนุมัติ</Badge>
             : "ไม่มีข้อมูล"}
         </td>
         <td className="text-center">
@@ -55,7 +55,7 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw,s
         <div style={{ width: "80rem" }} className="mt-4">
           <Button
             variant="outline-primary"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/emp/dashboard")}
             className="shadow"
           >
             <MdArrowBackIosNew /> กลับสู่หน้าหลัก
@@ -67,7 +67,7 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw,s
             </Card>
             <Container>
               <Row>
-                <Col md={10}>
+                <Col md={10} className="d-flex align-items-center">
                   รหัสพนักงาน:
                   <input
                     disabled
@@ -88,7 +88,7 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw,s
                   />
                 </Col>
                 <Col md={2} className="d-flex justify-content-end">
-                  <Button variant="dark" onClick={()=>navigate('/reimbursement/request')}>ส่งคำร้องขอเบิกค่าอบรม</Button>
+                  <Button variant="dark" onClick={()=>navigate('/emp/reimbursement/request')}>ส่งคำร้องขอเบิกค่าอบรม</Button>
                 </Col>
               </Row>
             </Container>
@@ -97,7 +97,7 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw,s
               <thead>
                 <tr>
                   <th className="text-center">#</th>
-                  <th>รหัสคำขอเบิกเงิน</th>
+                  <th>รหัสคำร้อง</th>
                   <th>รหัสคอร์ส</th>
                   <th>รหัสพนักงาน</th>
                   <th className="text-center">วันที่ส่งคำขอ</th>

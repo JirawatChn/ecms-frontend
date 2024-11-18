@@ -1,17 +1,24 @@
 import { Route, Routes } from "react-router";
-import { Dashboard } from "./pages/emp/dashboard";
+import { EmpDashboard } from "./pages/emp/dashboard";
 import { BrowserRouter } from "react-router-dom";
 import "./bootstrap.min.css";
 import { CourseList } from "./pages/emp/course/courselist";
-import { RegisterCourse } from "./pages/emp/course/registercourse";
 import { ManageCourse } from "./pages/emp/course/managecourse";
 import { useEffect, useState } from "react";
-import { TrainingResult } from "./pages/emp/course/trainingresult";
+import { TrainingDetails } from "./pages/emp/course/trainingdetails";
 import { EmpData } from "./pages/emp/empdata";
 import { Reimbursement } from "./pages/emp/reimbursement/reimbursement";
 import { ReimbursementDetails } from "./pages/emp/reimbursement/reimbursementdetails";
 import { RequestReimbursement } from "./pages/emp/reimbursement/request";
 import { Login } from "./pages/login";
+import { HrDashboard } from "./pages/hr/dashboard";
+import { Emp } from "./pages/hr/emp/emp";
+import { Results } from "./pages/hr/result/result";
+import { ReimbursementRequestsList } from "./pages/hr/request/reimbursement/request";
+import { CourseRequestsList } from "./pages/hr/request/course/request";
+import { RequestWithdrawCourseDetails } from "./pages/hr/request/course/details";
+import { RequestReimbursementDetails } from "./pages/hr/request/reimbursement/details";
+import { TrainingResultDetails } from "./pages/hr/result/details";
 
 function App() {
   const [empDataRaw, setEmpDataRaw] = useState({});
@@ -33,24 +40,25 @@ function App() {
     setEmpDataRaw(data);
   };
 
-  const fetchCourseData = () => {
+  const fetchRegisterCourseData = () => {
     const data = [
       {
         courseID: "ABC100",
-        applicantID: "APP047",
+        sessionID: "S047",
         courseName: "เตรียมความพร้อมสู่การทำงาน",
         trainingDate: "24-10-01",
         periods: "09:00-17:00",
         trainingLocation: "5-505",
-        status: "withdraw",
+        status: "pending",
       },
       {
         courseID: "ABC101",
-        applicantID: "APP099",
+        sessionID: "S099",
         courseName: "เตรียมความพร้อมสู่การทำงาน 2",
         trainingDate: "25-10-01",
         periods: "10:00-17:00",
         trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
+        status: "registered",
       },
     ];
     setregisterCourseDataRaw(data);
@@ -59,7 +67,7 @@ function App() {
   const fetchReimbursementData = () => {
     const data = [
       {
-        requestID: "REQ001",
+        requestID: "reim-001",
         courseID: "TLS123",
         empID: "EMP001",
         empName: "Sooyoung",
@@ -68,11 +76,12 @@ function App() {
         amount: "500",
         cardID: "100000000000",
         bankAccount: "123123213",
-        status: "Approve",
+        approvedDate: "2024-10-27",
+        status: "approve",
         vertifier: "hr_name",
       },
       {
-        requestID: "REQ002",
+        requestID: "reim-002",
         courseID: "TLS122",
         empID: "EMP001",
         empName: "Sooyoung",
@@ -81,8 +90,32 @@ function App() {
         amount: "500",
         cardID: "100000000000",
         bankAccount: "123123213",
-        status: "Processing",
+        status: "processing",
         vertifier: "",
+      },
+      {
+        requestID: "reim-003",
+        courseID: "TLS122",
+        empID: "EMP001",
+        empName: "Sooyoung",
+        department: "Sales",
+        sendDate: "2024-09-26",
+        amount: "500",
+        cardID: "100000000000",
+        bankAccount: "123123213",
+        status: "deny",
+      },
+      {
+        requestID: "reim-004",
+        courseID: "TLS122",
+        empID: "EMP001",
+        empName: "Sooyoung",
+        department: "Sales",
+        sendDate: "2024-09-26",
+        amount: "500",
+        cardID: "100000000000",
+        bankAccount: "123123213",
+        status: "approve",
       },
     ];
     setReimbursementDataRaw(data);
@@ -90,24 +123,24 @@ function App() {
 
   useEffect(() => {
     fetchEmpData();
-    fetchCourseData();
+    fetchRegisterCourseData();
     fetchReimbursementData();
   }, []);
+
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  const PageValue1 = 5;
+  const PageValue2 = 10;
+  const PageValue3 = 20;
 
   return (
     <div>
       <BrowserRouter basename="ecms">
         <Routes>
-        <Route
-            path="/"
-            element={
-              <Login/>
-            }
-          />
+          <Route path="/" element={<Login />} />
           <Route
-            path="/dashboard"
+            path="/emp/dashboard"
             element={
-              <Dashboard
+              <EmpDashboard
                 empDataRaw={empDataRaw}
                 setEmpDataRaw={setEmpDataRaw}
                 registerCourseDataRaw={registerCourseDataRaw}
@@ -116,14 +149,13 @@ function App() {
             }
           />
           <Route
-            path="/course"
+            path="/emp/course"
             element={
               <CourseList empDataRaw={empDataRaw} setEmpDataRaw={empDataRaw} />
             }
           />
-          <Route path="/course/register" element={<RegisterCourse />} />
           <Route
-            path="/course/manage"
+            path="/emp/course/manage"
             element={
               <ManageCourse
                 empDataRaw={empDataRaw}
@@ -134,9 +166,9 @@ function App() {
             }
           />
           <Route
-            path="/course/results"
+            path="/emp/course/trainings"
             element={
-              <TrainingResult
+              <TrainingDetails
                 empDataRaw={empDataRaw}
                 setEmpDataRaw={setEmpDataRaw}
               />
@@ -149,7 +181,7 @@ function App() {
             }
           />
           <Route
-            path="/reimbursement"
+            path="/emp/reimbursement"
             element={
               <Reimbursement
                 empDataRaw={empDataRaw}
@@ -160,7 +192,7 @@ function App() {
             }
           />
           <Route
-            path="/reimbursement/details/:requestID"
+            path="/emp/reimbursement/details/:requestID"
             element={
               <ReimbursementDetails
                 empDataRaw={empDataRaw}
@@ -171,7 +203,7 @@ function App() {
             }
           />
           <Route
-            path="/reimbursement/request"
+            path="/emp/reimbursement/request"
             element={
               <RequestReimbursement
                 empDataRaw={empDataRaw}
@@ -180,6 +212,67 @@ function App() {
                 setReimbursementDataRaw={setReimbursementDataRaw}
               />
             }
+          />
+          <Route path="hr/dashboard" element={<HrDashboard />} />
+          <Route
+            path="hr/reimbursement/requests"
+            element={
+              <ReimbursementRequestsList
+                itemsPerPage={itemsPerPage}
+                setItemsPerPage={setItemsPerPage}
+                PageValue1={PageValue1}
+                PageValue2={PageValue2}
+                PageValue3={PageValue3}
+              />
+            }
+          />
+          <Route
+            path="hr/withdraw/requests"
+            element={
+              <CourseRequestsList
+                itemsPerPage={itemsPerPage}
+                setItemsPerPage={setItemsPerPage}
+                PageValue1={PageValue1}
+                PageValue2={PageValue2}
+                PageValue3={PageValue3}
+              />
+            }
+          />
+          <Route
+            path="hr/results"
+            element={
+              <Results
+                itemsPerPage={itemsPerPage}
+                setItemsPerPage={setItemsPerPage}
+                PageValue1={PageValue1}
+                PageValue2={PageValue2}
+                PageValue3={PageValue3}
+              />
+            }
+          />
+          <Route
+            path="hr/emp"
+            element={
+              <Emp
+                itemsPerPage={itemsPerPage}
+                setItemsPerPage={setItemsPerPage}
+                PageValue1={PageValue1}
+                PageValue2={PageValue2}
+                PageValue3={PageValue3}
+              />
+            }
+          />
+          <Route
+            path="hr/withdraw/details/:requestID"
+            element={<RequestWithdrawCourseDetails />}
+          />
+            <Route
+            path="hr/reimbursement/details/:requestID"
+            element={<RequestReimbursementDetails />}
+          />
+            <Route
+            path="hr/results/details/:requestID"
+            element={<TrainingResultDetails />}
           />
         </Routes>
       </BrowserRouter>

@@ -10,11 +10,17 @@ import Modal from "react-bootstrap/Modal";
 export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
+  const [courseDataRaw, setCourseDataRaw] = useState([]);
   const [courseData, setCourseData] = useState([]);
+
 
   useEffect(() => {
     fetchCourseData();
   }, []);
+
+  useEffect(()=>{
+    setCourseData(courseDataRaw)
+  },[courseDataRaw])
 
   useEffect(() => {
     setEmpData(empDataRaw);
@@ -127,7 +133,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
         ],
       },
     ];
-    setCourseData(data);
+    setCourseDataRaw(data);
   };
 
   const tableData = courseData.map((data, i) => {
@@ -190,21 +196,25 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
 
     return (
       <tr key={i + 1}>
-        <td className="text-center">{
-          sessionData ? sessionData.courseLeft === "0" ? "" :  <Button
-          size="sm"
-          variant="primary"
-          onClick={() => setSelectedSID(data)}
-        >
-          {data}
-        </Button> : "ไม่มีข้อมูล"
-          }
-         
+        <td className="text-center">
+          {sessionData ? (
+            sessionData.courseLeft === "0" ? (
+              ""
+            ) : (
+              <Button
+                size="sm"
+                variant="primary"
+                onClick={() => setSelectedSID(data)}
+              >
+                {data}
+              </Button>
+            )
+          ) : (
+            "ไม่มีข้อมูล"
+          )}
         </td>
 
-        <td>
-          {sessionData ? sessionData.trainingDate : "ไม่มีข้อมูล"}
-        </td>
+        <td>{sessionData ? sessionData.trainingDate : "ไม่มีข้อมูล"}</td>
         <td className="text-center">
           {sessionData ? sessionData.periods : "ไม่มีข้อมูล"}
         </td>
@@ -213,7 +223,17 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
           {sessionData ? sessionData.courseLimit : "ไม่มีข้อมูล"}
         </td>
         <td className="text-center">
-          {sessionData ? sessionData.courseLeft === "0" ? <Badge pill bg="danger">เต็ม</Badge> : sessionData.courseLeft : "ไม่มีข้อมูล"}
+          {sessionData ? (
+            sessionData.courseLeft === "0" ? (
+              <Badge pill bg="danger">
+                เต็ม
+              </Badge>
+            ) : (
+              sessionData.courseLeft
+            )
+          ) : (
+            "ไม่มีข้อมูล"
+          )}
         </td>
       </tr>
     );
@@ -253,57 +273,59 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
         </Modal.Header>
         <Modal.Body>
           <Container>
-            <Row>
-              <Col md={3}>
-                <Form>
-                  <Form.Label>รอบอบรม</Form.Label>
+            <Card className="p-3">
+              <Row>
+                <Col md={3}>
+                  <Form>
+                    <Form.Label >รอบอบรม</Form.Label>
+                    <Form.Control
+                      type="text"
+                      disabled
+                      value={
+                        typeof selectedSID === "object" && selectedSID !== null
+                          ? ""
+                          : selectedSID
+                      }
+                      required
+                      ref={selectedSessionID}
+                    />
+                  </Form>
+                </Col>
+                <Col md={3}>
+                  <Form>
+                    <Form.Label >
+                      รหัสหลักสูตรการอบรม
+                    </Form.Label>
+                    <Form.Control
+                      type="text"
+                      disabled
+                      value={courseDetailsData.courseID ?? "ไม่มีข้อมูล"}
+                    />
+                  </Form>
+                </Col>
+                <Col md={4}>
+                  <Form.Label >ชื่อหลักสูตร</Form.Label>
                   <Form.Control
                     type="text"
                     disabled
-                    value={
-                      typeof selectedSID === "object" && selectedSID !== null
-                        ? ""
-                        : selectedSID
+                    value={courseDetailsData.courseName ?? "ไม่มีข้อมูล"}
+                  />
+                </Col>
+                <Col md={2} className="d-flex flex-column justify-content-end">
+                  <Button
+                    variant="primary"
+                    onClick={() =>
+                      registerCourse(
+                        courseDetailsData.courseID,
+                        selectedSessionID.current.value
+                      )
                     }
-                    required
-                    ref={selectedSessionID}
-                  />
-                </Form>
-              </Col>
-              <Col md={3}>
-                <Form>
-                  <Form.Label>รหัสหลักสูตรการอบรม</Form.Label>
-                  <Form.Control
-                    type="text"
-                    disabled
-                    value={courseDetailsData.courseID ?? "ไม่มีข้อมูล"}
-                  />
-                </Form>
-              </Col>
-              <Col md={4}>
-                <Form.Label>ชื่อหลักสูตร</Form.Label>
-                <Form.Control
-                  type="text"
-                  disabled
-                  value={courseDetailsData.courseName ?? "ไม่มีข้อมูล"}
-                />
-              </Col>
-              <Col md={2} className="d-flex flex-column justify-content-end">
-                <Button
-                  variant="primary"
-                  onClick={() =>
-                    registerCourse(
-                      courseDetailsData.courseID,
-                      selectedSessionID.current.value
-                    )
-                  }
-                >
-                  ลงทะเบียน
-                </Button>
-              </Col>
-            </Row>
-            <Row className="mt-2">
-              <Table striped borderless hover className="mt-2">
+                  >
+                    ลงทะเบียน
+                  </Button>
+                </Col>
+              </Row>
+              <Table striped borderless hover className="mt-3">
                 <thead>
                   <tr>
                     <th className="text-center"></th>
@@ -316,7 +338,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                 </thead>
                 <tbody>{sessionTable}</tbody>
               </Table>
-            </Row>
+            </Card>
           </Container>
         </Modal.Body>
       </Modal>
@@ -331,7 +353,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
         <div style={{ width: "80rem" }} className="mt-4">
           <Button
             variant="outline-primary"
-            onClick={() => navigate("/dashboard")}
+            onClick={() => navigate("/emp/dashboard")}
           >
             <MdArrowBackIosNew /> กลับสู่หน้าหลัก
           </Button>
@@ -341,7 +363,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
             </Card>
             <Container>
               <Row>
-                <Col md={10}>
+                <Col md={10} className="d-flex align-items-center">
                   รหัสพนักงาน:
                   <input
                     disabled
@@ -364,7 +386,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                 <Col md={2} className="d-flex justify-content-end">
                   <Button
                     variant="dark"
-                    onClick={() => navigate("/course/manage")}
+                    onClick={() => navigate("/emp/course/manage")}
                   >
                     ไปที่หน้าเพิ่ม-ถอน
                   </Button>
@@ -387,7 +409,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                 ) : (
                   <tr>
                     <td colSpan="7" className="text-center">
-                      ไม่มีคำขอเบิกเงิน
+                      ไม่มีคอร์สเปิดให้ลงทะเบียน
                     </td>
                   </tr>
                 )}

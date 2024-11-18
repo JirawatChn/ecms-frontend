@@ -37,7 +37,7 @@ export const RequestReimbursement = ({
   const requestIDLenght = findRequestLenght.length;
 
   const createRequestID =
-    "REQ" + (requestIDLenght + 1).toString().padStart(3, "0");
+    "reim-" + (requestIDLenght + 1).toString().padStart(3, "0");
   // console.log(createRequestID);
 
 
@@ -47,7 +47,6 @@ export const RequestReimbursement = ({
   const empID = useRef();
   const empName = useRef();
   const department = useRef();
-  const sendDate = useRef();
   const cardID = useRef();
   const bankAccount = useRef();
   const amount = useRef();
@@ -65,7 +64,6 @@ export const RequestReimbursement = ({
       empID: empID.current.value,
       empName: empName.current.value,
       department: department.current.value,
-      sendDate: sendDate.current.value,
       cardID: cardID.current.value,
       bankAccount: bankAccount.current.value,
       amount: amount.current.value
@@ -85,7 +83,7 @@ export const RequestReimbursement = ({
         <div style={{ width: "80rem" }} className="mt-4">
           <Button
             variant="outline-primary"
-            onClick={() => navigate("/reimbursement")}
+            onClick={() => navigate("/emp/reimbursement")}
           >
             <MdArrowBackIosNew /> กลับหน้าเบิกค่าอบรม
           </Button>
@@ -95,7 +93,7 @@ export const RequestReimbursement = ({
             </Card>
             <Container>
               <Row>
-                <Col md={10}>
+                <Col md={10} className="d-flex align-items-center">
                   รหัสพนักงาน:
                   <input
                     disabled
@@ -172,7 +170,6 @@ export const RequestReimbursement = ({
                             <Form.Label>วันที่ส่งคำขอเบิก</Form.Label>
                             <Form.Control
                               type="date"
-                              ref={sendDate}
                               disabled
                               value={formattedDate}
                             />
