@@ -5,7 +5,7 @@ import "./bootstrap.min.css";
 import { CourseList } from "./pages/emp/course/courselist";
 import { ManageCourse } from "./pages/emp/course/managecourse";
 import { useEffect, useState } from "react";
-import { TrainingDetails } from "./pages/emp/course/trainingdetails";
+import { TrainingHistory } from "./pages/emp/training/traininghistory";
 import { EmpData } from "./pages/emp/empdata";
 import { Reimbursement } from "./pages/emp/reimbursement/reimbursement";
 import { ReimbursementDetails } from "./pages/emp/reimbursement/reimbursementdetails";
@@ -19,6 +19,14 @@ import { CourseRequestsList } from "./pages/hr/request/course/request";
 import { RequestWithdrawCourseDetails } from "./pages/hr/request/course/details";
 import { RequestReimbursementDetails } from "./pages/hr/request/reimbursement/details";
 import { TrainingResultDetails } from "./pages/hr/result/details";
+import { CreateEmp } from "./pages/hr/emp/create";
+import { EmpDetails } from "./pages/hr/emp/details";
+import { EditEmp } from "./pages/hr/emp/edit";
+import { ProfileHr } from "./pages/hr/profile/profile";
+import { EditHrProfile } from "./pages/hr/profile/edit";
+import { Training } from "./pages/emp/training/training";
+import { TrainingRequestDetails } from "./pages/emp/training/trainingrequest";
+import { TrainingDetails } from "./pages/emp/training/trainingdetails";
 
 function App() {
   const [empDataRaw, setEmpDataRaw] = useState({});
@@ -132,7 +140,7 @@ function App() {
   const PageValue2 = 10;
   const PageValue3 = 20;
 
-  return (
+  return (  
     <div>
       <BrowserRouter basename="ecms">
         <Routes>
@@ -166,7 +174,43 @@ function App() {
             }
           />
           <Route
-            path="/emp/course/trainings"
+            path="/emp/trainings"
+            element={
+              <Training
+                empDataRaw={empDataRaw}
+                setEmpDataRaw={setEmpDataRaw}
+              />
+            }
+          />
+          <Route
+            path="/emp/trainings/request/:courseID/:sessionID"
+            element={
+              <TrainingRequestDetails
+                empDataRaw={empDataRaw}
+                setEmpDataRaw={setEmpDataRaw}
+              />
+            }
+          />
+          <Route
+            path="/emp/trainings/request/:courseID/:sessionID"
+            element={
+              <TrainingRequestDetails
+                empDataRaw={empDataRaw}
+                setEmpDataRaw={setEmpDataRaw}
+              />
+            }
+          />
+          <Route
+            path="/emp/trainings/history"
+            element={
+              <TrainingHistory
+                empDataRaw={empDataRaw}
+                setEmpDataRaw={setEmpDataRaw}
+              />
+            }
+          />
+           <Route
+            path="/emp/trainings/details/:courseID/:sessionID"
             element={
               <TrainingDetails
                 empDataRaw={empDataRaw}
@@ -266,13 +310,34 @@ function App() {
             path="hr/withdraw/details/:requestID"
             element={<RequestWithdrawCourseDetails />}
           />
-            <Route
+          <Route
             path="hr/reimbursement/details/:requestID"
             element={<RequestReimbursementDetails />}
           />
-            <Route
+          <Route
             path="hr/results/details/:requestID"
             element={<TrainingResultDetails />}
+          />
+          <Route path="hr/emp/create" element={<CreateEmp />} />
+          <Route path="hr/emp/details/:empID" element={<EmpDetails />} />
+          <Route path="hr/emp/edit/:empID" element={<EditEmp />} />
+          <Route
+            path="hr/profile"
+            element={
+              <ProfileHr
+                empDataRaw={empDataRaw}
+                setEmpDataRaw={setEmpDataRaw}
+              />
+            }
+          />
+           <Route
+            path="hr/edit/profile"
+            element={
+              <EditHrProfile
+                empDataRaw={empDataRaw}
+                setEmpDataRaw={setEmpDataRaw}
+              />
+            }
           />
         </Routes>
       </BrowserRouter>

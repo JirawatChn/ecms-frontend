@@ -6,8 +6,12 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-export const TrainingDetails = ({ empDataRaw, setEmpDataRaw }) => {
+export const TrainingHistory = ({ empDataRaw, setEmpDataRaw }) => {
   const navigate = useNavigate();
+  const sendData = (id,sid) =>{
+    navigate(`/emp/trainings/details/${id}/${sid}`);
+  }
+
 
   const [empData, setEmpData] = useState({});
   const [courseDetailsRaw, setCourseDetailsRaw] = useState([]);
@@ -79,6 +83,7 @@ export const TrainingDetails = ({ empDataRaw, setEmpDataRaw }) => {
             ? <Badge pill bg="warning">กำลังตรวจสอบ</Badge>
             : "ไม่มีข้อมูล"}
         </td>
+        <td><Button variant="link" size="sm" onClick={()=>sendData(data.courseID, data.sessionID)}>เปิด</Button></td>
       </tr>
     );
   });
@@ -90,14 +95,14 @@ export const TrainingDetails = ({ empDataRaw, setEmpDataRaw }) => {
         <div style={{ width: "80rem" }} className="mt-4">
           <Button
             variant="outline-primary"
-            onClick={() => navigate("/emp/dashboard")}
+            onClick={() => navigate("/emp/trainings")}
             className="shadow"
           >
-            <MdArrowBackIosNew /> กลับสู่หน้าหลัก
+            <MdArrowBackIosNew /> กลับสู่หน้าการอบรม
           </Button>
           <Card bg="primary" text="white" className="mt-2 shadow">
             <Card bg="dark" text="white" className="mt-3 h4">
-              <Card.Body>รายการข้อมูลการอบรม</Card.Body>
+              <Card.Body>รายการประวัติการอบรม</Card.Body>
             </Card>
             <Container>
               <Row>
@@ -133,6 +138,7 @@ export const TrainingDetails = ({ empDataRaw, setEmpDataRaw }) => {
                   <th className="text-center">วันที่อบรม</th>
                   <th className="text-center">วันที่อบรมสำเร็จ</th>
                   <th className="text-center">สถานะ</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
@@ -140,7 +146,7 @@ export const TrainingDetails = ({ empDataRaw, setEmpDataRaw }) => {
                   tableData
                 ) : (
                   <tr>
-                    <td colSpan="9" className="text-center">
+                    <td colSpan="10" className="text-center">
                       ไม่มีคอร์สที่เคยอบรม
                     </td>
                   </tr>

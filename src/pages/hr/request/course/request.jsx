@@ -4,6 +4,7 @@ import {
   Card,
   Col,
   Container,
+  Form,
   Modal,
   Nav,
   Row,
@@ -11,7 +12,7 @@ import {
 } from "react-bootstrap";
 import { Sidebar } from "../../../../components/sidebar";
 import { Topbar } from "../../../../components/topbar";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ButtonPage } from "../../../../components/buttonpages";
 import { MdCheck, MdClear } from "react-icons/md";
 import { useNavigate } from "react-router";
@@ -241,9 +242,15 @@ export const CourseRequestsList = ({
     window.location.reload();
   };
 
+  const remark = useRef()
+
   const denyRequest = () => {
+    if(remark.current.value === ""){
+      alert('กรุณากรอกหมายเหตุ')
+    }else{
+      // console.log(remark.current.value);
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
   const WarningModal = (props) => {
@@ -284,8 +291,20 @@ export const CourseRequestsList = ({
             centered
           >
             <Modal.Body>
-              <h4>ยืนยันหรือไม่</h4>
-              <p>คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {requestID}</p>
+            <div>
+                <h4>ยืนยันหรือไม่</h4>
+                <p>
+                  คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {requestID}
+                </p>
+                <Form.Group className="mb-3">
+                  <Form.Label>หมายเหตุ</Form.Label>
+                  <Form.Control
+                    type="text"
+                    ref={remark}
+                    required
+                  />
+                </Form.Group>
+              </div>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
               <Button
@@ -325,7 +344,7 @@ export const CourseRequestsList = ({
             <Container fluid>
               <div className="h3 fw-bold mb-4">คำร้องขอถอนคอร์สอบรม</div>
 
-              <Card bg="primary" className="mt-4 mb-2">
+              <Card bg="primary" className="mt-4 mb-2 shadow-sm">
                 <Card bg="dark" text="white" className="mt-3 h4">
                   <Card.Body>จำนวนรายการทั้งหมด {amount} รายการ</Card.Body>
                 </Card>

@@ -19,10 +19,10 @@ export const HrDashboard = () => {
                     <Card.Body>
                       <Row className="no-gutters align-items-center">
                         <Col className="mr-2">
-                          <div className="text-xs fw-bold text-warning text-uppercase mb-1">
+                          <div className="text-xs fw-bold  text-uppercase mb-1">
                            คำร้องขอถอนคอร์สอบรม
                           </div>
-                          <div className="h5 mb-0 fw-bold text-gray-800">
+                          <div className="h5 mb-0 fw-bold text-warning">
                             1
                           </div>
                         </Col>
@@ -35,10 +35,10 @@ export const HrDashboard = () => {
                     <Card.Body>
                       <Row className="no-gutters align-items-center">
                         <Col className="mr-2">
-                          <div className="text-xs fw-bold text-warning text-uppercase mb-1">
+                          <div className="text-xs fw-bold text-uppercase mb-1">
                            คำร้องขอเบิกค่าอบรม
                           </div>
-                          <div className="h5 mb-0 fw-bold text-gray-800">
+                          <div className="h5 mb-0 fw-bold text-warning">
                             1
                           </div>
                         </Col>
@@ -51,10 +51,10 @@ export const HrDashboard = () => {
                     <Card.Body>
                       <Row className="no-gutters align-items-center">
                         <Col className="mr-2">
-                          <div className="text-xs fw-bold text-success text-uppercase mb-1">
+                          <div className="text-xs fw-bold text-uppercase mb-1">
                            พนักงานปัจจุบัน
                           </div>
-                          <div className="h5 mb-0 fw-bold text-gray-800">
+                          <div className="h5 mb-0 fw-bold text-success">
                             1
                           </div>
                         </Col>
@@ -67,10 +67,10 @@ export const HrDashboard = () => {
                     <Card.Body>
                       <Row className="no-gutters align-items-center">
                         <Col className="mr-2">
-                          <div className="text-xs fw-bold text-primary text-uppercase mb-1">
+                          <div className="text-xs fw-bold  text-uppercase mb-1">
                            พนักงานทั้งหมดในระบบ
                           </div>
-                          <div className="h5 mb-0 fw-bold text-gray-800">
+                          <div className="h5 mb-0 fw-bold text-primary">
                             2
                           </div>
                         </Col>
@@ -85,10 +85,10 @@ export const HrDashboard = () => {
                     <Card.Body>
                       <Row className="no-gutters align-items-center">
                         <Col className="mr-2">
-                          <div className="text-xs fw-bold text-warning text-uppercase mb-1">
+                          <div className="text-xs fw-bold  text-uppercase mb-1">
                           กำลังรอผลการอบรม
                           </div>
-                          <div className="h5 mb-0 fw-bold text-gray-800">
+                          <div className="h5 mb-0 fw-bold text-warning">
                             1
                           </div>
                         </Col>
@@ -101,10 +101,10 @@ export const HrDashboard = () => {
                     <Card.Body>
                       <Row className="no-gutters align-items-center">
                         <Col className="mr-2">
-                          <div className="text-xs fw-bold text-primary text-uppercase mb-1">
+                          <div className="text-xs fw-bold  text-uppercase mb-1">
                            จำนวนคอร์สทั้งหมด
                           </div>
-                          <div className="h5 mb-0 fw-bold text-gray-800">
+                          <div className="h5 mb-0 fw-bold text-primary">
                             6
                           </div>
                         </Col>

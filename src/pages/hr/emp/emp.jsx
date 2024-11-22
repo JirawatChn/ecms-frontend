@@ -12,6 +12,7 @@ import { Sidebar } from "../../../components/sidebar";
 import { Topbar } from "../../../components/topbar";
 import { ButtonPage } from "../../../components/buttonpages";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 export const Emp = ({
   itemsPerPage,
@@ -20,13 +21,17 @@ export const Emp = ({
   PageValue2,
   PageValue3,
 }) => {
+  const navigate = useNavigate();
   const [empDataRaw, setEmpDataRaw] = useState([]);
   const [empData, setEmpData] = useState([]);
   const [amount, setAmount] = useState(0);
   const [numPages, setNumPages] = useState(0);
   const [curPage, setCurPage] = useState(1);
   const [currentLenght, setCurrentLenght] = useState(0);
-  // const [resultID, setRequestID] = useState({});
+
+  const sendData = (id) => {
+    navigate(`/hr/emp/details/${id}`);
+  };
 
   const [status, setStatus] = useState({
     active: "active",
@@ -34,38 +39,16 @@ export const Emp = ({
   });
 
   const [selectedValue, setSelectedValue] = useState(itemsPerPage);
-  const fetchResultsData = () => {
-    const data = [
-      {
-        empID: "EMP001",
-        empName: "HSY",
-        department: "Sales",
-        firstTrainingDate: "2024-10-01",
-        status: "active",
+
+  const fetchEmpData = async () => {
+    const data = await fetch("http://localhost:9999/checkData/checkEmp", {
+      method: "GET",
+      headers: {
+        "content-type": "application/json",
+        "token-key":"asd"
       },
-      {
-        empID: "EMP002",
-        empName: "HSY",
-        department: "Sales",
-        firstTrainingDate: "2024-10-01",
-        status: "active",
-      },
-      {
-        empID: "EMP003",
-        empName: "HSY",
-        department: "Sales",
-        firstTrainingDate: "2024-10-01",
-        status: "active",
-      },
-      {
-        empID: "EMP004",
-        empName: "HSY",
-        department: "Sales",
-        firstTrainingDate: "2024-10-01",
-        status: "inactive",
-      },
-    ];
-    setEmpDataRaw(data);
+    }).then((res) => res.json());    
+    setEmpDataRaw(data.data);
   };
 
   const handleChange = (event) => {
@@ -77,7 +60,7 @@ export const Emp = ({
   };
 
   useEffect(() => {
-    fetchResultsData();
+    fetchEmpData();
   }, []);
 
   useEffect(() => {
@@ -123,7 +106,8 @@ export const Emp = ({
           <td>{data.empID}</td>
           <td>{data.empName}</td>
           <td>{data.department}</td>
-          <td className="text-center">{data.firstTrainingDate}</td>
+          <td>{data.email}</td>
+          <td>{data.tel}</td>
           <td className="text-center">
             {data.status === "active" ? (
               <Badge pill bg="success">
@@ -138,7 +122,11 @@ export const Emp = ({
             )}
           </td>
           <td className="text-center">
-            <Button variant="link" size="sm">
+            <Button
+              variant="link"
+              size="sm"
+              onClick={() => sendData(data.empID)}
+            >
               เปิด
             </Button>
           </td>
@@ -155,9 +143,9 @@ export const Emp = ({
         <div className="content">
           <div className="mx-2">
             <Container fluid>
-              <div className="h3 fw-bold mb-4">พนักงาน</div>
+              <div className="h3 fw-bold mb-4">พนักงานทั้งหมด</div>
 
-              <Card bg="primary" className="mt-4 mb-2">
+              <Card bg="primary" className="mt-4 mb-2 shadow-sm">
                 <Card bg="dark" text="white" className="mt-3 h4">
                   <Card.Body>จำนวนรายการทั้งหมด {amount} รายการ</Card.Body>
                 </Card>
@@ -190,7 +178,12 @@ export const Emp = ({
                   </Col>
 
                   <Col className="d-flex justify-content-end mx-2">
-                    <Button variant="dark">สร้างพนักงานใหม่</Button>
+                    <Button
+                      variant="dark"
+                      onClick={() => navigate("/hr/emp/create")}
+                    >
+                      สร้างพนักงานใหม่
+                    </Button>
                   </Col>
                 </Row>
 
@@ -201,7 +194,8 @@ export const Emp = ({
                       <th>รหัสพนักงาน</th>
                       <th>ชื่อ</th>
                       <th>แผนก</th>
-                      <th className="text-center">วันที่อบรมครั้งแรก</th>
+                      <th>อีเมลล์</th>
+                      <th>เบอร์</th>
                       <th className="text-center">สถานะ</th>
                       <th></th>
                     </tr>
@@ -211,8 +205,8 @@ export const Emp = ({
                       tableData
                     ) : (
                       <tr>
-                        <td colSpan="8" className="text-center">
-                          ไม่มีผลลัพธ์อบรม
+                        <td colSpan="9" className="text-center">
+                          ไม่มีพนักงานในระบบ
                         </td>
                       </tr>
                     )}

@@ -78,7 +78,7 @@ export const ManageCourse = ({
         centered
       >
         <Modal.Body>
-          <h4>ลบหรือไม่</h4>
+          <h4>ยืนยันหรือไม่</h4>
           <p>คุณแน่ใจหรือไม่ที่จะลบรายการ รหัสคอร์ส {course.courseID}</p>
         </Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">

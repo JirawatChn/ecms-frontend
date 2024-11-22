@@ -4,6 +4,7 @@ import {
   Card,
   Col,
   Container,
+  Form,
   Modal,
   Nav,
   Row,
@@ -12,7 +13,7 @@ import {
 import { Sidebar } from "../../../components/sidebar";
 import { Topbar } from "../../../components/topbar";
 import { ButtonPage } from "../../../components/buttonpages";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { MdCheck, MdClear } from "react-icons/md";
 import { useNavigate } from "react-router";
 
@@ -261,9 +262,15 @@ export const Results = ({
     window.location.reload();
   };
 
+  const remark = useRef();
+
   const failRequest = () => {
+    if (remark.current.value === "") {
+      alert("กรุณากรอกหมายเหตุ");
+    } else {
+      window.location.reload();
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
   const WarningModal = (props) => {
@@ -307,11 +314,17 @@ export const Results = ({
             centered
           >
             <Modal.Body>
-              <h4>ยืนยันหรือไม่</h4>
-              <p>
-                คุณแน่ใจหรือไม่ที่จะให้ไม่ผ่านรายการ รหัสคอร์ส {courseID} รอบ{" "}
-                {sessionID}
-              </p>
+              <div>
+                <h4>ยืนยันหรือไม่</h4>
+                <p>
+                  คุณแน่ใจหรือไม่ที่จะให้ไม่ผ่านรายการ รหัสคอร์ส {courseID} รอบ{" "}
+                  {sessionID}
+                </p>
+                <Form.Group className="mb-3">
+                  <Form.Label>หมายเหตุ</Form.Label>
+                  <Form.Control type="text" ref={remark} required />
+                </Form.Group>
+              </div>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
               <Button
@@ -346,7 +359,7 @@ export const Results = ({
             <Container fluid>
               <div className="h3 fw-bold mb-4">ผลลัพธ์การอบรมของพนักงาน</div>
 
-              <Card bg="primary" className="mt-4 mb-2">
+              <Card bg="primary" className="mt-4 mb-2 shadow-sm">
                 <Card bg="dark" text="white" className="mt-3 h4">
                   <Card.Body>จำนวนรายการทั้งหมด {amount} รายการ</Card.Body>
                 </Card>

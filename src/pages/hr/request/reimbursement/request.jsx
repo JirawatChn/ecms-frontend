@@ -1,9 +1,20 @@
-import { Badge, Button, Card, Col, Container, Modal, Nav, Row, Table } from "react-bootstrap";
+import {
+  Badge,
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Modal,
+  Nav,
+  Row,
+  Table,
+} from "react-bootstrap";
 import { Sidebar } from "../../../../components/sidebar";
 import { Topbar } from "../../../../components/topbar";
 import { ButtonPage } from "../../../../components/buttonpages";
-import { useEffect, useState } from "react";
-import { MdCheck,MdClear } from "react-icons/md";
+import { useEffect, useRef, useState } from "react";
+import { MdCheck, MdClear } from "react-icons/md";
 import { useNavigate } from "react-router";
 
 export const ReimbursementRequestsList = ({
@@ -18,8 +29,9 @@ export const ReimbursementRequestsList = ({
     navigate(`/hr/reimbursement/details/${id}`);
   };
 
-  const [reimbursementRequestDataRaw,setReimbursementRequestDataRaw] = useState([])
-  const [reimbursementRequestData,setReimbursementRequestData] = useState([])
+  const [reimbursementRequestDataRaw, setReimbursementRequestDataRaw] =
+    useState([]);
+  const [reimbursementRequestData, setReimbursementRequestData] = useState([]);
   const [amount, setAmount] = useState(0);
   const [numPages, setNumPages] = useState(0);
   const [curPage, setCurPage] = useState(1);
@@ -31,7 +43,6 @@ export const ReimbursementRequestsList = ({
 
   const [selectedValue, setSelectedValue] = useState(itemsPerPage);
   const [modalShow, setModalShow] = useState(false);
-
   const fetchReimbursementRequestData = () => {
     const data = [
       {
@@ -40,7 +51,7 @@ export const ReimbursementRequestsList = ({
         empID: "EMP001",
         empName: "HSY",
         date: "2024-04-01",
-        amount:"1000",
+        amount: "1000",
         status: "pending",
       },
       {
@@ -49,7 +60,7 @@ export const ReimbursementRequestsList = ({
         empID: "EMP001",
         empName: "HSY",
         date: "2024-04-01",
-        amount:"1000",
+        amount: "1000",
         status: "approve",
       },
       {
@@ -58,7 +69,7 @@ export const ReimbursementRequestsList = ({
         empID: "EMP001",
         empName: "HSY",
         date: "2024-04-01",
-        amount:"1000",
+        amount: "1000",
         status: "deny",
       },
       {
@@ -67,7 +78,7 @@ export const ReimbursementRequestsList = ({
         empID: "EMP001",
         empName: "HSY",
         date: "2024-04-01",
-        amount:"600",
+        amount: "600",
         status: "pending",
       },
       {
@@ -76,7 +87,7 @@ export const ReimbursementRequestsList = ({
         empID: "EMP001",
         empName: "HSY",
         date: "2024-04-01",
-        amount:"1000",
+        amount: "1000",
         status: "pending",
       },
       {
@@ -85,7 +96,7 @@ export const ReimbursementRequestsList = ({
         empID: "EMP001",
         empName: "HSY",
         date: "2024-04-01",
-        amount:"1000",
+        amount: "1000",
         status: "approve",
       },
       {
@@ -94,7 +105,7 @@ export const ReimbursementRequestsList = ({
         empID: "EMP001",
         empName: "HSY",
         date: "2024-04-01",
-        amount:"1000",
+        amount: "1000",
         status: "deny",
       },
     ];
@@ -181,7 +192,7 @@ export const ReimbursementRequestsList = ({
               <Button
                 variant="success"
                 size="sm"
-                onClick={() => requestModal(data.requestID,'approve')}
+                onClick={() => requestModal(data.requestID, "approve")}
               >
                 <MdCheck />
               </Button>
@@ -194,7 +205,7 @@ export const ReimbursementRequestsList = ({
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() => requestModal(data.requestID,'deny')}
+                onClick={() => requestModal(data.requestID, "deny")}
               >
                 <MdClear />
               </Button>
@@ -203,7 +214,11 @@ export const ReimbursementRequestsList = ({
             )}
           </td>
           <td className="text-center">
-            <Button variant="link" size="sm" onClick={()=>sendData(data.requestID)}>
+            <Button
+              variant="link"
+              size="sm"
+              onClick={() => sendData(data.requestID)}
+            >
               เปิด
             </Button>
           </td>
@@ -216,7 +231,7 @@ export const ReimbursementRequestsList = ({
   const [requestID, setRequestID] = useState({});
   const [modalStatus, setModalStatus] = useState("");
 
-  const requestModal = (id,status) => {
+  const requestModal = (id, status) => {
     setModalShow(true);
     setRequestID(id);
     setModalStatus(status);
@@ -227,12 +242,18 @@ export const ReimbursementRequestsList = ({
     window.location.reload();
   };
 
+  const remark = useRef()
+
   const denyRequest = () => {
+    if(remark.current.value === ""){
+      alert('กรุณากรอกหมายเหตุ')
+    }else{
+      // console.log(remark.current.value);
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
- const WarningModal = (props) => {
+  const WarningModal = (props) => {
     return (
       <>
         {modalStatus === "approve" && (
@@ -270,8 +291,20 @@ export const ReimbursementRequestsList = ({
             centered
           >
             <Modal.Body>
-              <h4>ยืนยันหรือไม่</h4>
-              <p>คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {requestID}</p>
+              <div>
+                <h4>ยืนยันหรือไม่</h4>
+                <p>
+                  คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {requestID}
+                </p>
+                <Form.Group className="mb-3">
+                  <Form.Label>หมายเหตุ</Form.Label>
+                  <Form.Control
+                    type="text"
+                    ref={remark}
+                    required
+                  />
+                </Form.Group>
+              </div>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
               <Button
@@ -311,7 +344,7 @@ export const ReimbursementRequestsList = ({
             <Container fluid>
               <div className="h3 fw-bold mb-4">คำร้องขอเบิกค่าอบรม</div>
 
-              <Card bg="primary" className="mt-4 mb-2">
+              <Card bg="primary" className="mt-4 mb-2 shadow-sm">
                 <Card bg="dark" text="white" className="mt-3 h4">
                   <Card.Body>จำนวนรายการทั้งหมด {amount} รายการ</Card.Body>
                 </Card>

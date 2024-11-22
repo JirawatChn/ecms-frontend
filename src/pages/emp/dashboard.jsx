@@ -200,7 +200,7 @@ export const EmpDashboard = ({
                     "--icon-color": "#4895B6",
                     "--icon-hover": "#3c7a99",
                   }}
-                  onClick={() => navigate("/emp/course/trainings")}
+                  onClick={() => navigate("/emp/trainings")}
                 >
                   <div className="card-menu-circle">
                     <MdInsertChart className="icon" />

@@ -1,77 +1,104 @@
-import { Button, Card, Col, Container, Form, Modal, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import { Sidebar } from "../../../components/sidebar";
 import { Topbar } from "../../../components/topbar";
-import { MdArrowBackIosNew, MdEditNote,MdClose   } from "react-icons/md";
+import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 
-export const EmpDetails = () => {
+export const EditEmp = () => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
   const { empID } = useParams();
 
-  const sendData = (id) => {
-    navigate(`/hr/emp/edit/${id}`);
+  const [empName, setEmpName] = useState("");
+  const [department, setDepartment] = useState("");
+  const [cardID, setCardID] = useState("");
+  const [tel, setTel] = useState("");
+  const [email, setEmail] = useState("");
+  const [firstTrainingDate, setFirstTrainingDate] = useState("");
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   const updatedEmpName = empName || empData.empName;
+  //   const updatedDepartment = department ||  empData.department;
+  //   const updatedCardID = cardID ||  empData.cardID;
+  //   const updatedTel = tel ||  empData.tel;
+  //   const updatedEmail = email ||  empData.email;
+  //   const updatedFirstTrainingDate = firstTrainingDate ||  empData.firstTrainingDate;
+
+  //   console.log("empID:", empID);
+  //   console.log("empName:", updatedEmpName);
+  //   console.log("department:", updatedDepartment);
+  //   console.log("cardID:", updatedCardID);
+  //   console.log("tel:", updatedTel);
+  //   console.log("email:", updatedEmail);
+  //   console.log("firstTrainingDate:", updatedFirstTrainingDate);
+  // };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  
+    const dataToSubmit = {};
+  
+    if (empID) {
+      dataToSubmit.empID = empID;
+    }
+    if (empName) {
+      dataToSubmit.empName = empName;
+    }
+    if (department) {
+      dataToSubmit.department = department;
+    }
+    if (cardID) {
+      dataToSubmit.cardID = cardID;
+    }
+    if (tel) {
+      dataToSubmit.tel = tel;
+    }
+    if (email) {
+      dataToSubmit.email = email;
+    }
+    if (firstTrainingDate) {
+      dataToSubmit.firstTrainingDate = firstTrainingDate;
+    }
+  
+    if (Object.keys(dataToSubmit).length > 0) {
+      console.log("Data to submit:", dataToSubmit);
+    } else {
+      console.log("No new data to submit.");
+    }
+  };
+  
+
+  const fetchEmpData = () => {
+    const data = {
+      empID: "EMP001",
+      empName: "HSY",
+      department: "Sales",
+      cardID: "1000000000000",
+      tel: "06612345678",
+      email: " johndoe@example.com",
+      firstTrainingDate: "2024-10-01",
+      expiryDate: "2025-09-30",
+      nextExpiryDate: "11 เดือน 30 วัน",
+    };
+    setEmpData(data);
   };
 
-  const deleteEmp = (id) =>{
-    const data = {
-      empID:id,
-      status:'inactive'
-    }
-    console.log(data);
-  }
+  const sendData = (id) => {
+    navigate(`/hr/emp/details/${id}`);
+  };
 
   useEffect(() => {
-    const fetchEmpData = async () => {
-      const data = await fetch(`http://localhost:9999/checkData/checkEmpId/${empID}`, {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-          "token-key": "asd",
-        },
-      }).then((res) => res.json());  
-      setEmpData(data.data[0]);
-    };
-  
     fetchEmpData();
-  }, [empID]);    
+  }, []);
 
-  const [modalShow, setModalShow] = useState(false);
-
-  const WarningModal = (props) => {
-    return (
-          <Modal
-            {...props}
-            aria-labelledby="contained-modal-title-vcenter"
-            centered
-          >
-            <Modal.Body>
-              <h4>ยืนยันหรือไม่</h4>
-              <p>คุณแน่ใจหรือไม่ที่จะลบพนักงาน รหัส {empID}</p>
-            </Modal.Body>
-            <Modal.Footer className="d-flex justify-content-between">
-              <Button
-                onClick={props.onHide}
-                variant="outline-secondary"
-                className="flex-grow-1 me-2"
-              >
-                ยกเลิก
-              </Button>
-              <Button
-                onClick={() => deleteEmp(empID)}
-                variant="danger"
-                className="flex-grow-1"
-              >
-                ลบ
-              </Button>
-            </Modal.Footer>
-          </Modal>
-          )}
+  
 
   return (
     <div className="wrapper">
-            <WarningModal show={modalShow} onHide={() => setModalShow(false)} />
+      
       <Sidebar actived="emp" iconActive={{ opacity: "100%" }} />
       <div id="content-wrapper" className="d-flex flex-column">
         <Topbar content={"พนักงาน"} />
@@ -80,24 +107,22 @@ export const EmpDetails = () => {
             <Container fluid>
               <Button
                 variant="link"
-                onClick={() => navigate("/hr/emp")}
+                onClick={() => sendData(empID)}
                 className="back-button"
               >
-                <MdArrowBackIosNew /> กลับหน้าพนักงาน
+                <MdArrowBackIosNew /> ยกเลิกการแก้ไข
               </Button>
               <div className="h3 fw-bold mb-4 d-flex align-items-center">
-                รายละเอียดพนักงาน รหัส {empID}
+                แก้ไขรายละเอียดพนักงาน รหัส {empID}
               </div>
-              <Button variant="warning" className="mb-2 shadow-sm text-white" onClick={()=>sendData(empID)}><MdEditNote />แก้ไขข้อมูล</Button>              
-              <Button variant="danger" className="mb-2 shadow-sm text-white mx-2" onClick={()=>setModalShow(true)}><MdClose  />ลบพนักงาน</Button>
               <Card className="h-100 shadow-sm">
                 <div className="p-4">
                   <h5 className="mb-3 border-bottom pb-2 d-flex">
                     ข้อมูลทั่วไป
                   </h5>
-                  <Row>
-                    <Col>
-                      <Col md={8}>
+                  <Form onSubmit={handleSubmit}>
+                    <Row className="d-flex justify-content-center">
+                      <Col md={4}>
                         <Form.Group className="mb-3">
                           <Form.Label>รหัสพนักงาน</Form.Label>
                           <Form.Control
@@ -111,18 +136,16 @@ export const EmpDetails = () => {
                           <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
                           <Form.Control
                             type="text"
-                            disabled
-                            required
-                            value={empData.department || "ไม่มีข้อมูล"}
+                            onChange={(e) => setDepartment(e.target.value)}
+                            defaultValue={empData.department}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>ชื่อพนักงาน</Form.Label>
                           <Form.Control
                             type="text"
-                            disabled
-                            required
-                            value={empData.empName || "ไม่มีข้อมูล"}
+                            onChange={(e) => setEmpName(e.target.value)}
+                            defaultValue={empData.empName}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -131,56 +154,44 @@ export const EmpDetails = () => {
                           </Form.Label>
                           <Form.Control
                             type="text"
-                            disabled
                             required
-                            value={empData.cardID || "ไม่มีข้อมูล"}
+                            onChange={(e) => setCardID(e.target.value)}
+                            defaultValue={empData.cardID}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>อีเมลล์พนักงาน</Form.Label>
                           <Form.Control
                             type="text"
-                            disabled
                             required
-                            value={empData.email || "ไม่มีข้อมูล"}
+                            onChange={(e) => setEmail(e.target.value)}
+                            defaultValue={empData.email}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>เบอร์โทรศัพท์พนักงาน</Form.Label>
                           <Form.Control
                             type="text"
-                            disabled
-                            required
-                            value={empData.tel || "ไม่มีข้อมูล"}
+                            onChange={(e) => setTel(e.target.value)}
+                            defaultValue={empData.tel}
                           />
                         </Form.Group>
-                      </Col>
-                    </Col>
-                    <Col>
-                      <Col md={8}>
                         <Form.Group className="mb-3">
                           <Form.Label>วันที่อบรมครั้งแรก</Form.Label>
                           <Form.Control
                             type="date"
-                            disabled
-                            required
-                            value={
-                              empData.expiryDate
-                                ? new Date(empData.firstTrainingDate).toISOString().split("T")[0]
-                                : ""
-                            }                          />
+                            onChange={(e) =>
+                              setFirstTrainingDate(e.target.value)
+                            }
+                            defaultValue={empData.firstTrainingDate}
+                          />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>วันหมดอายุการอบรม</Form.Label>
                           <Form.Control
-                            type="date"
+                            type="text"
                             disabled
-                            required
-                            value={
-                              empData.expiryDate
-                                ? new Date(empData.expiryDate).toISOString().split("T")[0]
-                                : ""
-                            }
+                            value={empData.expiryDate || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -188,14 +199,17 @@ export const EmpDetails = () => {
                           <Form.Control
                             type="text"
                             disabled
-                            required
                             value={empData.nextExpiryDate || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                       </Col>
-                    </Col>
-                  </Row>
-                  
+                      <Container>
+                        <Row className="mt-3 d-flex justify-content-end" md={6}>
+                          <Button type="submit">แก้ไขข้อมูล</Button>
+                        </Row>
+                      </Container>
+                    </Row>
+                  </Form>
                 </div>
               </Card>
             </Container>

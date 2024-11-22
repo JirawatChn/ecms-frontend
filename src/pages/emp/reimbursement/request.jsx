@@ -37,7 +37,7 @@ export const RequestReimbursement = ({
   const requestIDLenght = findRequestLenght.length;
 
   const createRequestID =
-    "reim-" + (requestIDLenght + 1).toString().padStart(3, "0");
+    "reim" + (requestIDLenght + 1).toString().padStart(3, "0");
   // console.log(createRequestID);
 
 
@@ -214,7 +214,7 @@ export const RequestReimbursement = ({
                               <Col md={4}>
                                 <Form.Label>จำนวนเงิน (บาท)</Form.Label>
                                 <Form.Control
-                                  type="number"
+                                  type="text"
                                   ref={amount}
                                   required
                                 />
