@@ -238,7 +238,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                                   <Form.Control
                                     type="text"
                                     disabled
-                                    value={resultData.status}
+                                    value={resultData.status || "ไม่มีข้อมูล"}
                                   />
                                 </Form.Group>
                               </Form>

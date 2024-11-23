@@ -5,16 +5,44 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const login = async (username, pwd) => {
+    try {
+      const response = await fetch("http://localhost:9999/auth/login", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          username: username,
+          password: pwd,
+        }),
+      });
+      const newData = await response.json();
+
+      if (response.ok) {
+        const token = newData.data.token;
+        localStorage.setItem("token", token);
+
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const role = payload.roles;
+
+        console.log(role);
+        if (role === "hr") {
+          navigate('hr/dashboard')
+        } else if(role === "emp"){
+          navigate('emp/dashboard')
+        }
+      } else {
+        console.log("invalid password");
+      }
+    } catch (error) {
+      console.error("Error occurred during login:", error.message);
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Email:", email);
-    console.log("Password:", password);
-    
-    if(email === "hr"){
-      navigate('/hr/dashboard')
-    }else if(email === "emp"){
-      navigate('/emp/dashboard')
-    }
+    login(email, password);
   };
 
   return (
@@ -39,7 +67,7 @@ export const Login = () => {
             <label>Password</label>
           </div>
           <div className="field">
-            <input type="submit" value="Login" className="mt-3"/>
+            <input type="submit" value="Login" className="mt-3" />
           </div>
         </form>
       </div>
