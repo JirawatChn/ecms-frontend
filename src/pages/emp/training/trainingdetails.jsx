@@ -48,7 +48,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
 
   return (
     <div>
-      <Header content={"เบิกค่าอบรม"} />
+      <Header content={"ผลลัพธ์การอบรม"} />
       <div className="mt-3 d-flex justify-content-center">
         <div style={{ width: "80rem" }} className="mt-4">
           <Button
@@ -61,7 +61,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
           <Card bg="primary" className="mt-2" text="white">
             <Card bg="dark" text="white" className="mt-3 h4">
               <Card.Body>
-                <p>คำร้องขอผลลัพธ์การอบรม รหัส {resultData.requestID}</p>
+                <p>ผลลัพธ์การอบรม รหัส {resultData.requestID}</p>
               </Card.Body>{" "}
             </Card>
             <Container>
@@ -196,18 +196,6 @@ export const TrainingDetails = ({ empDataRaw }) => {
                                 type="text"
                                 disabled
                                 value={resultData.trainingDate || "ไม่มีข้อมูล"}
-                              />
-                            </Form.Group>
-                          </Form>
-                        </Col>
-                        <Col md={4}>
-                          <Form>
-                            <Form.Group className="mb-3">
-                              <Form.Label>วันที่อบรมสำเร็จ</Form.Label>
-                              <Form.Control
-                                type="text"
-                                disabled
-                                value={resultData.completeDate || "ไม่มีข้อมูล"}
                               />
                             </Form.Group>
                           </Form>

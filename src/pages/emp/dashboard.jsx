@@ -29,7 +29,6 @@ export const EmpDashboard = ({
     const data = 
       {
         courseID: "TLS123",
-        applicantID: "APP099",
         courseName: "เตรียมความพร้อมสู่การทำงาน 3",
         trainingDate: "20-10-01",
         completeDate: "20-10-01",
@@ -63,6 +62,7 @@ export const EmpDashboard = ({
       <tr key={i + 1} className="tr-cell">
         <td>{i + 1}</td>
         <td>{data.courseID}</td>
+        <td>{data.sessionID}</td>
         <td>{data.courseName}</td>
         <td className="text-center">{data.trainingDate}</td>
         <td className="text-center">{data.periods}</td>
@@ -236,6 +236,7 @@ export const EmpDashboard = ({
                       <tr>
                         <th>#</th>
                         <th>รหัสคอร์ส</th>
+                        <th>รอบ</th>
                         <th>ชื่อคอร์ส</th>
                         <th className="text-center">วันที่อบรม</th>
                         <th className="text-center">เวลา</th>
@@ -247,7 +248,7 @@ export const EmpDashboard = ({
                         tableData
                       ) : (
                         <tr>
-                          <td colSpan="6" className="text-center">
+                          <td colSpan="7" className="text-center">
                             ไม่มีคอร์สที่ได้ลงทะเบียนไว้
                           </td>
                         </tr>

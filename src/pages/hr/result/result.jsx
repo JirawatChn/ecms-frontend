@@ -246,6 +246,9 @@ export const Results = ({
     return null;
   });
 
+  // console.log(resultsData);
+  
+
   const [courseID, setCourseID] = useState({});
   const [sessionID, setSessionID] = useState({});
   const [modalStatus, setModalStatus] = useState("");

@@ -103,7 +103,7 @@ export const Emp = ({
       return (
         <tr key={i + 1} className="tr-cell">
           <td className="text-center">{i + 1}</td>
-          <td>{data.empID}</td>
+          <td>{data.empId}</td>
           <td>{data.empName}</td>
           <td>{data.department}</td>
           <td>{data.email}</td>
@@ -125,7 +125,7 @@ export const Emp = ({
             <Button
               variant="link"
               size="sm"
-              onClick={() => sendData(data.empID)}
+              onClick={() => sendData(data.empId)}
             >
               เปิด
             </Button>

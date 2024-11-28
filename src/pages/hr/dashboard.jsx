@@ -1,7 +1,7 @@
 import { Sidebar } from "../../components/sidebar";
 import { Topbar } from "../../components/topbar";
 import { Card, Col, Container, Row } from "react-bootstrap";
-import AreaChart from "./chart";
+// import AreaChart from "./chart";
 
 export const HrDashboard = () => {
   return (
@@ -113,7 +113,7 @@ export const HrDashboard = () => {
                   </Card>
                 </Col>
               </Row>
-              <Row className="mt-3">
+              {/* <Row className="mt-3">
                 <Col xl={12} lg={6} className="mb-4">
                   <Card className="shadow h-100 py-2">
                 <Card.Header className="fw-bold">จำนวนคอร์สที่ลงทะเบียนในแต่ละเดือน</Card.Header>
@@ -122,7 +122,7 @@ export const HrDashboard = () => {
                     </Card.Body>
                   </Card>
                 </Col>
-              </Row>
+              </Row> */}
             </Container>
           </div>
         </div>

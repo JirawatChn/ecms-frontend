@@ -7,25 +7,25 @@ import { useEffect, useRef, useState } from "react";
 
 export const CreateEmp = () => {
   const navigate = useNavigate();
-  const [empAmountRaw,setEmpAmountRaw] = useState();
-  const [empAmount,setEmpAmount] = useState();
+  const [empAmountRaw, setEmpAmountRaw] = useState();
+  const [empAmount, setEmpAmount] = useState();
 
-const fetchEmpAmount = () =>{
-    const data = 4
-    setEmpAmountRaw(data)
-}
+  const fetchEmpAmount = () => {
+    const data = 4;
+    setEmpAmountRaw(data);
+  };
 
-  useEffect(()=>{
-    fetchEmpAmount()
-  },[])
+  useEffect(() => {
+    fetchEmpAmount();
+  }, []);
+
+  useEffect(() => {
+    setEmpAmount(empAmountRaw);
+  }, [empAmountRaw]);
   
-  useEffect(()=>{
-    setEmpAmount(empAmountRaw)
-  },[empAmountRaw])
 
-  const createEmpID =
-    "EMP-" + (empAmount + 1).toString().padStart(3, "0");
-//   console.log(createEmpID);
+  const createEmpID = "EMP-" + (empAmount + 1).toString().padStart(3, "0");
+  //   console.log(createEmpID);
 
   const empID = useRef();
   const department = useRef();
@@ -33,26 +33,27 @@ const fetchEmpAmount = () =>{
   const cardID = useRef();
   const email = useRef();
   const tel = useRef();
+  const roles = useRef();
 
-  const [sendData,setSendData] = useState({});
+  const [sendData, setSendData] = useState({});
 
-  const createEmp = () =>{
+  const createEmp = () => {
     const newData = {
-        empID:empID.current.value,
-        department:department.current.value,
-        empName:empName.current.value,
-        cardID:cardID.current.value,
-        email:email.current.value,
-        tel:tel.current.value,
-        status:"active"
-    }
-    setSendData(newData)
+      empID: empID.current.value,
+      department: department.current.value,
+      empName: empName.current.value,
+      cardID: cardID.current.value,
+      email: email.current.value,
+      tel: tel.current.value,
+      roles:roles.current.value,
+      status: "active",
+    };
+    setSendData(newData);
     console.log(sendData);
-    
-  }
+  };
 
   const handleSubmit = () => {
-      createEmp()
+    createEmp();
   };
 
   return (
@@ -81,36 +82,51 @@ const fetchEmpAmount = () =>{
                       <Col md={4}>
                         <Form.Group className="mb-3">
                           <Form.Label>รหัสพนักงาน</Form.Label>
-                          <Form.Control type="text" disabled required ref={empID} value={createEmpID}/>
+                          <Form.Control
+                            type="text"
+                            disabled
+                            required
+                            ref={empID}
+                            value={createEmpID}
+                          />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
-                          <Form.Control type="text" ref={department}/>
+                          <Form.Control type="text" ref={department} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>ชื่อพนักงาน</Form.Label>
-                          <Form.Control type="text" ref={empName}/>
+                          <Form.Control type="text" ref={empName} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>
                             เลขที่ประจําตัวประชาชนของพนักงาน
                           </Form.Label>
-                          <Form.Control type="text" required ref={cardID}/>
+                          <Form.Control type="text" required ref={cardID} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>อีเมลล์พนักงาน</Form.Label>
-                          <Form.Control type="text" required ref={email}/>
+                          <Form.Control type="text" required ref={email} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>เบอร์โทรศัพท์พนักงาน</Form.Label>
-                          <Form.Control type="text" ref={tel}/>
+                          <Form.Control type="text" ref={tel} />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                          <Form.Label>เบอร์โทรศัพท์พนักงาน</Form.Label>
+                          <Form.Control type="text" ref={tel} />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                          <Form.Label>สิทธิ์การใช้งาน</Form.Label>
+                          <Form.Select aria-label="Default select example" ref={roles}>
+                            <option value="emp">Emp</option>
+                            <option value="hr">Hr</option>
+                          </Form.Select>
                         </Form.Group>
                       </Col>
                       <Container>
                         <Row className="mt-3 d-flex justify-content-end" md={6}>
-                          <Button type="submit">
-                            สร้างพนักงาน
-                          </Button>
+                          <Button type="submit">สร้างพนักงาน</Button>
                         </Row>
                       </Container>
                     </Row>

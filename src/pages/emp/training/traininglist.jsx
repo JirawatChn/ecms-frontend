@@ -4,16 +4,15 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 
-export const TrainingRequestDetails = ({ empDataRaw }) => {
+export const TrainingListDetails = ({ empDataRaw }) => {
   const [empData, setEmpData] = useState({});
   const navigate = useNavigate();
   const { courseID, sessionID } = useParams();
 
-  const [requestResultData, setRequestResultData] = useState({});
+  const [requestResultData, setListResultData] = useState({});
 
-  const fetchRequestResult = () => {
+  const fetchListResult = () => {
     const data = {
-      requestID: "result-001",
       empID: "EMP001",
       courseID: "ABC101",
       sessionID: "S099",
@@ -24,16 +23,11 @@ export const TrainingRequestDetails = ({ empDataRaw }) => {
       trainingHours: "8",
       trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
     };
-    setRequestResultData(data);
-  };
-
-  const sendRequestResult = () => {
-    console.log(requestResultData);
-    
+    setListResultData(data);
   };
 
   useEffect(() => {
-    fetchRequestResult();
+    fetchListResult();
   }, []);
 
   useEffect(() => {
@@ -52,7 +46,7 @@ export const TrainingRequestDetails = ({ empDataRaw }) => {
           <Card bg="primary" className="mt-2" text="white">
             <Card bg="dark" text="white" className="mt-3 h4">
               <Card.Body>
-                <p>ส่งคำร้องขอผลลัพธ์การอบรม </p>
+                <p>รายละเอียดการอบรม รหัส {courseID} รอบ {sessionID}</p>
               </Card.Body>{" "}
             </Card>
             <Container>
@@ -87,18 +81,6 @@ export const TrainingRequestDetails = ({ empDataRaw }) => {
 
                 <Container>
                   <Row>
-                    <Col md={2}>
-                      <Form>
-                        <Form.Group className="mb-3">
-                          <Form.Label>รหัสคำร้อง</Form.Label>
-                          <Form.Control
-                            type="text"
-                            value={requestResultData.requestID || "ไม่มีข้อมูล"}
-                            disabled
-                          />
-                        </Form.Group>
-                      </Form>
-                    </Col>
                     <Col md={2}>
                       <Form>
                         <Form.Group className="mb-3">
@@ -163,18 +145,7 @@ export const TrainingRequestDetails = ({ empDataRaw }) => {
                         </Form.Group>
                       </Form>
                     </Col>
-                    <Col md={2}>
-                      <Form>
-                        <Form.Group className="mb-3">
-                          <Form.Label>เวลาอบรม</Form.Label>
-                          <Form.Control
-                            type="text"
-                            disabled
-                            value={requestResultData.periods || "ไม่มีข้อมูล"}
-                          />
-                        </Form.Group>
-                      </Form>
-                    </Col>
+                    
                   </Row>
                   <Row>
                     <Col md={4}>
@@ -191,16 +162,14 @@ export const TrainingRequestDetails = ({ empDataRaw }) => {
                         </Form.Group>
                       </Form>
                     </Col>
-                    <Col md={4}>
+                    <Col md={2}>
                       <Form>
                         <Form.Group className="mb-3">
-                          <Form.Label>วันที่อบรมสำเร็จ</Form.Label>
+                          <Form.Label>เวลาอบรม</Form.Label>
                           <Form.Control
                             type="text"
                             disabled
-                            value={
-                              requestResultData.completeDate || "ไม่มีข้อมูล"
-                            }
+                            value={requestResultData.periods || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                       </Form>
@@ -219,14 +188,6 @@ export const TrainingRequestDetails = ({ empDataRaw }) => {
                         </Form.Group>
                       </Form>
                     </Col>
-                    <Container>
-                      <Row
-                        className="mt-3 mb-3 mx-1 d-flex justify-content-end"
-                        md={6}
-                      >
-                        <Button onClick={()=>sendRequestResult()}>อบรมสำเร็จแล้ว</Button>
-                      </Row>
-                    </Container>
                   </Row>
                 </Container>
               </Card>

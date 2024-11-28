@@ -21,7 +21,7 @@ export const TrainingHistory = ({ empDataRaw, setEmpDataRaw }) => {
     const data = [
       {
         courseID: "TLS123",
-        sessionID: "S099",
+        sessionID: "S001",
         courseName: "เตรียมความพร้อมสู่การทำงาน 3",
         trainingDate: "20-10-01",
         completeDate: "20-10-01",
@@ -30,8 +30,8 @@ export const TrainingHistory = ({ empDataRaw, setEmpDataRaw }) => {
         status: "pass",
       },
       {
-        courseID: "TLS122",
-        sessionID: "S007",
+        courseID: "TLS123",
+        sessionID: "S001",
         courseName: "เตรียมความพร้อมสู่การทำงาน 4",
         trainingDate: "10-08-01",
         completeDate: "10-08-01",
@@ -73,7 +73,6 @@ export const TrainingHistory = ({ empDataRaw, setEmpDataRaw }) => {
         <td>{data.sessionID}</td>
         <td>{data.courseName}</td>
         <td className="text-center">{data.trainingDate}</td>
-        <td className="text-center">{data.completeDate}</td>
         <td className="text-center">
           {data.status === "pass"
             ? <Badge pill bg="success">ผ่าน</Badge>
@@ -136,7 +135,6 @@ export const TrainingHistory = ({ empDataRaw, setEmpDataRaw }) => {
                   <th>รอบ</th>
                   <th>ชื่อคอร์ส</th>
                   <th className="text-center">วันที่อบรม</th>
-                  <th className="text-center">วันที่อบรมสำเร็จ</th>
                   <th className="text-center">สถานะ</th>
                   <th></th>
                 </tr>

@@ -8,11 +8,11 @@ import {
   Modal,
   Row,
 } from "react-bootstrap";
-import { Sidebar } from "../../../../components/sidebar";
-import { Topbar } from "../../../../components/topbar";
 import { useNavigate, useParams } from "react-router";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useEffect, useState } from "react";
+import { Sidebar } from "../../../../components/sidebar";
+import { Topbar } from "../../../../components/topbar";
 
 export const RequestWithdrawCourseDetails = () => {
   const { requestID } = useParams();
@@ -294,7 +294,7 @@ export const RequestWithdrawCourseDetails = () => {
                           <Row>
                             <Col md={4}>
                               <Form.Group className="mb-3">
-                                <Form.Label>ผู้อนุมัติการเบิก</Form.Label>
+                                <Form.Label>ผู้อนุมัติการถอน</Form.Label>
                                 <Form.Control
                                   type="text"
                                   disabled
@@ -349,7 +349,7 @@ export const RequestWithdrawCourseDetails = () => {
                           <Row>
                             <Col md={4}>
                               <Form.Group className="mb-3">
-                                <Form.Label>ผู้อนุมัติการเบิก</Form.Label>
+                                <Form.Label>ผู้อนุมัติการถอน</Form.Label>
                                 <Form.Control
                                   type="text"
                                   disabled
