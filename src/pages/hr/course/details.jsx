@@ -35,7 +35,7 @@ export const CourseDetails = () => {
       periods: "9.00-17.00",
       trainingLocation: "5-505",
       trainingDate: "2024-04-01",
-      status: "open",
+      status: "close",
     };
     setCourseDataRaw(data);
   };

@@ -13,6 +13,7 @@ import { Topbar } from "../../../components/topbar";
 import { ButtonPage } from "../../../components/buttonpages";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 export const Emp = ({
   itemsPerPage,
@@ -41,14 +42,18 @@ export const Emp = ({
   const [selectedValue, setSelectedValue] = useState(itemsPerPage);
 
   const fetchEmpData = async () => {
-    const data = await fetch("http://localhost:9999/checkData/checkEmp", {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        "token-key":"asd"
-      },
-    }).then((res) => res.json());    
-    setEmpDataRaw(data.data);
+    const token = localStorage.getItem('token')
+    try {
+      const response = await axios.get("http://localhost:9999/checkData/checkEmp", {
+        headers: {
+          "content-type": "application/json",
+          "authorization": token,
+        },
+      });
+        setEmpDataRaw(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
   };
 
   const handleChange = (event) => {
@@ -108,6 +113,7 @@ export const Emp = ({
           <td>{data.department}</td>
           <td>{data.email}</td>
           <td>{data.tel}</td>
+          <td className="text-center">{data.roles}</td>
           <td className="text-center">
             {data.status === "active" ? (
               <Badge pill bg="success">
@@ -196,6 +202,7 @@ export const Emp = ({
                       <th>แผนก</th>
                       <th>อีเมลล์</th>
                       <th>เบอร์</th>
+                      <th className="text-center">สิทธิ์การใช้</th>
                       <th className="text-center">สถานะ</th>
                       <th></th>
                     </tr>
@@ -205,7 +212,7 @@ export const Emp = ({
                       tableData
                     ) : (
                       <tr>
-                        <td colSpan="9" className="text-center">
+                        <td colSpan="10" className="text-center">
                           ไม่มีพนักงานในระบบ
                         </td>
                       </tr>

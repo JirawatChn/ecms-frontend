@@ -33,127 +33,66 @@ import { CreateCourse } from "./pages/hr/course/create";
 import { CreateSession } from "./pages/hr/course/createsession";
 import { CourseDetails } from "./pages/hr/course/details";
 import { EditCourse } from "./pages/hr/course/edit";
+import { Custom404 } from "./pages/404";
+import axios from "axios";
 
 function App() {
-  const [userRoles, setUserRoles] = useState("");
-
-  const decodeToken = () => {
-    const token = localStorage.getItem("token");
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const role = payload.roles;
-    setUserRoles(role);
-  };
-
-  useEffect(() => {
-    decodeToken();
-  }, []);
-
   const [empDataRaw, setEmpDataRaw] = useState({});
-  const [registerCourseDataRaw, setregisterCourseDataRaw] = useState([]);
-  const [reimbursementDataRaw, setReimbursementDataRaw] = useState([]);
+  const [enrollmentDataRaw, setEnrollmentDataRaw] = useState([]);
 
-  const fetchEmpData = () => {
-    const data = {
-      empID: "EMP001",
-      empName: "HSY",
-      department: "Sales",
-      cardID: "1000000000000",
-      tel: "06612345678",
-      email: " johndoe@example.com",
-      firstTrainingDate: "2024-10-01",
-      expiryDate: "2025-09-30",
-      nextExpiryDate: "11 เดือน 30 วัน",
-      roles:"emp",
-    };
-    setEmpDataRaw(data);
-  };
-
-  const fetchRegisterCourseData = () => {
-    const data = [
-      {
-        courseID: "ABC100",
-        sessionID: "S047",
-        courseName: "เตรียมความพร้อมสู่การทำงาน",
-        trainingDate: "24-10-01",
-        periods: "09:00-17:00",
-        trainingLocation: "5-505",
-        status: "pending",
-      },
-      {
-        courseID: "ABC101",
-        sessionID: "S099",
-        courseName: "เตรียมความพร้อมสู่การทำงาน 2",
-        trainingDate: "25-10-01",
-        periods: "10:00-17:00",
-        trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-        status: "registered",
-      },
-    ];
-    setregisterCourseDataRaw(data);
-  };
-
-  const fetchReimbursementData = () => {
-    const data = [
-      {
-        requestID: "reim-001",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "Sooyoung",
-        department: "Sales",
-        sendDate: "2024-09-26",
-        amount: "500",
-        cardID: "100000000000",
-        bankAccount: "123123213",
-        approvedDate: "2024-10-27",
-        status: "approve",
-        vertifier: "hr_name",
-      },
-      {
-        requestID: "reim-002",
-        courseID: "TLS122",
-        empID: "EMP001",
-        empName: "Sooyoung",
-        department: "Sales",
-        sendDate: "2024-09-26",
-        amount: "500",
-        cardID: "100000000000",
-        bankAccount: "123123213",
-        status: "processing",
-        vertifier: "",
-      },
-      {
-        requestID: "reim-003",
-        courseID: "TLS122",
-        empID: "EMP001",
-        empName: "Sooyoung",
-        department: "Sales",
-        sendDate: "2024-09-26",
-        amount: "500",
-        cardID: "100000000000",
-        bankAccount: "123123213",
-        status: "deny",
-      },
-      {
-        requestID: "reim-004",
-        courseID: "TLS122",
-        empID: "EMP001",
-        empName: "Sooyoung",
-        department: "Sales",
-        sendDate: "2024-09-26",
-        amount: "500",
-        cardID: "100000000000",
-        bankAccount: "123123213",
-        status: "approve",
-      },
-    ];
-    setReimbursementDataRaw(data);
+  const fetchEmpData = async () => {
+    const token = localStorage.getItem("token");
+    const empId = localStorage.getItem("empId");
+    try {
+      const response = await axios.post(
+        "http://localhost:9999/checkdata/profile",
+        {
+          empId: empId,
+        },
+        {
+          headers: {
+            "content-type": "application/json",
+            authorization: token,
+          },
+        }
+      );
+      setEmpDataRaw(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
   };
 
   useEffect(() => {
-    fetchEmpData();
-    fetchRegisterCourseData();
-    fetchReimbursementData();
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetchEmpData();
+      fetchEnrollmentData();
+    }
   }, []);
+
+  const fetchEnrollmentData = async () => {
+    const token = localStorage.getItem("token");
+    const empId = localStorage.getItem("empId");
+    try {
+      const response = await axios.post(
+        "http://localhost:9999/checkdata/enrollments",
+        {
+          empId: empId,
+        },
+        {
+          headers: {
+            "content-type": "application/json",
+            authorization: token,
+          },
+        }
+      );
+      setEnrollmentDataRaw(response.data.data || []);      
+      console.log(response.data.data);
+      
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
+  };
 
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const PageValue1 = 5;
@@ -164,156 +103,127 @@ function App() {
     <div>
       <BrowserRouter basename="ecms">
         <Routes>
-          <Route path="/" element={<Login />} />
-          <Route
-            path="/emp/dashboard"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "emp"} redirectPath="/">
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<Custom404 />} />
+          <Route element={<ProtectRoutes isAllowed="Emp" />}>
+            <Route
+              path="/emp/dashboard"
+              element={
                 <EmpDashboard
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
-                  registerCourseDataRaw={registerCourseDataRaw}
-                  setregisterCourseDataRaw={setregisterCourseDataRaw}
+                  enrollmentDataRaw={enrollmentDataRaw}
+                  setEnrollmentDataRaw={setEnrollmentDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/emp/course"
-            element={
-              <CourseList empDataRaw={empDataRaw} setEmpDataRaw={empDataRaw} />
-            }
-          />
-          <Route
-            path="/emp/course/manage"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "emp"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/emp/course"
+              element={
+                <CourseList
+                  empDataRaw={empDataRaw}
+                  setEmpDataRaw={empDataRaw}
+                />
+              }
+            />
+            <Route
+              path="/emp/course/manage"
+              element={
                 <ManageCourse
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={empDataRaw}
-                  registerCourseDataRaw={registerCourseDataRaw}
-                  setregisterCourseDataRaw={setregisterCourseDataRaw}
+                  enrollmentDataRaw={enrollmentDataRaw}
+                  setEnrollmentDataRaw={setEnrollmentDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/emp/trainings"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "emp"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/emp/trainings"
+              element={
                 <Training
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/emp/trainings/request/:courseID/:sessionID"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "emp"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/emp/trainings/request/:courseId/:sessionId"
+              element={
                 <TrainingListDetails
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/emp/trainings/request/:courseID/:sessionID"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "emp"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/emp/trainings/request/:courseId/:sessionId"
+              element={
                 <TrainingListDetails
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/emp/trainings/history"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "emp"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/emp/trainings/history"
+              element={
                 <TrainingHistory
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/emp/trainings/details/:courseID/:sessionID"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "emp"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/emp/trainings/details/:courseId/:sessionId"
+              element={
                 <TrainingDetails
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/emp/details"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "emp"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/emp/details"
+              element={
                 <EmpData
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/emp/reimbursement"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "emp"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/emp/reimbursement"
+              element={
                 <Reimbursement
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
-                  reimbursementDataRaw={reimbursementDataRaw}
-                  setReimbursementDataRaw={setReimbursementDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/emp/reimbursement/details/:requestID"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "emp"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/emp/reimbursement/details/:requestId"
+              element={
                 <ReimbursementDetails
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
-                  reimbursementDataRaw={reimbursementDataRaw}
-                  setReimbursementDataRaw={setReimbursementDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/emp/reimbursement/request"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "emp"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/emp/reimbursement/request"
+              element={
                 <RequestReimbursement
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
-                  reimbursementDataRaw={reimbursementDataRaw}
-                  setReimbursementDataRaw={setReimbursementDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/dashboard"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
-                <HrDashboard />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/reimbursement/requests"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
+              }
+            />
+          </Route>
+          <Route element={<ProtectRoutes isAllowed="Hr" />}>
+            <Route path="/hr/dashboard" element={<HrDashboard />} />
+            <Route
+              path="/hr/reimbursement/requests"
+              element={
                 <ReimbursementRequestsList
                   itemsPerPage={itemsPerPage}
                   setItemsPerPage={setItemsPerPage}
@@ -321,13 +231,11 @@ function App() {
                   PageValue2={PageValue2}
                   PageValue3={PageValue3}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/withdraw/requests"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/hr/withdraw/requests"
+              element={
                 <CourseRequestsList
                   itemsPerPage={itemsPerPage}
                   setItemsPerPage={setItemsPerPage}
@@ -335,13 +243,11 @@ function App() {
                   PageValue2={PageValue2}
                   PageValue3={PageValue3}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/course"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/hr/course"
+              element={
                 <Course
                   itemsPerPage={itemsPerPage}
                   setItemsPerPage={setItemsPerPage}
@@ -349,13 +255,11 @@ function App() {
                   PageValue2={PageValue2}
                   PageValue3={PageValue3}
                 />
-              </ProtectRoutes>
-            }
-          />
-           <Route
-            path="/hr/course/create/course"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/hr/course/create/course"
+              element={
                 <CreateCourse
                   itemsPerPage={itemsPerPage}
                   setItemsPerPage={setItemsPerPage}
@@ -363,13 +267,11 @@ function App() {
                   PageValue2={PageValue2}
                   PageValue3={PageValue3}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/course/create/session"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/hr/course/create/session"
+              element={
                 <CreateSession
                   itemsPerPage={itemsPerPage}
                   setItemsPerPage={setItemsPerPage}
@@ -377,13 +279,11 @@ function App() {
                   PageValue2={PageValue2}
                   PageValue3={PageValue3}
                 />
-              </ProtectRoutes>
-            }
-          />
-           <Route
-            path="/hr/course/details/:courseID/:sessionID"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/hr/course/details/:courseId/:sessionId"
+              element={
                 <CourseDetails
                   itemsPerPage={itemsPerPage}
                   setItemsPerPage={setItemsPerPage}
@@ -391,21 +291,15 @@ function App() {
                   PageValue2={PageValue2}
                   PageValue3={PageValue3}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/course/edit/:courseID/:sessionID"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
-                <EditCourse />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/results"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/hr/course/edit/:courseId/:sessionId"
+              element={<EditCourse />}
+            />
+            <Route
+              path="/hr/results"
+              element={
                 <Results
                   itemsPerPage={itemsPerPage}
                   setItemsPerPage={setItemsPerPage}
@@ -413,13 +307,11 @@ function App() {
                   PageValue2={PageValue2}
                   PageValue3={PageValue3}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/emp"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/hr/emp"
+              element={
                 <Emp
                   itemsPerPage={itemsPerPage}
                   setItemsPerPage={setItemsPerPage}
@@ -427,80 +319,43 @@ function App() {
                   PageValue2={PageValue2}
                   PageValue3={PageValue3}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/withdraw/details/:requestID"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
-                <RequestWithdrawCourseDetails />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/reimbursement/details/:requestID"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
-                <RequestReimbursementDetails />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/results/details/:requestID"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
-                <TrainingResultDetails />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/emp/create"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
-                <CreateEmp />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/emp/details/:empID"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
-                <EmpDetails />
-              </ProtectRoutes>
-            }
-          />
+              }
+            />
+            <Route
+              path="/hr/withdraw/details/:requestId"
+              element={<RequestWithdrawCourseDetails />}
+            />
+            <Route
+              path="/hr/reimbursement/details/:requestId"
+              element={<RequestReimbursementDetails />}
+            />
+            <Route
+              path="/hr/results/details/:requestId"
+              element={<TrainingResultDetails />}
+            />
+            <Route path="/hr/emp/create" element={<CreateEmp />} />
+            <Route path="/hr/emp/details/:empId" element={<EmpDetails />} />
 
-          <Route
-            path="/hr/emp/edit/:empID"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
-                <EditEmp />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/profile"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
+            <Route path="/hr/emp/edit/:empId" element={<EditEmp />} />
+            <Route
+              path="/hr/profile"
+              element={
                 <ProfileHr
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
-          <Route
-            path="/hr/edit/profile"
-            element={
-              <ProtectRoutes isAllowed={userRoles === "hr"} redirectPath="/">
+              }
+            />
+            <Route
+              path="/hr/edit/profile"
+              element={
                 <EditHrProfile
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
                 />
-              </ProtectRoutes>
-            }
-          />
+              }
+            />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>

@@ -29,11 +29,11 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
   const fetchCourseData = () => {
     const data = [
       {
-        courseID: "ABC100",
+        courseId: "ABC100",
         courseName: "เตรียมความพร้อมสู่การทำงาน",
         sessions: [
           {
-            sessionID: "S003",
+            sessionId: "S003",
             trainingDate: "26/10/2024",
             periods: "09:00-17:00",
             trainingLocation: "5-507",
@@ -43,11 +43,11 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
         ],
       },
       {
-        courseID: "ABC101",
+        courseId: "ABC101",
         courseName: "เตรียมความพร้อมสู่การทำงาน",
         sessions: [
           {
-            sessionID: "S001",
+            sessionId: "S001",
             trainingDate: "24/10/2024",
             periods: "09:00-17:00",
             trainingLocation: "5-505",
@@ -55,7 +55,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
             courseLeft: "0",
           },
           {
-            sessionID: "S002",
+            sessionId: "S002",
             trainingDate: "25/10/2024",
             periods: "09:00-17:00",
             trainingLocation: "5-506",
@@ -65,11 +65,11 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
         ],
       },
       {
-        courseID: "ABC102",
+        courseId: "ABC102",
         courseName: "เตรียมความพร้อมสู่การทำงาน",
         sessions: [
           {
-            sessionID: "S001",
+            sessionId: "S001",
             trainingDate: "24/10/2024",
             periods: "09:00-17:00",
             trainingLocation: "5-505",
@@ -77,7 +77,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
             courseLeft: "10",
           },
           {
-            sessionID: "S002",
+            sessionId: "S002",
             trainingDate: "24/10/2024",
             periods: "09:00-17:00",
             trainingLocation: "5-505",
@@ -85,7 +85,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
             courseLeft: "0",
           },
           {
-            sessionID: "S003",
+            sessionId: "S003",
             trainingDate: "24/10/2024",
             periods: "09:00-17:00",
             trainingLocation: "5-505",
@@ -95,11 +95,11 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
         ],
       },
       {
-        courseID: "ABC103",
+        courseId: "ABC103",
         courseName: "เตรียมความพร้อมสู่การทำงาน",
         sessions: [
           {
-            sessionID: "S001",
+            sessionId: "S001",
             trainingDate: "24/10/2024",
             periods: "09:00-17:00",
             trainingLocation: "5-505",
@@ -107,7 +107,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
             courseLeft: "0",
           },
           {
-            sessionID: "S002",
+            sessionId: "S002",
             trainingDate: "25/10/2024",
             periods: "09:00-17:00",
             trainingLocation: "5-506",
@@ -115,7 +115,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
             courseLeft: "20",
           },
           {
-            sessionID: "S003",
+            sessionId: "S003",
             trainingDate: "26/10/2024",
             periods: "09:00-17:00",
             trainingLocation: "5-507",
@@ -123,7 +123,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
             courseLeft: "10",
           },
           {
-            sessionID: "S004",
+            sessionId: "S004",
             trainingDate: "24/10/2024",
             periods: "09:00-17:00",
             trainingLocation: "5-505",
@@ -133,20 +133,20 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
         ],
       },
     ];
-    setCourseDataRaw(data);
+    setCourseDataRaw(data || []);
   };
 
   const tableData = courseData.map((data, i) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
-        <td>{data.courseID}</td>
+        <td>{data.courseId}</td>
         <td>{data.courseName}</td>
         <td className="text-end">
           <Button
             variant="primary"
             size="sm"
-            onClick={() => showCourseDetails(data.courseID)}
+            onClick={() => showCourseDetails(data.courseId)}
           >
             เลือก
           </Button>
@@ -155,19 +155,19 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
     );
   });
 
-  const selectedSessionID = useRef();
+  const selectedSessionId = useRef();
 
   const [modalShow, setModalShow] = useState(false);
   const [courseDetailsData, setCourseDetailsData] = useState({});
   const [sessions, setSessions] = useState([]);
-  const [sessionIDData, setSessionsIDData] = useState([]);
-  const [selectedCourseID, setSelectedCourseID] = useState({});
+  const [sessionIdData, setSessionsIdData] = useState([]);
+  const [selectedCourseId, setSelectedCourseId] = useState({});
 
-  const [selectedSID, setSelectedSID] = useState({});
+  const [selectedSId, setSelectedSId] = useState({});
 
   const showCourseDetails = async (data) => {
-    const newData = courseData.find((item) => item.courseID === data);
-    setSelectedCourseID(data);
+    const newData = courseData.find((item) => item.courseId === data);
+    setSelectedCourseId(data);
     if (newData) {
       setCourseDetailsData(newData);
       if (newData.sessions && newData.sessions.length > 0) {
@@ -175,9 +175,9 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
       } else {
         setSessions([]);
       }
-      const sessionID = newData.sessions.map((item) => item.sessionID);
+      const sessionId = newData.sessions.map((item) => item.sessionId);
       // console.log(sessions);
-      setSessionsIDData(sessionID);
+      setSessionsIdData(sessionId);
 
       setModalShow(true);
     } else {
@@ -186,13 +186,13 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
   };
 
   useEffect(() => {
-    if (selectedSessionID.current) {
-      selectedSessionID.current.value = "";
+    if (selectedSessionId.current) {
+      selectedSessionId.current.value = "";
     }
-  }, [selectedCourseID]);
+  }, [selectedCourseId]);
 
-  const sessionTable = sessionIDData.map((data, i) => {
-    const sessionData = sessions.find((item) => item.sessionID === data);
+  const sessionTable = sessionIdData.map((data, i) => {
+    const sessionData = sessions.find((item) => item.sessionId === data);
 
     return (
       <tr key={i + 1}>
@@ -204,7 +204,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
               <Button
                 size="sm"
                 variant="primary"
-                onClick={() => setSelectedSID(data)}
+                onClick={() => setSelectedSId(data)}
               >
                 {data}
               </Button>
@@ -240,12 +240,12 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
   });
 
   const registerData = (id, sid) => {
-    if (selectedSessionID.current.value === "") {
+    if (selectedSessionId.current.value === "") {
       alert("กรุณาเลือก Sessions");
     } else {
       const newData = {
-        courseID: id,
-        empID: empData.empID,
+        courseId: id,
+        empId: empData.empId,
         sessions: sid,
       };
       console.log(newData);
@@ -268,7 +268,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
       >
         <Modal.Header closeButton>
           <Modal.Title id="contained-modal-title-vcenter">
-            รายละเอียดคอร์ส {courseDetailsData.courseID}
+            รายละเอียดคอร์ส {courseDetailsData.courseId}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -282,12 +282,12 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                       type="text"
                       disabled
                       value={
-                        typeof selectedSID === "object" && selectedSID !== null
+                        typeof selectedSId === "object" && selectedSId !== null
                           ? ""
-                          : selectedSID
+                          : selectedSId
                       }
                       required
-                      ref={selectedSessionID}
+                      ref={selectedSessionId}
                     />
                   </Form>
                 </Col>
@@ -299,7 +299,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                     <Form.Control
                       type="text"
                       disabled
-                      value={courseDetailsData.courseID ?? "ไม่มีข้อมูล"}
+                      value={courseDetailsData.courseId ?? "ไม่มีข้อมูล"}
                     />
                   </Form>
                 </Col>
@@ -316,8 +316,8 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                     variant="primary"
                     onClick={() =>
                       registerCourse(
-                        courseDetailsData.courseID,
-                        selectedSessionID.current.value
+                        courseDetailsData.courseId,
+                        selectedSessionId.current.value
                       )
                     }
                   >
@@ -367,7 +367,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                   รหัสพนักงาน:
                   <input
                     disabled
-                    value={empData.empID ?? "ไม่มีข้อมูล"}
+                    value={empData.empId ?? "ไม่มีข้อมูล"}
                     className="mx-1"
                   />
                   ชื่อ:

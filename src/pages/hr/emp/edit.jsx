@@ -3,7 +3,7 @@ import { Sidebar } from "../../../components/sidebar";
 import { Topbar } from "../../../components/topbar";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate, useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const EditEmp = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ export const EditEmp = () => {
   const [tel, setTel] = useState("");
   const [email, setEmail] = useState("");
   const [firstTrainingDate, setFirstTrainingDate] = useState("");
-
+  const roles = useRef()
   // const handleSubmit = (e) => {
   //   e.preventDefault();
 
@@ -62,6 +62,9 @@ export const EditEmp = () => {
     if (firstTrainingDate) {
       dataToSubmit.firstTrainingDate = firstTrainingDate;
     }
+    if (roles) {
+      dataToSubmit.roles = roles.current.value;
+    }
   
     if (Object.keys(dataToSubmit).length > 0) {
       console.log("Data to submit:", dataToSubmit);
@@ -82,6 +85,7 @@ export const EditEmp = () => {
       firstTrainingDate: "2024-10-01",
       expiryDate: "2025-09-30",
       nextExpiryDate: "11 เดือน 30 วัน",
+      roles:"emp"
     };
     setEmpData(data);
   };
@@ -201,6 +205,13 @@ export const EditEmp = () => {
                             disabled
                             value={empData.nextExpiryDate || "ไม่มีข้อมูล"}
                           />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                          <Form.Label>สิทธิ์การใช้งาน</Form.Label>
+                          <Form.Select aria-label="Default select example" ref={roles}>
+                            <option value="emp">Emp</option>
+                            <option value="hr">Hr</option>
+                          </Form.Select>
                         </Form.Group>
                       </Col>
                       <Container>

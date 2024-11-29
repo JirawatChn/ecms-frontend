@@ -8,15 +8,11 @@ import { useEffect, useRef, useState } from "react";
 export const CreateSession = () => {
   const navigate = useNavigate();
 
-  const courseID = useRef();
-  const courseName = useRef();
   const sessionID = useRef();
   const courseLimit = useRef();
   const hours = useRef();
   const trainingLocation = useRef();
   const trainingDate = useRef();
-
-  const [courseData, setCourseData] = useState([]);
 
   useEffect(() => {
     const data = [
@@ -25,8 +21,8 @@ export const CreateSession = () => {
         courseName: "Leadership Fundamentals",
         sessions: [
           {
-            trainingDate: "10-02-2222",
-            trainingLocation: "10-02-2222",
+            trainingDate: "2023-09-20",
+            trainingLocation: "2023-09-20",
             periods: "08:00-17:00",
             hours: 777,
             courseLimit: 877,
@@ -54,24 +50,66 @@ export const CreateSession = () => {
             sessionId: "S003",
             status: "active",
           },
+        ],
+      },
+      {
+        courseId: "C002",
+        courseName: "Leadership Fundamentals",
+        sessions: [
           {
-            trainingDate: "trainingDate",
-            trainingLocation: "trainingLocation",
-            periods: "periods",
+            trainingDate: "2023-09-20",
+            trainingLocation: "2023-09-20",
+            periods: "08:00-17:00",
+            hours: 777,
+            courseLimit: 877,
+            courseLeft: 877,
+            sessionId: "S001",
+            status: "open",
+          },
+          {
+            trainingDate: "2023-09-20",
+            trainingLocation: "Bangkok Training Center",
+            periods: "09:00-17:00",
             hours: 8,
-            courseLimit: 8,
-            courseLeft: 8,
-            sessionId: "S004",
-            status: "status",
-            _id: {
-              $oid: "6746b6f0c703aad3494ab1ff",
-            },
+            courseLimit: 20,
+            courseLeft: 10,
+            sessionId: "S002",
+            status: "complete",
           },
         ],
       },
     ];
-    setCourseData(data);
+    const courseArray = data.map((course) => ({
+      courseId: course.courseId,
+      courseName: course.courseName,
+      sessions: course.sessions.map((session) => session.sessionId),
+    }));
+
+    setSelectCourseId(courseArray);
   }, []);
+
+  const [selectCourseId, setSelectCourseId] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [newSession, setNewSession] = useState("");
+
+  console.log(selectCourseId);
+
+  const handleSelectChange = (event) => {
+    const selectedValue = event.target.value;
+    setSelectedCourse(selectedValue);
+  
+    const selectedCourseData = selectCourseId.find(
+      (course) => course.courseId === selectedValue
+    );
+  
+    if (selectedCourseData) {
+      const nextSession = 
+        "S" + (selectedCourseData.sessions.length + 1).toString().padStart(3, "0");
+      setNewSession(nextSession);
+    } else {
+      setNewSession(""); // หากไม่พบ courseId ที่เลือก
+    }
+  };
 
   const createCourse = () => {
     const newData = {
@@ -118,17 +156,23 @@ export const CreateSession = () => {
                     <Row>
                       <Col md={4}>
                         <Form.Group className="mb-3">
-                          <Form.Label>รหัสคอร์ส</Form.Label>
-                          <Form.Control
-                            type="text"
+                          <Form.Label>คอร์ส</Form.Label>
+                          <Form.Select
+                            aria-label="Default select example"
+                            value={selectedCourse}
                             required
-                            ref={courseID}
-                            disabled
-                          />
-                        </Form.Group>
-                        <Form.Group className="mb-4">
-                          <Form.Label>ชื่อคอร์ส</Form.Label>
-                          <Form.Control type="text" ref={courseName} disabled />
+                            onChange={handleSelectChange}
+                          >
+                            <option value="">กรุณาเลือกคอร์ส</option>
+                            {selectCourseId.map((course) => (
+                              <option
+                                key={course.courseId}
+                                value={course.courseId}
+                              >
+                                {course.courseId} - {course.courseName}
+                              </option>
+                            ))}
+                          </Form.Select>
                         </Form.Group>
                         <h5 className="mb-3 border-bottom pb-2">
                           รายละเอียดรอบ
@@ -140,7 +184,7 @@ export const CreateSession = () => {
                             required
                             ref={sessionID}
                             disabled
-                            value={"S001" || ""}
+                            value={newSession || ""}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">

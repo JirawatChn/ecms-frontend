@@ -1,11 +1,14 @@
-// import { Navigate } from "react-router";
+import { useContext } from "react";
+import { Navigate, Outlet } from "react-router";
+import { AuthContext } from "../context/AuthContext";
 
-const ProtectRoutes = ({ isAllowed, redirectPath = "/", children }) => {
-    // if (!isAllowed) {
-    //     return <Navigate to={redirectPath} replace />;
-    // }
-    return children;
+const ProtectRoutes = ({ isAllowed }) => {
+  const {roles} = useContext(AuthContext);
+
+  if (roles !== isAllowed) {
+    return <Navigate to={"/login"} replace />;
+  }
+  return <Outlet />;
 };
 
-
-export default ProtectRoutes
+export default ProtectRoutes;

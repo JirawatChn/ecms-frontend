@@ -8,68 +8,76 @@ import {
   MdInsertChart,
   MdAccountCircle,
 } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
-export const EmpDashboard = ({
-  empDataRaw,
-  setEmpDataRaw,
-  registerCourseDataRaw,
-  setregisterCourseDataRaw,
-}) => {
+export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
   const navigate = useNavigate();
 
   const [empData, setEmpData] = useState({});
-  const [courseData, setCourseData] = useState([]);
-  const [courseDetailsRaw, setCourseDetailsRaw] = useState([]);
-  const [courseDetails, setCourseDetails] = useState({});
-
-  const fetchCourseDetails = () => {
-    const data = 
-      {
-        courseID: "TLS123",
-        courseName: "เตรียมความพร้อมสู่การทำงาน 3",
-        trainingDate: "20-10-01",
-        completeDate: "20-10-01",
-        periods: "10:00-17:00",
-        trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-        status: "Pass",
-      }
-    ;
-    setCourseDetailsRaw(data);
-  };
+  const [enrollmentData, setEnrollmentData] = useState([]);
+  const [lastResult, setLastResult] = useState({});
+  const location = useLocation(); // Current route
 
   useEffect(() => {
-    fetchCourseDetails();
-  }, []);
+    const hasRefreshed = sessionStorage.getItem("hasRefreshed");
+    if (!hasRefreshed) {
+      sessionStorage.setItem("hasRefreshed", "true");
+      window.location.reload();
+    }
+  }, [location]);
 
   useEffect(() => {
     setEmpData(empDataRaw);
   }, [empDataRaw]);
 
   useEffect(() => {
-    setCourseData(registerCourseDataRaw);
-  }, [registerCourseDataRaw]);
+    setEnrollmentData(enrollmentDataRaw);
+  }, [enrollmentDataRaw]);
 
   useEffect(() => {
-    setCourseDetails(courseDetailsRaw);
-  }, [courseDetailsRaw]);
+    fetchLastResult();
+  }, []);
 
+  const fetchLastResult = async () => {
+    const token = localStorage.getItem("token");
+    const empId = localStorage.getItem("empId");
+    try {
+      const response = await axios.post(
+        "http://localhost:9999/checkdata/dashboard",
+        {
+          empId: empId,
+        },
+        {
+          headers: {
+            "content-type": "application/json",
+            authorization: token,
+          },
+        }
+      );
+      setLastResult(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
+  };
 
-  const tableData = courseData.map((data, i) => {
+  const tableData = enrollmentData.map((data, i) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td>{i + 1}</td>
-        <td>{data.courseID}</td>
-        <td>{data.sessionID}</td>
+        <td>{data.courseId}</td>
+        <td className="text-center">{data.sessionId}</td>
         <td>{data.courseName}</td>
         <td className="text-center">{data.trainingDate}</td>
         <td className="text-center">{data.periods}</td>
-        <td>{data.trainingLocation}</td>
+        <td>{data.trainingLocation.toString().split("T")[0]}</td>
       </tr>
     );
   });
+
+  console.log(enrollmentData);
 
   return (
     <div>
@@ -85,12 +93,13 @@ export const EmpDashboard = ({
             >
               <Card.Body>
                 <Card.Title className="fw-bold">
-                  ID: {empData.empID || "ไม่มีข้อมูล"}
+                  ID: {empData.empId || "ไม่มีข้อมูล"}
                 </Card.Title>
-                <p className="fw-bold h5"> {empData.empName || "ไม่มีข้อมูล"}</p>
-                <p>
-                  แผนก: {empData.department || "ไม่มีข้อมูล"}
+                <p className="fw-bold h5">
+                  {" "}
+                  {empData.empName || "ไม่มีข้อมูล"}
                 </p>
+                <p>แผนก: {empData.department || "ไม่มีข้อมูล"}</p>
                 <p>หมายเลขโทรศัพท์: {empData.tel || "ไม่มีข้อมูล"}</p>
                 <p>อีเมล: {empData.email || "ไม่มีข้อมูล"}</p>
               </Card.Body>
@@ -104,7 +113,8 @@ export const EmpDashboard = ({
               <Card.Body>
                 <Card.Title>การอบรม</Card.Title>
                 <p>
-                  วันที่อบรมครั้งแรก: {empData.firstTrainingDate || "ไม่มีข้อมูล"}
+                  วันที่อบรมครั้งแรก:{" "}
+                  {empData.firstTrainingDate || "ไม่มีข้อมูล"}
                 </p>
                 <p>วันหมดอายุการอบรม: {empData.expiryDate || "ไม่มีข้อมูล"}</p>
                 <p>
@@ -120,12 +130,14 @@ export const EmpDashboard = ({
             >
               <Card.Body>
                 <Card.Title>ผลลัพธ์การอบรมครั้งล่าสุด</Card.Title>
-                <p>รหัสคอร์ส: {courseDetails.courseID || "ไม่มีข้อมูล"}</p>
-                <p>ชื่อคอร์ส: {courseDetails.courseName || "ไม่มีข้อมูล"}</p>
-                <p>วันที่อบรมสำเร็จ: {courseDetails.trainingDate || "ไม่มีข้อมูล"}</p>
+                <p>รหัสคอร์ส: {lastResult.courseId || "ไม่มีข้อมูล"}</p>
+                <p>ชื่อคอร์ส: {lastResult.courseName || "ไม่มีข้อมูล"}</p>
+                <p>
+                  วันที่อบรมสำเร็จ: {lastResult.trainingDate || "ไม่มีข้อมูล"}
+                </p>
                 <div>ผลลัพธ์:</div>
                 <div className="h4">
-                  {courseDetails.status === "Pass"
+                  {lastResult.status === "Pass"
                     ? "ผ่าน"
                     : empData.status === "Fail"
                     ? "ไม่ผ่าน"
@@ -184,7 +196,7 @@ export const EmpDashboard = ({
                     "--icon-color": "#77B648",
                     "--icon-hover": "#6a9e3f",
                   }}
-                  onClick={() => navigate('/emp/reimbursement')}
+                  onClick={() => navigate("/emp/reimbursement")}
                 >
                   <div className="card-menu-circle">
                     <MdOutlineAttachMoney className="icon" />
@@ -216,7 +228,7 @@ export const EmpDashboard = ({
                     "--icon-color": "#4862B6",
                     "--icon-hover": "#3d549b",
                   }}
-                  onClick={() => navigate('/emp/details')}
+                  onClick={() => navigate("/emp/details")}
                 >
                   <div className="card-menu-circle">
                     <MdAccountCircle className="icon" />
@@ -236,7 +248,7 @@ export const EmpDashboard = ({
                       <tr>
                         <th>#</th>
                         <th>รหัสคอร์ส</th>
-                        <th>รอบ</th>
+                        <th className="text-center">รอบ</th>
                         <th>ชื่อคอร์ส</th>
                         <th className="text-center">วันที่อบรม</th>
                         <th className="text-center">เวลา</th>

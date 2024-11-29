@@ -7,38 +7,38 @@ import { useEffect, useState } from "react";
 
 export const EditCourse = () => {
   const navigate = useNavigate();
-  const [empData, setEmpData] = useState({});
+  const [courseData, setCourseData] = useState({});
   const { courseID, sessionID } = useParams();
 
-  const [empName, setEmpName] = useState("");
-  const [department, setDepartment] = useState("");
-  const [cardID, setCardID] = useState("");
-  const [tel, setTel] = useState("");
-  const [email, setEmail] = useState("");
-  const [firstTrainingDate, setFirstTrainingDate] = useState("");
+  const [courseName, setCourseName] = useState("");
+  const [courseLimit, setCourseLimit] = useState("");
+  const [hours, setHours] = useState("");
+  const [periods, setPeriods] = useState("");
+  const [trainingDate, setTrainingDate] = useState("");
+  const [trainingLocation, setTrainingLocation] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     const dataToSubmit = {};
 
-    if (empName) {
-      dataToSubmit.empName = empName;
+    if (courseName) {
+      dataToSubmit.courseName = courseName;
     }
-    if (department) {
-      dataToSubmit.department = department;
+    if (courseLimit) {
+      dataToSubmit.courseLimit = courseLimit;
     }
-    if (cardID) {
-      dataToSubmit.cardID = cardID;
+    if (hours) {
+      dataToSubmit.hours = hours;
     }
-    if (tel) {
-      dataToSubmit.tel = tel;
+    if (periods) {
+      dataToSubmit.periods = periods;
     }
-    if (email) {
-      dataToSubmit.email = email;
+    if (trainingDate) {
+      dataToSubmit.trainingDate = trainingDate;
     }
-    if (firstTrainingDate) {
-      dataToSubmit.firstTrainingDate = firstTrainingDate;
+    if (trainingLocation) {
+      dataToSubmit.trainingLocation = trainingLocation;
     }
 
     if (Object.keys(dataToSubmit).length > 0) {
@@ -48,19 +48,16 @@ export const EditCourse = () => {
     }
   };
 
-  const fetchEmpData = () => {
+  const fetchCourseData = () => {
     const data = {
-      empID: "EMP001",
-      empName: "HSY",
-      department: "Sales",
-      cardID: "1000000000000",
-      tel: "06612345678",
-      email: " johndoe@example.com",
-      firstTrainingDate: "2024-10-01",
-      expiryDate: "2025-09-30",
-      nextExpiryDate: "11 เดือน 30 วัน",
+      courseName: "wwwwww wwww 01",
+      courseLimit: "20",
+      hours: "8",
+      periods: "9.00 - 17.00",
+      trainingLocation: "5-505",
+      trainingDate: "2024-11-22",
     };
-    setEmpData(data);
+    setCourseData(data);
   };
 
   const sendData = () => {
@@ -68,7 +65,7 @@ export const EditCourse = () => {
   };
 
   useEffect(() => {
-    fetchEmpData();
+    fetchCourseData();
   }, []);
 
   return (
@@ -108,7 +105,7 @@ export const EditCourse = () => {
                             type="text"
                             required
                             disabled
-                            value={empData.empID || "ไม่มีข้อมูล"}
+                            value={courseID || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -116,7 +113,7 @@ export const EditCourse = () => {
                           <Form.Control
                             type="text"
                             disabled
-                            defaultValue={empData.department}
+                            value={sessionID || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -124,52 +121,51 @@ export const EditCourse = () => {
                           <Form.Control
                             type="text"
                             disabled
-                            onChange={(e) => setEmpName(e.target.value)}
-                            defaultValue={empData.empName}
+                            onChange={(e) => setCourseName(e.target.value)}
+                            defaultValue={courseData.courseName}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                          <Form.Label>
-                            จำนวนที่นั่ง
-                          </Form.Label>
+                          <Form.Label>จำนวนที่นั่ง</Form.Label>
                           <Form.Control
                             type="text"
-                            onChange={(e) => setCardID(e.target.value)}
-                            defaultValue={empData.cardID}
+                            onChange={(e) => setCourseLimit(e.target.value)}
+                            defaultValue={courseData.courseLimit}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>จำนวนชั่วโมงอบรม</Form.Label>
                           <Form.Control
                             type="text"
-                            onChange={(e) => setEmail(e.target.value)}
-                            defaultValue={empData.email}
+                            onChange={(e) => setHours(e.target.value)}
+                            defaultValue={courseData.hours}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>เวลาอบรม</Form.Label>
                           <Form.Control
                             type="text"
-                            onChange={(e) => setTel(e.target.value)}
-                            defaultValue={empData.tel}
+                            onChange={(e) => setPeriods(e.target.value)}
+                            defaultValue={courseData.periods}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>สถานที่อบรม</Form.Label>
                           <Form.Control
-                            type="date"
+                            type="text"
                             onChange={(e) =>
-                              setFirstTrainingDate(e.target.value)
+                              setTrainingLocation(e.target.value)
                             }
-                            defaultValue={empData.firstTrainingDate}
+                            defaultValue={courseData.trainingLocation}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>วันที่อบรม</Form.Label>
                           <Form.Control
-                            type="text"
-                            onChange={(e) => setDepartment(e.target.value)}
-                            value={empData.expiryDate || "ไม่มีข้อมูล"}
+                            type="date"
+                            onChange={(e) => setTrainingDate(e.target.value)}
+                            defaultValue={courseData.trainingDate || "ไม่มีข้อมูล"}
+                            min={new Date().toISOString().split("T")[0]}
                           />
                         </Form.Group>
                       </Col>

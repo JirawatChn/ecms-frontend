@@ -7,43 +7,66 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import { Badge, Col, Container, Row } from "react-bootstrap";
+import axios from "axios";
 
 export const ManageCourse = ({
-  registerCourseDataRaw,
-  setregisterCourseDataRaw,
+  enrollmentDataRaw,
+  setEnrollmentDataRaw,
   empDataRaw,
   setEmpDataRaw,
 }) => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
-  const [courseData, setCourseData] = useState([]);
+  const [enrollmentData, setEnrollmentData] = useState([]);
 
   useEffect(() => {
     setEmpData(empDataRaw);
   }, [empDataRaw]);
 
   useEffect(() => {
-    setCourseData(registerCourseDataRaw);
-  }, [registerCourseDataRaw]);
+    setEnrollmentData(enrollmentDataRaw);
+  }, [enrollmentDataRaw]);
 
-  const [course, setCourse] = useState({});
+  const [courseId, setCourseId] = useState("");
+  const [sessionId, setSessionId] = useState("");
 
-  const deleteCourseModal = (id) => {
+  const withdrawCourseModal = (id, sid) => {
     setModalShow(true);
-    setCourse({ courseID: id });
+    setCourseId(id);
+    setSessionId(sid);
   };
 
-  const deleteCourse = () => {
-    setModalShow(false);
-    window.location.reload();
+  const withdrawCourse = async () => {
+    const token = localStorage.getItem("token");
+    const empId = localStorage.getItem("empId");
+    try {
+      const response = await axios.post(
+        "http://localhost:9999/checkdata/dashboard",
+        {
+          empId: empId,
+          courseId: courseId,
+          sessionId: sessionId,
+        },
+        {
+          headers: {
+            "content-type": "application/json",
+            authorization: token,
+          },
+        }
+      );
+      setModalShow(false);
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
   };
 
-  const tableData = courseData.map((data, i) => {
+  const tableData = enrollmentData.map((data, i) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
-        <td>{data.courseID}</td>
-        <td>{data.sessionID}</td>
+        <td>{data.courseId}</td>
+        <td className="text-center">{data.sessionId}</td>
         <td>{data.courseName}</td>
         <td className="text-center">{data.trainingDate}</td>
         <td className="text-center">{data.periods}</td>
@@ -60,7 +83,9 @@ export const ManageCourse = ({
         <td className="text-center">
           <Button
             variant="link"
-            onClick={() => deleteCourseModal(data.courseID)}
+            onClick={() =>
+              withdrawCourseModal(data.courseId, data.sessionId)
+            }
           >
             ลบ
           </Button>
@@ -79,7 +104,9 @@ export const ManageCourse = ({
       >
         <Modal.Body>
           <h4>ยืนยันหรือไม่</h4>
-          <p>คุณแน่ใจหรือไม่ที่จะลบรายการ รหัสคอร์ส {course.courseID}</p>
+          <p>
+            คุณแน่ใจหรือไม่ที่จะถอนรายการ รหัสคอร์ส {courseId} รอบ {sessionId}
+          </p>
         </Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">
           <Button
@@ -90,7 +117,7 @@ export const ManageCourse = ({
             ยกเลิก
           </Button>
           <Button
-            onClick={() => deleteCourse()}
+            onClick={() => withdrawCourse()}
             variant="primary"
             className="flex-grow-1"
           >
@@ -125,7 +152,7 @@ export const ManageCourse = ({
                   รหัสพนักงาน:
                   <input
                     disabled
-                    value={empData.empID ?? "ไม่มีข้อมูล"}
+                    value={empData.empId ?? "ไม่มีข้อมูล"}
                     className="mx-1"
                   />
                   ชื่อ:
@@ -148,7 +175,7 @@ export const ManageCourse = ({
                 <tr>
                   <th className="text-center">#</th>
                   <th>รหัสคอร์ส</th>
-                  <th>รอบ</th>
+                  <th className="text-center">รอบ</th>
                   <th>ชื่อคอร์ส</th>
                   <th className="text-center">วันที่อบรม</th>
                   <th className="text-center">เวลา</th>

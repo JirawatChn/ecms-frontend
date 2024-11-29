@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../context/AuthContext";
 export const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { setToken, setRoles, setEmpId } = useContext(AuthContext);
 
   const login = async (username, pwd) => {
     try {
@@ -17,28 +19,28 @@ export const Login = () => {
           password: pwd,
         }),
       });
+
       const newData = await response.json();
+      const { token, roles, empId} = newData.data;
+      setToken(token);
+      setRoles(roles);
+      setEmpId(empId)
 
-      if (response.ok) {
-        const token = newData.data.token;
-        localStorage.setItem("token", token);
+      // console.log("Roles:", roles); // ตรวจสอบค่า roles
+      // console.log("Token:", token);
 
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        const role = payload.roles;
+      localStorage.setItem("token", token);
+      localStorage.setItem("roles", roles);
 
-        console.log(role);
-        if (role === "hr") {
-          navigate('hr/dashboard')
-        } else if(role === "emp"){
-          navigate('emp/dashboard')
-        }
-      } else {
-        console.log("invalid password");
+      if (roles === "Hr") {
+        navigate("/hr/dashboard");
+      } else if (roles === "Emp") {
+        navigate("/emp/dashboard");
       }
     } catch (error) {
       console.error("Error occurred during login:", error.message);
     }
-  };
+  };  
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -24,7 +24,7 @@ export const CreateEmp = () => {
   }, [empAmountRaw]);
   
 
-  const createEmpID = "EMP-" + (empAmount + 1).toString().padStart(3, "0");
+  const createEmpID = "EMP" + (empAmount + 1).toString().padStart(3, "0");
   //   console.log(createEmpID);
 
   const empID = useRef();
