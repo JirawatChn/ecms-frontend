@@ -29,7 +29,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
           </Button>
           <Card bg="primary" text="white" className="mt-2 shadow">
             <Card bg="dark" text="white" className="mt-3 h4">
-              <Card.Body>รหัสพนักงาน {empData.empID}</Card.Body>
+              <Card.Body>รหัสพนักงาน {empData.empId}</Card.Body>
             </Card>
             <Card.Body>
               <Card bg="white">
@@ -48,7 +48,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                               <Form.Label>รหัสพนักงาน</Form.Label>
                               <Form.Control
                                 type="text"
-                                value={empData.empID ?? ""}
+                                value={empData.empId ?? ""}
                                 disabled
                               />
                             </Form.Group>
