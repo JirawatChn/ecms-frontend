@@ -4,11 +4,12 @@ import { Topbar } from "../../../components/topbar";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 export const EditCourse = () => {
   const navigate = useNavigate();
   const [courseData, setCourseData] = useState({});
-  const { courseID, sessionID } = useParams();
+  const { courseId, sessionId } = useParams();
 
   const [courseName, setCourseName] = useState("");
   const [courseLimit, setCourseLimit] = useState("");
@@ -21,6 +22,9 @@ export const EditCourse = () => {
     e.preventDefault();
 
     const dataToSubmit = {};
+
+    dataToSubmit.courseId = courseId
+    dataToSubmit.sessionId = sessionId
 
     if (courseName) {
       dataToSubmit.courseName = courseName;
@@ -42,31 +46,58 @@ export const EditCourse = () => {
     }
 
     if (Object.keys(dataToSubmit).length > 0) {
-      console.log("Data to submit:", dataToSubmit);
+      const editCourse = async () => {
+        const token = localStorage.getItem("token");
+        try {
+          await axios.post(
+            `http://localhost:9999/courses/editcourse`,
+            dataToSubmit,
+            {
+              headers: {
+                "content-type": "application/json",
+                authorization: token,
+              },
+            }
+          );
+          window.location.reload();
+          navigate(-1);
+        } catch (error) {
+          console.error("Error fetching employee data:", error);
+        }
+      };
+      editCourse();
     } else {
       console.log("No new data to submit.");
     }
   };
 
-  const fetchCourseData = () => {
-    const data = {
-      courseName: "wwwwww wwww 01",
-      courseLimit: "20",
-      hours: "8",
-      periods: "9.00 - 17.00",
-      trainingLocation: "5-505",
-      trainingDate: "2024-11-22",
-    };
-    setCourseData(data);
-  };
-
   const sendData = () => {
-    navigate(`/hr/course/details/${courseID}/${sessionID}`);
+    navigate(`/hr/course/details/${courseId}/${sessionId}`);
   };
 
   useEffect(() => {
+    const fetchCourseData = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(
+          "http://localhost:9999/courses/coursedetail",
+          {
+            courseId: courseId,
+            sessionId: sessionId,
+          },
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        );
+        setCourseData(response.data.data[0]);
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
+    };
     fetchCourseData();
-  }, []);
+  }, [courseId, sessionId]);
 
   return (
     <div className="wrapper">
@@ -89,7 +120,7 @@ export const EditCourse = () => {
                 <MdArrowBackIosNew /> ยกเลิกการแก้ไข
               </Button>
               <div className="h3 fw-bold mb-4 d-flex align-items-center">
-                แก้ไขรายละเอียดคอร์ส รหัส {courseID} รอบ {sessionID}
+                แก้ไขรายละเอียดคอร์ส รหัส {courseId} รอบ {sessionId}
               </div>
               <Card className="h-100 shadow-sm">
                 <div className="p-4">
@@ -105,7 +136,7 @@ export const EditCourse = () => {
                             type="text"
                             required
                             disabled
-                            value={courseID || "ไม่มีข้อมูล"}
+                            value={courseId || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -113,7 +144,7 @@ export const EditCourse = () => {
                           <Form.Control
                             type="text"
                             disabled
-                            value={sessionID || "ไม่มีข้อมูล"}
+                            value={sessionId || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -130,7 +161,9 @@ export const EditCourse = () => {
                           <Form.Control
                             type="text"
                             onChange={(e) => setCourseLimit(e.target.value)}
-                            defaultValue={courseData.courseLimit}
+                            defaultValue={
+                              courseData.sessions?.[0]?.courseLimit || ""
+                            }
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -138,7 +171,7 @@ export const EditCourse = () => {
                           <Form.Control
                             type="text"
                             onChange={(e) => setHours(e.target.value)}
-                            defaultValue={courseData.hours}
+                            defaultValue={courseData.sessions?.[0]?.hours || ""}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -146,7 +179,9 @@ export const EditCourse = () => {
                           <Form.Control
                             type="text"
                             onChange={(e) => setPeriods(e.target.value)}
-                            defaultValue={courseData.periods}
+                            defaultValue={
+                              courseData.sessions?.[0]?.periods || ""
+                            }
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -156,7 +191,9 @@ export const EditCourse = () => {
                             onChange={(e) =>
                               setTrainingLocation(e.target.value)
                             }
-                            defaultValue={courseData.trainingLocation}
+                            defaultValue={
+                              courseData.sessions?.[0]?.trainingLocation || ""
+                            }
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -164,7 +201,10 @@ export const EditCourse = () => {
                           <Form.Control
                             type="date"
                             onChange={(e) => setTrainingDate(e.target.value)}
-                            defaultValue={courseData.trainingDate || "ไม่มีข้อมูล"}
+                            defaultValue={
+                              courseData.sessions?.[0]?.trainingDate ||
+                              new Date().toISOString().split("T")[0]
+                            }
                             min={new Date().toISOString().split("T")[0]}
                           />
                         </Form.Group>

@@ -1,22 +1,46 @@
 import Navbar from "react-bootstrap/Navbar";
 import Dropdown from "react-bootstrap/Dropdown";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
 
-export const Topbar = ({ content }) => {
-  const [empName, setEmpName] = useState({});
-  const fetchEmpName = () => {
-    const data = {
-      empName: "HRyoung",
-    };
-    setEmpName(data);
+export const Topbar = ({ content}) => {
+  const navigate = useNavigate();
+  const {logout} = useContext(AuthContext)
+  const [name,setName] = useState('');
+
+  const handleLogout = () => {
+    logout(); 
+    sessionStorage.clear()
+    navigate('/login'); 
   };
 
-  useEffect(() => {
-    fetchEmpName();
-  }, []);
+  const fetchName = async () =>{
+    const token = localStorage.getItem("token");
+    const empId = localStorage.getItem("empId");
+    try {
+      const response = await axios.post(
+        "http://localhost:9999/checkdata/profile",
+        {
+          empId: empId,
+        },
+        {
+          headers: {
+            "content-type": "application/json",
+            authorization: token,
+          },
+        }
+      );
+      setName(response.data.data.empName || []);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
+  }
 
-  const navigate = useNavigate();
+  useEffect(()=>{
+    fetchName()
+  },[])
 
   return (
     <div>
@@ -30,11 +54,11 @@ export const Topbar = ({ content }) => {
           <Navbar.Collapse className="justify-content-end">
             <Dropdown align="end">
               <Dropdown.Toggle variant="primary">
-                <span>{empName.empName || "ไม่มีข้อมูล"}</span>
+                <span>{name || "ไม่มีข้อมูล"}</span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={()=>navigate('/hr/profile')}>My Profile</Dropdown.Item>
-                <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
+                <Dropdown.Item onClick={()=>handleLogout()}>Logout</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </Navbar.Collapse>

@@ -25,15 +25,15 @@ export const ReimbursementDetails = ({
     setReimbursementData(reimbursementDataRaw);
   }, [reimbursementDataRaw]);
 
-  const { requestID } = useParams();
+  const { reqId } = useParams();
 
   const fetchReimbursementData = useCallback(() => {
-    if (!requestID) return;
+    if (!reqId) return;
     const filteredData = reimbursementData.filter(
-      (item) => item.requestID === requestID
+      (item) => item.reqId === reqId
     );
     setFilterData(filteredData);
-  }, [requestID, reimbursementData]);
+  }, [reqId, reimbursementData]);
 
   useEffect(() => {
     fetchReimbursementData();
@@ -56,8 +56,8 @@ export const ReimbursementDetails = ({
               <Card.Body>
                 {filterData.length > 0 ? (
                   filterData.map((item) => (
-                    <div key={item.requestID}>
-                      <p>รหัสคำขอเบิกเงิน: {item.requestID}</p>
+                    <div key={item.reqId}>
+                      <p>รหัสคำขอเบิกเงิน: {item.reqId}</p>
                     </div>
                   ))
                 ) : (
@@ -71,7 +71,7 @@ export const ReimbursementDetails = ({
                   รหัสพนักงาน:
                   <input
                     disabled
-                    value={empData.empID ?? "ไม่มีข้อมูล"}
+                    value={empData.empId ?? "ไม่มีข้อมูล"}
                     className="mx-1"
                   />
                   ชื่อ:
@@ -107,7 +107,7 @@ export const ReimbursementDetails = ({
                                 value={
                                   filterData.length > 0
                                     ? filterData
-                                        .map((item) => item.requestID)
+                                        .map((item) => item.reqId)
                                         .join(",")
                                     : "ไม่มีข้อมูล"
                                 }
@@ -125,7 +125,7 @@ export const ReimbursementDetails = ({
                                 value={
                                   filterData.length > 0
                                     ? filterData
-                                        .map((item) => item.courseID)
+                                        .map((item) => item.courseId)
                                         .join(",")
                                     : "ไม่มีข้อมูล"
                                 }
@@ -140,13 +140,7 @@ export const ReimbursementDetails = ({
                               <Form.Label>รหัสพนักงาน</Form.Label>
                               <Form.Control
                                 type="text"
-                                value={
-                                  filterData.length > 0
-                                    ? filterData
-                                        .map((item) => item.empID)
-                                        .join(",")
-                                    : "ไม่มีข้อมูล"
-                                }
+                                value={empData.empId || "ไม่มีข้อมูล"}
                                 disabled
                               />
                             </Form.Group>
@@ -160,13 +154,7 @@ export const ReimbursementDetails = ({
                               <Form.Label>ชื่อพนักงาน</Form.Label>
                               <Form.Control
                                 type="text"
-                                value={
-                                  filterData.length > 0
-                                    ? filterData
-                                        .map((item) => item.empName)
-                                        .join(",")
-                                    : "ไม่มีข้อมูล"
-                                }
+                                value={empData.empName || "ไม่มีข้อมูล"}
                                 disabled
                               />
                             </Form.Group>
@@ -178,13 +166,8 @@ export const ReimbursementDetails = ({
                               <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
                               <Form.Control
                                 type="text"
-                                value={
-                                  filterData.length > 0
-                                    ? filterData
-                                        .map((item) => item.department)
-                                        .join(",")
-                                    : "ไม่มีข้อมูล"
-                                }
+                                value={empData.department || "ไม่มีข้อมูล"}
+
                                 disabled
                               />
                             </Form.Group>
@@ -197,13 +180,13 @@ export const ReimbursementDetails = ({
                             <Form.Group className="mb-3">
                               <Form.Label>วันที่ส่งคำขอเบิก</Form.Label>
                               <Form.Control
-                                type="text"
+                                type="date"
                                 value={
                                   filterData.length > 0
                                     ? filterData
-                                        .map((item) => item.sendDate)
+                                        .map((item) => item.createdAt.toString().split("T")[0])
                                         .join(",")
-                                    : "ไม่มีข้อมูล"
+                                    : ""
                                 }
                                 disabled
                               />
@@ -231,7 +214,7 @@ export const ReimbursementDetails = ({
                                     value={
                                       filterData.length > 0
                                         ? filterData
-                                            .map((item) => item.cardID)
+                                            .map((item) => item.cardId)
                                             .join(",")
                                         : "ไม่มีข้อมูล"
                                     }
@@ -339,8 +322,8 @@ export const ReimbursementDetails = ({
                               <Form>
                                 {filterData.length > 0 &&
                                 filterData.some(
-                                  (item) => item.vertifier !== "" &&
-                                  item.vertifier
+                                  (item) =>
+                                    item.vertifier !== "" && item.vertifier
                                 ) ? (
                                   <Form.Group className="mb-3">
                                     <Form.Label>ผู้อนุมัติการเบิก</Form.Label>

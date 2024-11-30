@@ -13,36 +13,42 @@ import { MdArrowBackIosNew, MdEditNote } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { Sidebar } from "../../../components/sidebar";
 import { Topbar } from "../../../components/topbar";
+import axios from "axios";
 
 export const CourseDetails = () => {
-  const { courseID, sessionID } = useParams();
+  const { courseId, sessionId } = useParams();
   const navigate = useNavigate();
 
   const [courseDataRaw, setCourseDataRaw] = useState({});
   const [courseData, setCourseData] = useState({});
 
-  const sendData = () =>{
-    navigate(`/hr/course/edit/${courseID}/${sessionID}`);
-  }
-
-  const fetchCourseData = () => {
-    const data = {
-      courseID: "TLS123",
-      courseName: "เตรียมความพร้อมสู่การทำงาน",
-      sessionID: "S001",
-      courseLimit: 10,
-      hours: 8,
-      periods: "9.00-17.00",
-      trainingLocation: "5-505",
-      trainingDate: "2024-04-01",
-      status: "close",
-    };
-    setCourseDataRaw(data);
+  const sendData = () => {
+    navigate(`/hr/course/edit/${courseId}/${sessionId}`);
   };
 
   useEffect(() => {
+    const fetchCourseData = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(
+          "http://localhost:9999/courses/coursedetail",
+          {
+            courseId: courseId,
+            sessionId: sessionId,
+          },
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        );
+        setCourseDataRaw(response.data.data[0]);
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
+    };
     fetchCourseData();
-  }, []);
+  }, [courseId, sessionId]);
 
   useEffect(() => {
     setCourseData(courseDataRaw);
@@ -57,24 +63,92 @@ export const CourseDetails = () => {
     setModalStatus(status);
   };
 
-  const completeCourse = () => {
+  const completeCourse = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/courses/completecourse",
+        {
+          courseId:courseId,
+          sessionId:sessionId
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
-  const openCourse = () => {
+  const activeCourse = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/courses/opencourse",
+        {
+          courseId:courseId,
+          sessionId:sessionId
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
-  const startCourse = () => {
+  const startCourse = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/courses/startcourse",
+        {
+          courseId:courseId,
+          sessionId:sessionId
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
-  const closeCourse = () => {
+  const closeCourse = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/courses/closecourse",
+        {
+          courseId:courseId,
+          sessionId:sessionId
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
   const WarningModal = (props) => {
@@ -89,8 +163,8 @@ export const CourseDetails = () => {
             <Modal.Body>
               <h4>ยืนยันหรือไม่</h4>
               <p>
-                คุณแน่ใจหรือไม่ที่จะเสร็จสิ้นการอบรม รหัสคอร์ส {courseID} รอบ{" "}
-                {sessionID}
+                คุณแน่ใจหรือไม่ที่จะเสร็จสิ้นการอบรม รหัสคอร์ส {courseId} รอบ{" "}
+                {sessionId}
               </p>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
@@ -120,8 +194,8 @@ export const CourseDetails = () => {
             <Modal.Body>
               <h4>ยืนยันหรือไม่</h4>
               <p>
-                คุณแน่ใจหรือไม่ที่จะปิดการอบรม รหัสคอร์ส {courseID} รอบ{" "}
-                {sessionID}
+                คุณแน่ใจหรือไม่ที่จะปิดการอบรม รหัสคอร์ส {courseId} รอบ{" "}
+                {sessionId}
               </p>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
@@ -142,7 +216,7 @@ export const CourseDetails = () => {
             </Modal.Footer>
           </Modal>
         )}
-        {modalStatus === "open" && (
+        {modalStatus === "active" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
@@ -151,8 +225,8 @@ export const CourseDetails = () => {
             <Modal.Body>
               <h4>ยืนยันหรือไม่</h4>
               <p>
-                คุณแน่ใจหรือไม่ที่จะเริ่มการอบรม รหัสคอร์ส {courseID} รอบ{" "}
-                {sessionID}
+                คุณแน่ใจหรือไม่ที่จะเริ่มการอบรม รหัสคอร์ส {courseId} รอบ{" "}
+                {sessionId}
               </p>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
@@ -173,7 +247,7 @@ export const CourseDetails = () => {
             </Modal.Footer>
           </Modal>
         )}
-         {modalStatus === "start" && (
+        {modalStatus === "start" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
@@ -182,8 +256,8 @@ export const CourseDetails = () => {
             <Modal.Body>
               <h4>ยืนยันหรือไม่</h4>
               <p>
-                คุณแน่ใจหรือไม่ที่จะเปิดการอบรม รหัสคอร์ส {courseID} รอบ{" "}
-                {sessionID}
+                คุณแน่ใจหรือไม่ที่จะเปิดการอบรม รหัสคอร์ส {courseId} รอบ{" "}
+                {sessionId}
               </p>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
@@ -195,7 +269,7 @@ export const CourseDetails = () => {
                 ยกเลิก
               </Button>
               <Button
-                onClick={() => openCourse()}
+                onClick={() => activeCourse()}
                 variant="success"
                 className="flex-grow-1"
               >
@@ -230,33 +304,37 @@ export const CourseDetails = () => {
                 <MdArrowBackIosNew /> กลับหน้าคอร์สอบรม
               </Button>
               <div className="h3 fw-bold mb-4 d-flex align-items-center">
-                รายละเอียดคอร์สอบรม รหัส {courseID} รอบ {sessionID}
+                รายละเอียดคอร์สอบรม รหัส {courseId} รอบ {sessionId}
                 <h6 className="mx-3 mt-2">
-                  {courseData.status === "ongoing" ? (
-                    <Badge pill bg="warning">
-                      กำลังอบรม
-                    </Badge>
-                  ) : courseData.status === "complete" ? (
-                    <Badge pill bg="primary">
-                      อบรมเสร็จสิ้น
-                    </Badge>
-                  ) : courseData.status === "close" ? (
-                    <Badge pill bg="secondary">
-                      ปิด
-                    </Badge>
-                  ) : courseData.status === "open" ? (
-                    <Badge pill bg="success">
-                      กำลังเปิด
-                    </Badge>
-                  ) : (
-                    ""
-                  )}
+                  {courseData.sessions &&
+                    courseData.sessions.length > 0 &&
+                    courseData.sessions.map((session) => {
+                      return session.status === "ongoing" ? (
+                        <Badge pill bg="warning" key={session._id}>
+                          กำลังอบรม
+                        </Badge>
+                      ) : session.status === "complete" ? (
+                        <Badge pill bg="primary" key={session._id}>
+                          อบรมเสร็จสิ้น
+                        </Badge>
+                      ) : session.status === "close" ? (
+                        <Badge pill bg="secondary" key={session._id}>
+                          ปิด
+                        </Badge>
+                      ) : session.status === "active" ? (
+                        <Badge pill bg="success" key={session._id}>
+                          กำลังเปิด
+                        </Badge>
+                      ) : (
+                        ""
+                      );
+                    })}
                 </h6>
               </div>
               <Button
                 variant="warning"
                 className="mb-2 shadow-sm text-white"
-                onClick={()=>sendData()}
+                onClick={() => sendData()}
               >
                 <MdEditNote />
                 แก้ไขข้อมูล
@@ -269,30 +347,38 @@ export const CourseDetails = () => {
                         รายละเอียดคอร์ส
                       </h5>
                       <p>
-                        <strong>รหัสคอร์ส:</strong> {courseData.courseID}
+                        <strong>รหัสคอร์ส:</strong> {courseData.courseId}
                       </p>
                       <p>
                         <strong>ชื่อคอร์ส:</strong> {courseData.courseName}
                       </p>
-                      <p>
-                        <strong>รอบ:</strong> {courseData.sessionID}
-                      </p>
-                      <p>
-                        <strong>จำนวนที่นั่ง:</strong> {courseData.courseLimit}
-                      </p>
-                      <p>
-                        <strong>จำนวนชั่วโมงอบรม:</strong> {courseData.hours}
-                      </p>
-                      <p>
-                        <strong>เวลาอบรม:</strong> {courseData.periods}
-                      </p>
-                      <p>
-                        <strong>สถานที่อบรม:</strong>{" "}
-                        {courseData.trainingLocation}
-                      </p>
-                      <p>
-                        <strong>วันที่อบรม:</strong> {courseData.trainingDate}
-                      </p>
+                      {courseData.sessions &&
+                        courseData.sessions.length > 0 &&
+                        courseData.sessions.map((session) => (
+                          <div key={session._id}>
+                            <p>
+                              <strong>รอบ:</strong> {session.sessionId}
+                            </p>
+                            <p>
+                              <strong>จำนวนที่นั่ง:</strong>{" "}
+                              {session.courseLimit}
+                            </p>
+                            <p>
+                              <strong>จำนวนชั่วโมงอบรม:</strong> {session.hours}
+                            </p>
+                            <p>
+                              <strong>เวลาอบรม:</strong> {session.periods}
+                            </p>
+                            <p>
+                              <strong>สถานที่อบรม:</strong>{" "}
+                              {session.trainingLocation}
+                            </p>
+                            <p>
+                              <strong>วันที่อบรม:</strong>{" "}
+                              {session.trainingDate}
+                            </p>
+                          </div>
+                        ))}
                     </div>
                   </Card>
                 </Col>
@@ -303,85 +389,77 @@ export const CourseDetails = () => {
                     <div className="p-4">
                       <div className="d-flex align-items-center ">
                         <h5 className="mb-0">สถานะคอร์ส</h5>
-                        <h6 className="mb-0 ">
-                          {courseData.status === "ongoing" ? (
-                            <Badge pill bg="warning" className="mx-3">
-                              กำลังอบรม
-                            </Badge>
-                          ) : courseData.status === "close" ? (
-                            <Badge pill bg="secondary" className="mx-3">
-                              ปิด
-                            </Badge>
-                          ) : courseData.status === "open" ? (
-                            <Badge pill bg="success" className="mx-3">
-                              กำลังเปิด
-                            </Badge>
-                          ) : courseData.status === "complete" ? (
-                            <Badge pill bg="primary" className="mx-3">
-                              อบรมเสร็จสิ้น
-                            </Badge>
-                          ) : (
-                            ""
-                          )}
+                        <h6 className="mb-0 mx-3">
+                          {courseData.sessions &&
+                            courseData.sessions.length > 0 &&
+                            courseData.sessions.map((session) => {
+                              return session.status === "ongoing" ? (
+                                <Badge pill bg="warning" key={session._id}>
+                                  กำลังอบรม
+                                </Badge>
+                              ) : session.status === "complete" ? (
+                                <Badge pill bg="primary" key={session._id}>
+                                  อบรมเสร็จสิ้น
+                                </Badge>
+                              ) : session.status === "close" ? (
+                                <Badge pill bg="secondary" key={session._id}>
+                                  ปิด
+                                </Badge>
+                              ) : session.status === "active" ? (
+                                <Badge pill bg="success" key={session._id}>
+                                  กำลังเปิด
+                                </Badge>
+                              ) : (
+                                ""
+                              );
+                            })}
                         </h6>
                       </div>
-                      {courseData.status === "ongoing" ? (
-                        <div className="mt-3">
-                          <Button
-                            className="request-button"
-                            variant="success"
-                            onClick={() =>
-                              requestModal("complete")
-                            }
-                          >
-                            อบรมเสร็จสิ้น
-                          </Button>
-                          <Button
-                            variant="danger"
-                            className="mx-2 request-button"
-                            onClick={() =>
-                              requestModal("close")
-                            }
-                          >
-                            ปิดการอบรม
-                          </Button>
-                        </div>
-                      ) : courseData.status === "open" ? (
-                        <div className="mt-3">
-                          <Button
-                            className="request-button"
-                            variant="success"
-                            onClick={() =>
-                              requestModal("open")
-                            }
-                          >
-                            เริ่มการอบรม
-                          </Button>
-                          <Button
-                            variant="danger"
-                            className="mx-2 request-button"
-                            onClick={() =>
-                              requestModal("close")
-                            }
-                          >
-                            ปิดการอบรม
-                          </Button>
-                        </div>
-                      ) : courseData.status === "close" ? (
-                        <div className="mt-3">
-                          <Button
-                            className="request-button"
-                            variant="success"
-                            onClick={() =>
-                              requestModal("start")
-                            }
-                          >
-                            เปิดการอบรม
-                          </Button>
-                        </div>
-                      ) : (
-                        ""
-                      )}
+                      {courseData.sessions &&
+                        courseData.sessions.length > 0 &&
+                        courseData.sessions.map((session) =>
+                          session.status === "ongoing" ? (
+                            <div className="mt-3" key={session._id}>
+                              <Button
+                                className="request-button"
+                                variant="success"
+                                onClick={() => requestModal("complete")}
+                              >
+                                อบรมเสร็จสิ้น
+                              </Button>
+                          
+                            </div>
+                          ) : session.status === "active" ? (
+                            <div className="mt-3" key={session._id}>
+                              <Button
+                                className="request-button"
+                                variant="success"
+                                onClick={() => requestModal("active")}
+                              >
+                                เริ่มการอบรม
+                              </Button>
+                              <Button
+                                variant="danger"
+                                className="mx-2 request-button"
+                                onClick={() => requestModal("close")}
+                              >
+                                ปิดการอบรม
+                              </Button>
+                            </div>
+                          ) : session.status === "close" ? (
+                            <div className="mt-3" key={session._id}>
+                              <Button
+                                className="request-button"
+                                variant="success"
+                                onClick={() => requestModal("start")}
+                              >
+                                เปิดการอบรม
+                              </Button>
+                            </div>
+                          ) : (
+                            ""
+                          )
+                        )}
                     </div>
                   </Card>
                 </Col>

@@ -6,66 +6,36 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-export const Training = ({ empDataRaw, setEmpDataRaw }) => {
+export const Training = ({ empDataRaw, enrollmentDataRaw}) => {
   const navigate = useNavigate();
 
   const sendData = (id,sid) =>{
-    navigate(`request/${id}/${sid}`);
+    navigate(`details/${id}/${sid}`);
   }
 
   const [empData, setEmpData] = useState({});
-  const [courseDetailsRaw, setCourseDetailsRaw] = useState([]);
-  const [courseDetails, setCourseDetails] = useState([]);
+  const [enrollmentData, setEnrollmentData] = useState([]);
 
-  const fetchCourseDetails = () => {
-    const data = [
-      {
-        courseID: "TLS121",
-        sessionID: "S007",
-        courseName: "เตรียมความพร้อมสู่การทำงาน 4",
-        trainingDate: "2010-08-01",
-        completeDate: "2010-08-01",
-        periods: "10:00-17:00",
-        trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-        status: "processing",
-      },
-      {
-        courseID: "TLS122",
-        sessionID: "S007",
-        courseName: "เตรียมความพร้อมสู่การทำงาน 4",
-        trainingDate: "2010-08-01",
-        completeDate: "2010-08-01",
-        periods: "10:00-17:00",
-        trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-        status: "processing",
-      },
-    ];
-    setCourseDetailsRaw(data);
-  };
-
-  useEffect(() => {
-    fetchCourseDetails();
-  }, []);
 
   useEffect(() => {
     setEmpData(empDataRaw);
   }, [empDataRaw]);
 
   useEffect(() => {
-    setCourseDetails(courseDetailsRaw);
-  }, [courseDetailsRaw]);
+    setEnrollmentData(enrollmentDataRaw);
+  }, [enrollmentDataRaw]);
 
-  const tableData = courseDetails.map((data, i) => {
+  const tableData = enrollmentData.map((data, i) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
-        <td>{data.courseID}</td>
-        <td>{data.sessionID}</td>
+        <td>{data.courseId}</td>
+        <td>{data.sessionId}</td>
         <td>{data.courseName}</td>
         <td>{data.trainingLocation}</td>
-        <td className="text-center">{data.trainingDate}</td>
+        <td className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
         <td className="text-center">
-          <Button size="sm" variant="link" onClick={()=>sendData(data.courseID,data.sessionID)}>
+          <Button size="sm" variant="link" onClick={()=>sendData(data.courseId,data.sessionId)}>
             เปิด
           </Button>
         </td>
@@ -106,7 +76,7 @@ export const Training = ({ empDataRaw, setEmpDataRaw }) => {
                   รหัสพนักงาน:
                   <input
                     disabled
-                    value={empData.empID ?? "ไม่มีข้อมูล"}
+                    value={empData.empId ?? "ไม่มีข้อมูล"}
                     className="mx-1"
                   />
                   ชื่อ:

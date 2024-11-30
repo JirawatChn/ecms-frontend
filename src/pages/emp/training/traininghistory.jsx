@@ -6,83 +6,42 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-export const TrainingHistory = ({ empDataRaw, setEmpDataRaw }) => {
+export const TrainingHistory = ({ empDataRaw,courseResultDataRaw}) => {
   const navigate = useNavigate();
-  const sendData = (id,sid) =>{
-    navigate(`/emp/trainings/details/${id}/${sid}`);
+  const sendData = (id) =>{
+    navigate(`/emp/trainings/history/${id}`);
   }
 
-
   const [empData, setEmpData] = useState({});
-  const [courseDetailsRaw, setCourseDetailsRaw] = useState([]);
-  const [courseDetails, setCourseDetails] = useState([]);
-
-  const fetchCourseDetails = () => {
-    const data = [
-      {
-        courseID: "TLS123",
-        sessionID: "S001",
-        courseName: "เตรียมความพร้อมสู่การทำงาน 3",
-        trainingDate: "20-10-01",
-        completeDate: "20-10-01",
-        periods: "10:00-17:00",
-        trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-        status: "pass",
-      },
-      {
-        courseID: "TLS123",
-        sessionID: "S001",
-        courseName: "เตรียมความพร้อมสู่การทำงาน 4",
-        trainingDate: "10-08-01",
-        completeDate: "10-08-01",
-        periods: "10:00-17:00",
-        trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-        status: "fail",
-      },
-      {
-        courseID: "TLS121",
-        sessionID: "S007",
-        courseName: "เตรียมความพร้อมสู่การทำงาน 4",
-        trainingDate: "10-08-01",
-        completeDate: "10-08-01",
-        periods: "10:00-17:00",
-        trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-        status: "processing",
-      },
-    ];
-    setCourseDetailsRaw(data);
-  };
-
-  useEffect(() => {
-    fetchCourseDetails();
-  }, []);
+  const [courseResultData, setCourseResultData] = useState([]);
 
   useEffect(() => {
     setEmpData(empDataRaw);
   }, [empDataRaw]);
 
-  useEffect(() => {
-    setCourseDetails(courseDetailsRaw);
-  }, [courseDetailsRaw]);
+  useEffect(()=>{
+    setCourseResultData(courseResultDataRaw || [])
+  },[courseResultDataRaw])
 
-  const tableData = courseDetails.map((data, i) => {
+  const tableData = courseResultData.map((data, i) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
-        <td>{data.courseID}</td>
-        <td>{data.sessionID}</td>
+        <td>{data.reqId}</td>
+        <td>{data.courseId}</td>
+        <td>{data.sessionId}</td>
         <td>{data.courseName}</td>
-        <td className="text-center">{data.trainingDate}</td>
+        <td className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
         <td className="text-center">
           {data.status === "pass"
             ? <Badge pill bg="success">ผ่าน</Badge>
             : data.status === "fail"
             ? <Badge pill bg="danger">ไม่ผ่าน</Badge>
-            : data.status === "processing"
+            : data.status === "pending"
             ? <Badge pill bg="warning">กำลังตรวจสอบ</Badge>
             : "ไม่มีข้อมูล"}
         </td>
-        <td><Button variant="link" size="sm" onClick={()=>sendData(data.courseID, data.sessionID)}>เปิด</Button></td>
+        <td><Button variant="link" size="sm" onClick={()=>sendData(data.reqId)}>เปิด</Button></td>
       </tr>
     );
   });
@@ -109,7 +68,7 @@ export const TrainingHistory = ({ empDataRaw, setEmpDataRaw }) => {
                   รหัสพนักงาน:
                   <input
                     disabled
-                    value={empData.empID ?? "ไม่มีข้อมูล"}
+                    value={empData.empId ?? "ไม่มีข้อมูล"}
                     className="mx-1"
                   />
                   ชื่อ:
@@ -131,6 +90,7 @@ export const TrainingHistory = ({ empDataRaw, setEmpDataRaw }) => {
               <thead>
                 <tr>
                   <th className="text-center">#</th>
+                  <th>รหัส</th>
                   <th>รหัสคอร์ส</th>
                   <th>รอบ</th>
                   <th>ชื่อคอร์ส</th>
@@ -144,7 +104,7 @@ export const TrainingHistory = ({ empDataRaw, setEmpDataRaw }) => {
                   tableData
                 ) : (
                   <tr>
-                    <td colSpan="10" className="text-center">
+                    <td colSpan="11" className="text-center">
                       ไม่มีคอร์สที่เคยอบรม
                     </td>
                   </tr>

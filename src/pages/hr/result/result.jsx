@@ -16,6 +16,7 @@ import { ButtonPage } from "../../../components/buttonpages";
 import { useEffect, useRef, useState } from "react";
 import { MdCheck, MdClear } from "react-icons/md";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 export const Results = ({
   itemsPerPage,
@@ -42,87 +43,21 @@ export const Results = ({
 
   const [selectedValue, setSelectedValue] = useState(itemsPerPage);
   const [modalShow, setModalShow] = useState(false);
-  const fetchResultsData = () => {
-    const data = [
-      {
-        requestID: "result-001",
-        courseID: "TLS123",
-        sessionID: "S001",
-        empID: "EMP001",
-        empName: "HSY",
-        traningDate: "2024-04-01",
-        completeDate: "2024-5-01",
-        amount: "1000",
-        status: "pending",
-      },
-      {
-        requestID: "result-001",
-        courseID: "TLS123",
-        sessionID: "S002",
-        empID: "EMP001",
-        empName: "HSY",
-        traningDate: "2024-04-01",
-        completeDate: "2024-5-01",
-        amount: "1000",
-        status: "pass",
-      },
-      {
-        requestID: "result-001",
-        courseID: "TLS123",
-        sessionID: "S003",
-        empID: "EMP001",
-        empName: "HSY",
-        traningDate: "2024-04-01",
-        completeDate: "2024-5-01",
-        amount: "1000",
-        status: "fail",
-      },
-      {
-        requestID: "result-001",
-        courseID: "TLS123",
-        sessionID: "S004",
-        empID: "EMP001",
-        empName: "HSY",
-        traningDate: "2024-04-01",
-        completeDate: "2024-5-01",
-        amount: "600",
-        status: "pending",
-      },
-      {
-        requestID: "result-001",
-        courseID: "TLS123",
-        sessionID: "S005",
-        empID: "EMP001",
-        empName: "HSY",
-        traningDate: "2024-04-01",
-        completeDate: "2024-5-01",
-        amount: "1000",
-        status: "pending",
-      },
-      {
-        requestID: "result-001",
-        courseID: "TLS123",
-        sessionID: "S006",
-        empID: "EMP001",
-        empName: "HSY",
-        traningDate: "2024-04-01",
-        completeDate: "2024-5-01",
-        amount: "1000",
-        status: "pass",
-      },
-      {
-        requestID: "result-001",
-        courseID: "TLS123",
-        sessionID: "S007",
-        empID: "EMP001",
-        empName: "HSY",
-        traningDate: "2024-04-01",
-        completeDate: "2024-5-01",
-        amount: "1000",
-        status: "fail",
-      },
-    ];
-    setResultsDataRaw(data);
+  const fetchResultsData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        "http://localhost:9999/courseresult/results",
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setResultsDataRaw(response.data.data);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
   };
 
   const handleChange = (event) => {
@@ -177,13 +112,12 @@ export const Results = ({
       return (
         <tr key={i + 1} className="tr-cell">
           <td className="text-center">{i + 1}</td>
-          <td>{data.requestID}</td>
-          <td>{data.courseID}</td>
-          <td>{data.sessionID}</td>
-          <td>{data.empID}</td>
+          <td>{data.reqId}</td>
+          <td>{data.reqId}</td>
+          <td>{data.sessionId}</td>
+          <td>{data.empId}</td>
           <td>{data.empName}</td>
-          <td className="text-center">{data.traningDate}</td>
-          <td className="text-center">{data.completeDate}</td>
+          <td className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
           <td className="text-center">
             {data.status === "pending" ? (
               <Badge pill bg="warning">
@@ -207,7 +141,7 @@ export const Results = ({
                 variant="success"
                 size="sm"
                 onClick={() =>
-                  requestModal(data.courseID, data.sessionID, "pass")
+                  requestModal(data.reqId, "pass")
                 }
               >
                 <MdCheck />
@@ -222,7 +156,7 @@ export const Results = ({
                 variant="danger"
                 size="sm"
                 onClick={() =>
-                  requestModal(data.courseID, data.sessionID, "fail")
+                  requestModal(data.reqId, "fail")
                 }
               >
                 <MdClear />
@@ -235,7 +169,7 @@ export const Results = ({
             <Button
               variant="link"
               size="sm"
-              onClick={() => sendData(data.requestID)}
+              onClick={() => sendData(data.reqId)}
             >
               เปิด
             </Button>
@@ -249,29 +183,60 @@ export const Results = ({
   // console.log(resultsData);
   
 
-  const [courseID, setCourseID] = useState({});
-  const [sessionID, setSessionID] = useState({});
+  const [reqId, setReqId] = useState({});
   const [modalStatus, setModalStatus] = useState("");
 
-  const requestModal = (id, sid, status) => {
+  const requestModal = (id, status) => {
     setModalShow(true);
-    setCourseID(id);
-    setSessionID(sid);
+    setReqId(id);
     setModalStatus(status);
   };
 
-  const passRequest = () => {
+  const remark = useRef()
+
+  const passRequest = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/courseresult/pass",
+        {
+          reqId: reqId,
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
-  const remark = useRef();
-
-  const failRequest = () => {
+  const failRequest = async () => {
     if (remark.current.value === "") {
       alert("กรุณากรอกหมายเหตุ");
     } else {
-      window.location.reload();
+      const token = localStorage.getItem("token");
+      try {
+        await axios.post(
+          "http://localhost:9999/courseresult/fail",
+          {
+            reqId: reqId,
+            remark: remark.current.value,
+          },
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        );        
+        window.location.reload();
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
     }
     setModalShow(false);
   };
@@ -288,8 +253,7 @@ export const Results = ({
             <Modal.Body>
               <h4>ยืนยันหรือไม่</h4>
               <p>
-                คุณแน่ใจหรือไม่ที่จะให้ผ่านรายการ รหัสคอร์ส {courseID} รอบ{" "}
-                {sessionID}
+                คุณแน่ใจหรือไม่ที่จะให้ผ่านรายการ รหัส {reqId} 
               </p>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
@@ -320,8 +284,7 @@ export const Results = ({
               <div>
                 <h4>ยืนยันหรือไม่</h4>
                 <p>
-                  คุณแน่ใจหรือไม่ที่จะให้ไม่ผ่านรายการ รหัสคอร์ส {courseID} รอบ{" "}
-                  {sessionID}
+                  คุณแน่ใจหรือไม่ที่จะให้ไม่ผ่านรายการ รหัส {reqId} 
                 </p>
                 <Form.Group className="mb-3">
                   <Form.Label>หมายเหตุ</Form.Label>
@@ -390,13 +353,12 @@ export const Results = ({
                   <thead>
                     <tr>
                       <th className="text-center">#</th>
-                      <th>รหัสคำร้อง</th>
+                      <th>รหัส</th>
                       <th>รหัสคอร์ส</th>
                       <th>รอบ</th>
                       <th>รหัสพนักงาน</th>
                       <th>ชื่อผู้อบรม</th>
                       <th className="text-center">วันที่อบรม</th>
-                      <th className="text-center">วันที่อบรมสำเร็จ</th>
                       <th className="text-center">สถานะ</th>
                       <th></th>
                       <th></th>

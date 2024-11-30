@@ -16,6 +16,7 @@ import { ButtonPage } from "../../../../components/buttonpages";
 import { useEffect, useRef, useState } from "react";
 import { MdCheck, MdClear } from "react-icons/md";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 export const ReimbursementRequestsList = ({
   itemsPerPage,
@@ -43,73 +44,22 @@ export const ReimbursementRequestsList = ({
 
   const [selectedValue, setSelectedValue] = useState(itemsPerPage);
   const [modalShow, setModalShow] = useState(false);
-  const fetchReimbursementRequestData = () => {
-    const data = [
-      {
-        requestID: "reim-001",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        amount: "1000",
-        status: "pending",
-      },
-      {
-        requestID: "reim-002",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        amount: "1000",
-        status: "approve",
-      },
-      {
-        requestID: "reim-001",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        amount: "1000",
-        status: "deny",
-      },
-      {
-        requestID: "reim-002",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        amount: "600",
-        status: "pending",
-      },
-      {
-        requestID: "reim-003",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        amount: "1000",
-        status: "pending",
-      },
-      {
-        requestID: "reim-004",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        amount: "1000",
-        status: "approve",
-      },
-      {
-        requestID: "reim-005",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        amount: "1000",
-        status: "deny",
-      },
-    ];
-    setReimbursementRequestDataRaw(data);
+
+  const fetchReimbursementRequestData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        "http://localhost:9999/reimbursement/requests",
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setReimbursementRequestDataRaw(response.data.data);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
   };
 
   const handleChange = (event) => {
@@ -160,26 +110,26 @@ export const ReimbursementRequestsList = ({
     const start = (curPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
 
-    if (start <= i && i < end) {
+    if (start <= i && i < end) {      
       return (
         <tr key={i + 1} className="tr-cell">
           <td className="text-center">{i + 1}</td>
-          <td>{data.requestID}</td>
-          <td>{data.courseID}</td>
-          <td>{data.empID}</td>
+          <td>{data.reqId}</td>
+          <td>{data.courseId}</td>
+          <td>{data.empId}</td>
           <td>{data.empName}</td>
-          <td className="text-center">{data.date}</td>
+          <td className="text-center">{data.createdAt.toString().split('T')[0]}</td>
           <td className="text-center">{data.amount}</td>
           <td className="text-center">
             {data.status === "pending" ? (
               <Badge pill bg="warning">
                 รออนุมัติ
               </Badge>
-            ) : data.status === "approve" ? (
+            ) : data.status === "approved" ? (
               <Badge pill bg="success">
                 อนุมัติ
               </Badge>
-            ) : data.status === "deny" ? (
+            ) : data.status === "denied" ? (
               <Badge pill bg="danger">
                 ไม่อนุมัติ
               </Badge>
@@ -192,7 +142,7 @@ export const ReimbursementRequestsList = ({
               <Button
                 variant="success"
                 size="sm"
-                onClick={() => requestModal(data.requestID, "approve")}
+                onClick={() => requestModal(data.reqId, "approved")}
               >
                 <MdCheck />
               </Button>
@@ -205,7 +155,7 @@ export const ReimbursementRequestsList = ({
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() => requestModal(data.requestID, "deny")}
+                onClick={() => requestModal(data.reqId, "denied")}
               >
                 <MdClear />
               </Button>
@@ -217,7 +167,7 @@ export const ReimbursementRequestsList = ({
             <Button
               variant="link"
               size="sm"
-              onClick={() => sendData(data.requestID)}
+              onClick={() => sendData(data.reqId)}
             >
               เปิด
             </Button>
@@ -226,29 +176,61 @@ export const ReimbursementRequestsList = ({
       );
     }
     return null;
-  });
+  });    
 
-  const [requestID, setRequestID] = useState({});
+  const [reqId, setRequestId] = useState({});
   const [modalStatus, setModalStatus] = useState("");
+  const remark = useRef()
 
   const requestModal = (id, status) => {
     setModalShow(true);
-    setRequestID(id);
+    setRequestId(id);
     setModalStatus(status);
   };
 
-  const approveRequest = () => {
+  const approvedRequest = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/reimbursement/approved",
+        {
+          reqId: reqId,
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
-  const remark = useRef()
-
-  const denyRequest = () => {
-    if(remark.current.value === ""){
-      alert('กรุณากรอกหมายเหตุ')
-    }else{
-      // console.log(remark.current.value);
+  const deniedRequest = async () => {
+    if (remark.current.value === "") {
+      alert("กรุณากรอกหมายเหตุ");
+    } else {
+      const token = localStorage.getItem("token");
+      try {
+        await axios.post(
+          "http://localhost:9999/reimbursement/denied",
+          {
+            reqId: reqId,
+            remark: remark.current.value,
+          },
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        );
+        window.location.reload();
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
     }
     setModalShow(false);
   };
@@ -256,7 +238,7 @@ export const ReimbursementRequestsList = ({
   const WarningModal = (props) => {
     return (
       <>
-        {modalStatus === "approve" && (
+        {modalStatus === "approved" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
@@ -264,7 +246,7 @@ export const ReimbursementRequestsList = ({
           >
             <Modal.Body>
               <h4>ยืนยันหรือไม่</h4>
-              <p>คุณแน่ใจหรือไม่ที่จะอนุมัติรายการ รหัสคำร้อง {requestID}</p>
+              <p>คุณแน่ใจหรือไม่ที่จะอนุมัติรายการ รหัสคำร้อง {reqId}</p>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
               <Button
@@ -275,7 +257,7 @@ export const ReimbursementRequestsList = ({
                 ยกเลิก
               </Button>
               <Button
-                onClick={() => approveRequest()}
+                onClick={() => approvedRequest()}
                 variant="success"
                 className="flex-grow-1"
               >
@@ -284,7 +266,7 @@ export const ReimbursementRequestsList = ({
             </Modal.Footer>
           </Modal>
         )}
-        {modalStatus === "deny" && (
+        {modalStatus === "denied" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
@@ -294,7 +276,7 @@ export const ReimbursementRequestsList = ({
               <div>
                 <h4>ยืนยันหรือไม่</h4>
                 <p>
-                  คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {requestID}
+                  คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {reqId}
                 </p>
                 <Form.Group className="mb-3">
                   <Form.Label>หมายเหตุ</Form.Label>
@@ -315,7 +297,7 @@ export const ReimbursementRequestsList = ({
                 ยกเลิก
               </Button>
               <Button
-                onClick={() => denyRequest()}
+                onClick={() => deniedRequest()}
                 variant="danger"
                 className="flex-grow-1"
               >

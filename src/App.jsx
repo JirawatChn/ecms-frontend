@@ -39,6 +39,52 @@ import axios from "axios";
 function App() {
   const [empDataRaw, setEmpDataRaw] = useState({});
   const [enrollmentDataRaw, setEnrollmentDataRaw] = useState([]);
+  const [reimbursementDataRaw, setReimbursementDataRaw] = useState([]);
+  const [courseResultDataRaw, setCourseResultDataRaw] = useState([]);
+
+  const fetchReimbursementData = async () => {
+    const token = localStorage.getItem("token");
+    const empId = localStorage.getItem("empId");
+    try {
+      const response = await axios.post(
+        "http://localhost:9999/reimbursements/details",
+        {
+          empId: empId,
+        },
+        {
+          headers: {
+            "content-type": "application/json",
+            authorization: token,
+          },
+        }
+      );
+      setReimbursementDataRaw(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
+  };
+
+  const fetchCourseResultData = async () => {
+    const token = localStorage.getItem("token");
+    const empId = localStorage.getItem("empId");
+    try {
+      const response = await axios.post(
+        "http://localhost:9999/courses/results",
+        {
+          empId: empId,
+        },
+        {
+          headers: {
+            "content-type": "application/json",
+            authorization: token,
+          },
+        }
+      );
+      setCourseResultDataRaw(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
+  };
 
   const fetchEmpData = async () => {
     const token = localStorage.getItem("token");
@@ -64,9 +110,14 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    const roles = localStorage.getItem("roles");
     if (token) {
+      if (roles === "Emp") {
+        fetchEnrollmentData();
+        fetchReimbursementData();
+        fetchCourseResultData();
+      }
       fetchEmpData();
-      fetchEnrollmentData();
     }
   }, []);
 
@@ -86,9 +137,7 @@ function App() {
           },
         }
       );
-      setEnrollmentDataRaw(response.data.data || []);      
-      console.log(response.data.data);
-      
+      setEnrollmentDataRaw(response.data.data || []);
     } catch (error) {
       console.error("Error fetching employee data:", error);
     }
@@ -142,25 +191,18 @@ function App() {
               element={
                 <Training
                   empDataRaw={empDataRaw}
+                  enrollmentDataRaw={enrollmentDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
                 />
               }
             />
             <Route
-              path="/emp/trainings/request/:courseId/:sessionId"
+              path="/emp/trainings/details/:courseId/:sessionId"
               element={
                 <TrainingListDetails
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
-                />
-              }
-            />
-            <Route
-              path="/emp/trainings/request/:courseId/:sessionId"
-              element={
-                <TrainingListDetails
-                  empDataRaw={empDataRaw}
-                  setEmpDataRaw={setEmpDataRaw}
+                  enrollmentDataRaw={enrollmentDataRaw}
                 />
               }
             />
@@ -170,15 +212,17 @@ function App() {
                 <TrainingHistory
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
+                  courseResultDataRaw={courseResultDataRaw}
                 />
               }
             />
             <Route
-              path="/emp/trainings/details/:courseId/:sessionId"
+              path="/emp/trainings/history/:reqId"
               element={
                 <TrainingDetails
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
+                  courseResultDataRaw={courseResultDataRaw}
                 />
               }
             />
@@ -197,15 +241,17 @@ function App() {
                 <Reimbursement
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
+                  reimbursementDataRaw={reimbursementDataRaw}
                 />
               }
             />
             <Route
-              path="/emp/reimbursement/details/:requestId"
+              path="/emp/reimbursement/details/:reqId"
               element={
                 <ReimbursementDetails
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
+                  reimbursementDataRaw={reimbursementDataRaw}
                 />
               }
             />
@@ -215,12 +261,14 @@ function App() {
                 <RequestReimbursement
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
+                  reimbursementDataRaw={reimbursementDataRaw}
                 />
               }
             />
           </Route>
           <Route element={<ProtectRoutes isAllowed="Hr" />}>
             <Route path="/hr/dashboard" element={<HrDashboard />} />
+
             <Route
               path="/hr/reimbursement/requests"
               element={
@@ -322,21 +370,23 @@ function App() {
               }
             />
             <Route
-              path="/hr/withdraw/details/:requestId"
+              path="/hr/withdraw/details/:reqId"
               element={<RequestWithdrawCourseDetails />}
             />
             <Route
-              path="/hr/reimbursement/details/:requestId"
+              path="/hr/reimbursement/details/:reqId"
               element={<RequestReimbursementDetails />}
             />
             <Route
-              path="/hr/results/details/:requestId"
+              path="/hr/results/details/:reqId"
               element={<TrainingResultDetails />}
             />
             <Route path="/hr/emp/create" element={<CreateEmp />} />
+
             <Route path="/hr/emp/details/:empId" element={<EmpDetails />} />
 
             <Route path="/hr/emp/edit/:empId" element={<EditEmp />} />
+
             <Route
               path="/hr/profile"
               element={

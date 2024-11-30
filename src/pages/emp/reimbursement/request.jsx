@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router";
 import { useEffect, useRef, useState } from "react";
 import { Col, Container, Form, ListGroup, Row } from "react-bootstrap";
+import axios from "axios";
 
 export const RequestReimbursement = ({
   empDataRaw,
@@ -28,49 +29,61 @@ export const RequestReimbursement = ({
   }, [empDataRaw]);
 
   useEffect(() => {
-    setReimbursementData(reimbursementDataRaw);
+    setReimbursementData(reimbursementDataRaw || []);
   }, [reimbursementDataRaw]);
 
-  const filteredData = reimbursementData.map((item) => item.courseID);
+  const filteredData = reimbursementData.map((item) => item.courseId);
 
-  const findRequestLenght = reimbursementData.map((item) => item.requestID);
-  const requestIDLenght = findRequestLenght.length;
+  const findRequestLenght = reimbursementData.map((item) => item.reqId);
+  const reqIdLenght = findRequestLenght.length;
 
-  const createRequestID =
-    "reim" + (requestIDLenght + 1).toString().padStart(3, "0");
-  // console.log(createRequestID);
+  const createRequestId =
+    "R" + (reqIdLenght + 1).toString().padStart(3, "0");
+  // console.log(createRequestId);
 
-
-
-  const requestID = useRef();
-  const courseID = useRef();
-  const empID = useRef();
+  const reqId = useRef();
+  const courseId = useRef();
+  const empId = useRef();
   const empName = useRef();
   const department = useRef();
-  const cardID = useRef();
+  const cardId = useRef();
   const bankAccount = useRef();
   const amount = useRef();
 
-  const [sendData,setSendData] = useState({})
-
-  const handleSubmit = () => {
-    createRequest()
+  const handleSubmit = (event) => {
+    event.preventDefault(); // ป้องกันไม่ให้ form รีเฟรชหน้า
+    createRequest(); // เรียกฟังก์ชันสร้างคำร้อง
   };
   
   const createRequest = async () =>{
-    const newData = {
-      requestID: requestID.current.value,
-      courseID: courseID.current.value,
-      empID: empID.current.value,
-      empName: empName.current.value,
-      department: department.current.value,
-      cardID: cardID.current.value,
-      bankAccount: bankAccount.current.value,
-      amount: amount.current.value
-    };
-    setSendData(newData);
-    console.log(sendData);
-    // sessionStorage.setItem('data',JSON.stringify(newData))
+    const token = localStorage.getItem("token");
+    const empId = localStorage.getItem("empId");
+    try {
+      await axios.post(
+        "http://localhost:9999/reimbursements/requests",
+        { 
+          reqId: reqId.current.value,
+          courseId: courseId.current.value,
+          amount: amount.current.value,
+          empId: empId,
+          bankAccount: bankAccount.current.value,
+          empName: empName.current.value,
+          department: department.current.value,
+          cardId: cardId.current.value,
+        },
+        {
+          headers: {
+            "content-type": "application/json",
+            authorization: token,
+          },
+        }
+        
+      ); 
+      navigate('/emp/dashboard')
+      window.location.reload()      
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
   }
 
   const today = new Date();
@@ -97,7 +110,7 @@ export const RequestReimbursement = ({
                   รหัสพนักงาน:
                   <input
                     disabled
-                    value={empData.empID ?? "ไม่มีข้อมูล"}
+                    value={empData.empId ?? "ไม่มีข้อมูล"}
                     className="mx-1"
                   />
                   ชื่อ:
@@ -129,15 +142,15 @@ export const RequestReimbursement = ({
                             <Form.Label>รหัสคำขอเบิกเงิน</Form.Label>
                             <Form.Control
                               type="text"
-                              ref={requestID}
-                              value={createRequestID}
+                              ref={reqId}
+                              value={createRequestId}
                               disabled
                               required
                             />
                           </Col>
                           <Col md={3}>
                             <Form.Label>รหัสคอร์ส</Form.Label>
-                            <Form.Select ref={courseID}>
+                            <Form.Select ref={courseId}>
                               {filteredData.map((data, i) => (
                                 <option key={i} value={data ?? "ไม่มีข้อมูล"}>
                                   {data}
@@ -147,7 +160,7 @@ export const RequestReimbursement = ({
                           </Col>
                           <Col md={3}>
                             <Form.Label>รหัสพนักงาน</Form.Label>
-                            <Form.Control type="text" ref={empID} disabled value={empData.empID ?? "ไม่มีข้อมูล"} required />
+                            <Form.Control type="text" ref={empId} disabled value={empData.empId ?? "ไม่มีข้อมูล"} required />
                           </Col>
                         </Row>
                         <Row className="mt-3">
@@ -190,7 +203,7 @@ export const RequestReimbursement = ({
                                 <Form.Label>เลขประจำตัวประชาชน</Form.Label>
                                 <Form.Control
                                   type="text"
-                                  ref={cardID}
+                                  ref={cardId}
                                   required
                                 />
                               </Col>
@@ -226,7 +239,7 @@ export const RequestReimbursement = ({
                               className="mt-3 d-flex justify-content-end"
                               md={6}
                             >
-                              <Button type="submit" onClick={() => {}}>
+                              <Button type="submit">
                                 ส่งคำร้อง
                               </Button>
                             </Row>

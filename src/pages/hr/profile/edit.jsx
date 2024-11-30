@@ -9,19 +9,19 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
 
-    const [empID] = useState('')
+  const [empId] = useState("");
   const [empName, setEmpName] = useState("");
   const [department, setDepartment] = useState("");
-  const [cardID, setCardID] = useState("");
+  const [cardId, setCardId] = useState("");
   const [tel, setTel] = useState("");
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     const dataToSubmit = {};
-    if(empID){
-        dataToSubmit.empID = empData.empID
+    if (empId) {
+      dataToSubmit.empId = empData.empId;
     }
     if (empName) {
       dataToSubmit.empName = empName;
@@ -29,8 +29,8 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
     if (department) {
       dataToSubmit.department = department;
     }
-    if (cardID) {
-      dataToSubmit.cardID = cardID;
+    if (cardId) {
+      dataToSubmit.cardId = cardId;
     }
     if (tel) {
       dataToSubmit.tel = tel;
@@ -38,7 +38,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
     if (email) {
       dataToSubmit.email = email;
     }
-  
+
     if (Object.keys(dataToSubmit).length > 0) {
       console.log("Data to submit:", dataToSubmit);
     } else {
@@ -60,7 +60,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
             <Container fluid>
               <Button
                 variant="link"
-                onClick={()=>navigate('/hr/profile')}
+                onClick={() => navigate("/hr/profile")}
                 className="back-button"
               >
                 <MdArrowBackIosNew /> ยกเลิกการแก้ไข
@@ -82,7 +82,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                             type="text"
                             disabled
                             required
-                            value={empData.empID || "ไม่มีข้อมูล"}
+                            value={empData.empId || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -108,8 +108,8 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                           <Form.Control
                             type="text"
                             required
-                            onChange={(e) => setCardID(e.target.value)}
-                            defaultValue={empData.cardID}
+                            onChange={(e) => setCardId(e.target.value)}
+                            defaultValue={empData.cardId}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">

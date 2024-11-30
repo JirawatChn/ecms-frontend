@@ -4,55 +4,82 @@ import { Topbar } from "../../../components/topbar";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate } from "react-router";
 import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 export const CreateEmp = () => {
   const navigate = useNavigate();
   const [empAmountRaw, setEmpAmountRaw] = useState();
   const [empAmount, setEmpAmount] = useState();
 
-  const fetchEmpAmount = () => {
-    const data = 4;
-    setEmpAmountRaw(data);
+  const fetchAmountData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        "http://localhost:9999/dashboard/dashboard",
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setEmpAmountRaw(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
   };
 
   useEffect(() => {
-    fetchEmpAmount();
+    fetchAmountData();
   }, []);
 
   useEffect(() => {
-    setEmpAmount(empAmountRaw);
+    if (empAmountRaw && typeof empAmountRaw.allEmps === "number") {
+      setEmpAmount(empAmountRaw.allEmps);
+    }
   }, [empAmountRaw]);
-  
 
-  const createEmpID = "EMP" + (empAmount + 1).toString().padStart(3, "0");
-  //   console.log(createEmpID);
+  const createEmpId = "EMP" + (empAmount + 1).toString().padStart(3, "0");
+  //   console.log(createEmpId);
 
-  const empID = useRef();
+  const empId = useRef();
   const department = useRef();
   const empName = useRef();
-  const cardID = useRef();
+  const cardId = useRef();
   const email = useRef();
   const tel = useRef();
   const roles = useRef();
 
-  const [sendData, setSendData] = useState({});
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-  const createEmp = () => {
-    const newData = {
-      empID: empID.current.value,
-      department: department.current.value,
-      empName: empName.current.value,
-      cardID: cardID.current.value,
-      email: email.current.value,
-      tel: tel.current.value,
-      roles:roles.current.value,
-      status: "active",
+    const createEmp = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        await axios.post(
+          `http://localhost:9999/manageemp/createemp`,
+          {
+            empId: empId.current.value,
+            department: department.current.value,
+            empName: empName.current.value,
+            cardId: cardId.current.value,
+            email: email.current.value,
+            tel: tel.current.value,
+            roles: roles.current.value,
+            status: "active",
+          },
+          {
+            headers: {
+              "content-type": "application/json",
+              authorization: token,
+            },
+          }
+        );
+        window.location.reload()
+        navigate(-1)
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
     };
-    setSendData(newData);
-    console.log(sendData);
-  };
-
-  const handleSubmit = () => {
     createEmp();
   };
 
@@ -86,8 +113,8 @@ export const CreateEmp = () => {
                             type="text"
                             disabled
                             required
-                            ref={empID}
-                            value={createEmpID}
+                            ref={empId}
+                            value={createEmpId}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -102,7 +129,7 @@ export const CreateEmp = () => {
                           <Form.Label>
                             เลขที่ประจําตัวประชาชนของพนักงาน
                           </Form.Label>
-                          <Form.Control type="text" required ref={cardID} />
+                          <Form.Control type="text" required ref={cardId} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>อีเมลล์พนักงาน</Form.Label>
@@ -113,14 +140,13 @@ export const CreateEmp = () => {
                           <Form.Control type="text" ref={tel} />
                         </Form.Group>
                         <Form.Group className="mb-3">
-                          <Form.Label>เบอร์โทรศัพท์พนักงาน</Form.Label>
-                          <Form.Control type="text" ref={tel} />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
                           <Form.Label>สิทธิ์การใช้งาน</Form.Label>
-                          <Form.Select aria-label="Default select example" ref={roles}>
-                            <option value="emp">Emp</option>
-                            <option value="hr">Hr</option>
+                          <Form.Select
+                            aria-label="Default select example"
+                            ref={roles}
+                          >
+                            <option value="Emp">Emp</option>
+                            <option value="Hr">Hr</option>
                           </Form.Select>
                         </Form.Group>
                       </Col>

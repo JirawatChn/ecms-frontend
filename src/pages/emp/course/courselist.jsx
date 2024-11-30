@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import { Badge, Col, Container, Form, Row, Table } from "react-bootstrap";
 import { useEffect, useRef, useState } from "react";
 import Modal from "react-bootstrap/Modal";
+import axios from "axios";
 
 export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
   const navigate = useNavigate();
@@ -13,127 +14,31 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
   const [courseDataRaw, setCourseDataRaw] = useState([]);
   const [courseData, setCourseData] = useState([]);
 
-
   useEffect(() => {
     fetchCourseData();
   }, []);
 
-  useEffect(()=>{
-    setCourseData(courseDataRaw)
-  },[courseDataRaw])
+  useEffect(() => {
+    setCourseData(courseDataRaw);
+  }, [courseDataRaw]);
 
   useEffect(() => {
     setEmpData(empDataRaw);
   }, [empDataRaw]);
 
-  const fetchCourseData = () => {
-    const data = [
-      {
-        courseId: "ABC100",
-        courseName: "เตรียมความพร้อมสู่การทำงาน",
-        sessions: [
-          {
-            sessionId: "S003",
-            trainingDate: "26/10/2024",
-            periods: "09:00-17:00",
-            trainingLocation: "5-507",
-            courseLimit: "50",
-            courseLeft: "10",
-          },
-        ],
-      },
-      {
-        courseId: "ABC101",
-        courseName: "เตรียมความพร้อมสู่การทำงาน",
-        sessions: [
-          {
-            sessionId: "S001",
-            trainingDate: "24/10/2024",
-            periods: "09:00-17:00",
-            trainingLocation: "5-505",
-            courseLimit: "50",
-            courseLeft: "0",
-          },
-          {
-            sessionId: "S002",
-            trainingDate: "25/10/2024",
-            periods: "09:00-17:00",
-            trainingLocation: "5-506",
-            courseLimit: "50",
-            courseLeft: "20",
-          },
-        ],
-      },
-      {
-        courseId: "ABC102",
-        courseName: "เตรียมความพร้อมสู่การทำงาน",
-        sessions: [
-          {
-            sessionId: "S001",
-            trainingDate: "24/10/2024",
-            periods: "09:00-17:00",
-            trainingLocation: "5-505",
-            courseLimit: "50",
-            courseLeft: "10",
-          },
-          {
-            sessionId: "S002",
-            trainingDate: "24/10/2024",
-            periods: "09:00-17:00",
-            trainingLocation: "5-505",
-            courseLimit: "50",
-            courseLeft: "0",
-          },
-          {
-            sessionId: "S003",
-            trainingDate: "24/10/2024",
-            periods: "09:00-17:00",
-            trainingLocation: "5-505",
-            courseLimit: "50",
-            courseLeft: "0",
-          },
-        ],
-      },
-      {
-        courseId: "ABC103",
-        courseName: "เตรียมความพร้อมสู่การทำงาน",
-        sessions: [
-          {
-            sessionId: "S001",
-            trainingDate: "24/10/2024",
-            periods: "09:00-17:00",
-            trainingLocation: "5-505",
-            courseLimit: "50",
-            courseLeft: "0",
-          },
-          {
-            sessionId: "S002",
-            trainingDate: "25/10/2024",
-            periods: "09:00-17:00",
-            trainingLocation: "5-506",
-            courseLimit: "50",
-            courseLeft: "20",
-          },
-          {
-            sessionId: "S003",
-            trainingDate: "26/10/2024",
-            periods: "09:00-17:00",
-            trainingLocation: "5-507",
-            courseLimit: "50",
-            courseLeft: "10",
-          },
-          {
-            sessionId: "S004",
-            trainingDate: "24/10/2024",
-            periods: "09:00-17:00",
-            trainingLocation: "5-505",
-            courseLimit: "50",
-            courseLeft: "0",
-          },
-        ],
-      },
-    ];
-    setCourseDataRaw(data || []);
+  const fetchCourseData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get("http://localhost:9999/courses/browse", {
+        headers: {
+          "Content-Type": "application/json",
+          authorization: token,
+        },
+      });
+      setCourseDataRaw(response.data.data);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
   };
 
   const tableData = courseData.map((data, i) => {
@@ -198,7 +103,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
       <tr key={i + 1}>
         <td className="text-center">
           {sessionData ? (
-            sessionData.courseLeft === "0" ? (
+            sessionData.courseLeft === 0 ? (
               ""
             ) : (
               <Button
@@ -214,7 +119,10 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
           )}
         </td>
 
-        <td>{sessionData ? sessionData.trainingDate : "ไม่มีข้อมูล"}</td>
+        <td>
+          {sessionData
+            ? sessionData.trainingDate.toString().split('T')[0] : "ไม่มีข้อมูล"}
+        </td>
         <td className="text-center">
           {sessionData ? sessionData.periods : "ไม่มีข้อมูล"}
         </td>
@@ -224,7 +132,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
         </td>
         <td className="text-center">
           {sessionData ? (
-            sessionData.courseLeft === "0" ? (
+            sessionData.courseLeft === 0 ? (
               <Badge pill bg="danger">
                 เต็ม
               </Badge>
@@ -239,17 +147,38 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
     );
   });
 
-  const registerData = (id, sid) => {
+  const registerData = async (id, sid) => {
     if (selectedSessionId.current.value === "") {
       alert("กรุณาเลือก Sessions");
     } else {
-      const newData = {
-        courseId: id,
-        empId: empData.empId,
-        sessions: sid,
-      };
-      console.log(newData);
-    }
+      const token = localStorage.getItem("token");
+      const empId = localStorage.getItem("empId");
+      try {
+        const response = await axios.post(
+          "http://localhost:9999/courses/register",
+          {
+            empId: empId,
+            courseId: id,
+            sessionId: sid,
+          },
+          {
+            headers: {
+              "content-type": "application/json",
+              authorization: token,
+            },
+          }
+        );
+        console.log(response.data);
+        navigate('/emp/dashboard')
+        window.location.reload();
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          alert("เวลาอบรมซ้ำกัน");
+        } else {
+          console.error("Error fetching employee data:", error);
+        }
+      }
+    };
   };
 
   const registerCourse = (id, sid) => {
@@ -277,7 +206,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
               <Row>
                 <Col md={3}>
                   <Form>
-                    <Form.Label >รอบอบรม</Form.Label>
+                    <Form.Label>รอบอบรม</Form.Label>
                     <Form.Control
                       type="text"
                       disabled
@@ -293,9 +222,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                 </Col>
                 <Col md={3}>
                   <Form>
-                    <Form.Label >
-                      รหัสหลักสูตรการอบรม
-                    </Form.Label>
+                    <Form.Label>รหัสหลักสูตรการอบรม</Form.Label>
                     <Form.Control
                       type="text"
                       disabled
@@ -304,7 +231,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                   </Form>
                 </Col>
                 <Col md={4}>
-                  <Form.Label >ชื่อหลักสูตร</Form.Label>
+                  <Form.Label>ชื่อหลักสูตร</Form.Label>
                   <Form.Control
                     type="text"
                     disabled

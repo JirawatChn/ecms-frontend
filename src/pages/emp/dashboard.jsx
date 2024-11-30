@@ -61,7 +61,7 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
     } catch (error) {
       console.error("Error fetching employee data:", error);
     }
-  };
+  };  
 
   const tableData = enrollmentData.map((data, i) => {
     return (
@@ -70,14 +70,12 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
         <td>{data.courseId}</td>
         <td className="text-center">{data.sessionId}</td>
         <td>{data.courseName}</td>
-        <td className="text-center">{data.trainingDate}</td>
+        <td className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
         <td className="text-center">{data.periods}</td>
-        <td>{data.trainingLocation.toString().split("T")[0]}</td>
+        <td>{data.trainingLocation}</td>
       </tr>
     );
   });
-
-  console.log(enrollmentData);
 
   return (
     <div>

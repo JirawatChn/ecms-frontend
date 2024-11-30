@@ -4,45 +4,28 @@ import { Topbar } from "../../../components/topbar";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate, useParams } from "react-router";
 import { useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 export const EditEmp = () => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
-  const { empID } = useParams();
+  const { empId } = useParams();
 
   const [empName, setEmpName] = useState("");
   const [department, setDepartment] = useState("");
-  const [cardID, setCardID] = useState("");
+  const [cardId, setCardId] = useState("");
   const [tel, setTel] = useState("");
   const [email, setEmail] = useState("");
   const [firstTrainingDate, setFirstTrainingDate] = useState("");
-  const roles = useRef()
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   const updatedEmpName = empName || empData.empName;
-  //   const updatedDepartment = department ||  empData.department;
-  //   const updatedCardID = cardID ||  empData.cardID;
-  //   const updatedTel = tel ||  empData.tel;
-  //   const updatedEmail = email ||  empData.email;
-  //   const updatedFirstTrainingDate = firstTrainingDate ||  empData.firstTrainingDate;
-
-  //   console.log("empID:", empID);
-  //   console.log("empName:", updatedEmpName);
-  //   console.log("department:", updatedDepartment);
-  //   console.log("cardID:", updatedCardID);
-  //   console.log("tel:", updatedTel);
-  //   console.log("email:", updatedEmail);
-  //   console.log("firstTrainingDate:", updatedFirstTrainingDate);
-  // };
+  const roles = useRef();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     const dataToSubmit = {};
-  
-    if (empID) {
-      dataToSubmit.empID = empID;
+
+    if (empId) {
+      dataToSubmit.empId = empId;
     }
     if (empName) {
       dataToSubmit.empName = empName;
@@ -50,8 +33,8 @@ export const EditEmp = () => {
     if (department) {
       dataToSubmit.department = department;
     }
-    if (cardID) {
-      dataToSubmit.cardID = cardID;
+    if (cardId) {
+      dataToSubmit.cardId = cardId;
     }
     if (tel) {
       dataToSubmit.tel = tel;
@@ -65,29 +48,31 @@ export const EditEmp = () => {
     if (roles) {
       dataToSubmit.roles = roles.current.value;
     }
-  
+
     if (Object.keys(dataToSubmit).length > 0) {
-      console.log("Data to submit:", dataToSubmit);
+      const editEmp = async () => {
+        const token = localStorage.getItem("token");
+        try {
+          await axios.post(
+            `http://localhost:9999/manageemp/editemp`,
+            dataToSubmit,
+            {
+              headers: {
+                "content-type": "application/json",
+                authorization: token,
+              },
+            }
+          );
+          window.location.reload();
+          navigate(-1);
+        } catch (error) {
+          console.error("Error fetching employee data:", error);
+        }
+      };
+      editEmp();
     } else {
       console.log("No new data to submit.");
     }
-  };
-  
-
-  const fetchEmpData = () => {
-    const data = {
-      empID: "EMP001",
-      empName: "HSY",
-      department: "Sales",
-      cardID: "1000000000000",
-      tel: "06612345678",
-      email: " johndoe@example.com",
-      firstTrainingDate: "2024-10-01",
-      expiryDate: "2025-09-30",
-      nextExpiryDate: "11 เดือน 30 วัน",
-      roles:"emp"
-    };
-    setEmpData(data);
   };
 
   const sendData = (id) => {
@@ -95,14 +80,43 @@ export const EditEmp = () => {
   };
 
   useEffect(() => {
+    const fetchEmpData = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(
+          `http://localhost:9999/checkdata/checkempid/`,
+          {
+            empId: empId,
+          },
+          {
+            headers: {
+              "content-type": "application/json",
+              authorization: token,
+            },
+          }
+        );
+        setEmpData(response.data.data[0] || []);
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
+    };
     fetchEmpData();
-  }, []);
+  }, [empId]);
 
-  
+  useEffect(() => {
+    if (empData.roles) {
+      setSelectedRole(empData.roles);
+    }
+  }, [empData]);
+
+  const [selectedRole, setSelectedRole] = useState("Emp");
+
+  const roleChange = (e) => {
+    setSelectedRole(e.target.value);
+  };
 
   return (
     <div className="wrapper">
-      
       <Sidebar actived="emp" iconActive={{ opacity: "100%" }} />
       <div id="content-wrapper" className="d-flex flex-column">
         <Topbar content={"พนักงาน"} />
@@ -111,13 +125,13 @@ export const EditEmp = () => {
             <Container fluid>
               <Button
                 variant="link"
-                onClick={() => sendData(empID)}
+                onClick={() => sendData(empId)}
                 className="back-button"
               >
                 <MdArrowBackIosNew /> ยกเลิกการแก้ไข
               </Button>
               <div className="h3 fw-bold mb-4 d-flex align-items-center">
-                แก้ไขรายละเอียดพนักงาน รหัส {empID}
+                แก้ไขรายละเอียดพนักงาน รหัส {empId}
               </div>
               <Card className="h-100 shadow-sm">
                 <div className="p-4">
@@ -133,7 +147,7 @@ export const EditEmp = () => {
                             type="text"
                             disabled
                             required
-                            value={empData.empID || "ไม่มีข้อมูล"}
+                            value={empData.empId || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -159,8 +173,8 @@ export const EditEmp = () => {
                           <Form.Control
                             type="text"
                             required
-                            onChange={(e) => setCardID(e.target.value)}
-                            defaultValue={empData.cardID}
+                            onChange={(e) => setCardId(e.target.value)}
+                            defaultValue={empData.cardId}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -187,15 +201,25 @@ export const EditEmp = () => {
                             onChange={(e) =>
                               setFirstTrainingDate(e.target.value)
                             }
-                            defaultValue={empData.firstTrainingDate}
+                            defaultValue={
+                              empData.firstTrainingDate
+                                ? empData.firstTrainingDate
+                                    .toString()
+                                    .split("T")[0]
+                                : ""
+                            }
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>วันหมดอายุการอบรม</Form.Label>
                           <Form.Control
-                            type="text"
+                            type="date"
                             disabled
-                            value={empData.expiryDate || "ไม่มีข้อมูล"}
+                            value={
+                              empData.expiryDate
+                                ? empData.expiryDate.toString().split("T")[0]
+                                : ""
+                            }
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -208,9 +232,14 @@ export const EditEmp = () => {
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>สิทธิ์การใช้งาน</Form.Label>
-                          <Form.Select aria-label="Default select example" ref={roles}>
-                            <option value="emp">Emp</option>
-                            <option value="hr">Hr</option>
+                          <Form.Select
+                            aria-label="Default select example"
+                            ref={roles}
+                            value={selectedRole}
+                            onChange={roleChange}
+                          >
+                            <option value="Emp">Emp</option>
+                            <option value="Hr">Hr</option>
                           </Form.Select>
                         </Form.Group>
                       </Col>

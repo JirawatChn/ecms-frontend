@@ -11,13 +11,13 @@ export const ProfileHr = ({empDataRaw,setEmpDataRaw}) => {
   
   useEffect(()=>{
     setEmpData(empDataRaw)
-  },[empDataRaw])
+  },[empDataRaw])    
 
   return (
     <div className="wrapper">
       <Sidebar actived="emp" iconActive={{ opacity: "100%" }} />
       <div id="content-wrapper" className="d-flex flex-column">
-        <Topbar content={"พนักงาน"} name={empData.empName}/>
+        <Topbar content={"พนักงาน"}/>
         <div className="content">
           <div className="mx-2">
             <Container fluid>
@@ -48,7 +48,7 @@ export const ProfileHr = ({empDataRaw,setEmpDataRaw}) => {
                             type="text"
                             disabled
                             required
-                            value={empData.empID || "ไม่มีข้อมูล"}
+                            value={empData.empId || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -77,7 +77,7 @@ export const ProfileHr = ({empDataRaw,setEmpDataRaw}) => {
                             type="text"
                             disabled
                             required
-                            value={empData.cardID || "ไม่มีข้อมูล"}
+                            value={empData.cardId || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">

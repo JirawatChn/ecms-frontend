@@ -11,36 +11,39 @@ import { Header } from "../../../components/header";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import axios from "axios";
 
 export const TrainingDetails = ({ empDataRaw }) => {
   const [empData, setEmpData] = useState({});
   const navigate = useNavigate();
-  const { courseID, sessionID } = useParams();
+  const [courseResultData,setCourseResultData] = useState([])
 
-  const [resultData, setRequestResultData] = useState({});
+  const {reqId} = useParams();  
 
-  const fetchRequestResult = () => {
-    const data = {
-      requestID: "result-001",
-      empID: "EMP001",
-      courseID: "ABC101",
-      sessionID: "S099",
-      courseName: "เตรียมความพร้อมสู่การทำงาน 2",
-      trainingDate: "2022-10-01",
-      completeDate: "2022-10-01",
-      periods: "10:00-17:00",
-      trainingHours: "8",
-      trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-      status: "pending",
-      approvedDate: "",
-      vertifier: "",
-    };
-    setRequestResultData(data);
-  };
-
-  useEffect(() => {
-    fetchRequestResult();
-  }, []);
+  useEffect(()=>{
+    const fetchResultById = async () =>{
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(
+          "http://localhost:9999/courses/result/id",
+          {
+            reqId: reqId,
+          },
+          {
+            headers: {
+              "content-type": "application/json",
+              authorization: token,
+            },
+          }
+        );
+        setCourseResultData(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
+    }
+  
+    fetchResultById()
+  },[reqId])  
 
   useEffect(() => {
     setEmpData(empDataRaw);
@@ -53,7 +56,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
         <div style={{ width: "80rem" }} className="mt-4">
           <Button
             variant="outline-primary"
-            onClick={() => navigate("/emp/trainings")}
+            onClick={() => navigate(-1)}
           >
             <MdArrowBackIosNew /> กลับสู่หน้าการอบรม
           </Button>
@@ -61,7 +64,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
           <Card bg="primary" className="mt-2" text="white">
             <Card bg="dark" text="white" className="mt-3 h4">
               <Card.Body>
-                <p>ผลลัพธ์การอบรม รหัส {resultData.requestID}</p>
+                <p>ผลลัพธ์การอบรม รหัส {reqId}</p>
               </Card.Body>{" "}
             </Card>
             <Container>
@@ -70,7 +73,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                   รหัสพนักงาน:
                   <input
                     disabled
-                    value={empData.empID ?? "ไม่มีข้อมูล"}
+                    value={empData.empId ?? "ไม่มีข้อมูล"}
                     className="mx-1"
                   />
                   ชื่อ:
@@ -100,10 +103,10 @@ export const TrainingDetails = ({ empDataRaw }) => {
                         <Col md={2}>
                           <Form>
                             <Form.Group className="mb-3">
-                              <Form.Label>รหัสคำร้อง</Form.Label>
+                              <Form.Label>รหัส</Form.Label>
                               <Form.Control
                                 type="text"
-                                value={resultData.requestID || "ไม่มีข้อมูล"}
+                                value={reqId || "ไม่มีข้อมูล"}
                                 disabled
                               />
                             </Form.Group>
@@ -115,7 +118,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                               <Form.Label>รหัสคอร์ส</Form.Label>
                               <Form.Control
                                 type="text"
-                                value={courseID}
+                                value={courseResultData.courseId || "ไม่มีข้อมูล"}
                                 disabled
                               />
                             </Form.Group>
@@ -127,7 +130,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                               <Form.Label>รอบ</Form.Label>
                               <Form.Control
                                 type="text"
-                                value={sessionID}
+                                value={courseResultData.sessionId || "ไม่มีข้อมูล"}
                                 disabled
                               />
                             </Form.Group>
@@ -139,7 +142,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                               <Form.Label>รหัสพนักงาน</Form.Label>
                               <Form.Control
                                 type="text"
-                                value={resultData.empID || "ไม่มีข้อมูล"}
+                                value={courseResultData.empId || "ไม่มีข้อมูล"}
                                 disabled
                               />
                             </Form.Group>
@@ -154,7 +157,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                               <Form.Label>ชื่อคอร์ส</Form.Label>
                               <Form.Control
                                 type="text"
-                                value={resultData.courseName || "ไม่มีข้อมูล"}
+                                value={courseResultData.courseName || "ไม่มีข้อมูล"}
                                 disabled
                               />
                             </Form.Group>
@@ -167,7 +170,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                               <Form.Control
                                 type="text"
                                 value={
-                                  resultData.trainingLocation || "ไม่มีข้อมูล"
+                                  courseResultData.trainingLocation || "ไม่มีข้อมูล"
                                 }
                                 disabled
                               />
@@ -181,7 +184,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                               <Form.Control
                                 type="text"
                                 disabled
-                                value={resultData.periods || "ไม่มีข้อมูล"}
+                                value={courseResultData.periods || "ไม่มีข้อมูล"}
                               />
                             </Form.Group>
                           </Form>
@@ -193,9 +196,9 @@ export const TrainingDetails = ({ empDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>วันที่อบรม</Form.Label>
                               <Form.Control
-                                type="text"
+                                type="date"
                                 disabled
-                                value={resultData.trainingDate || "ไม่มีข้อมูล"}
+                                value={courseResultData.trainingDate ? courseResultData.trainingDate.toString().split('T')[0] : ""}
                               />
                             </Form.Group>
                           </Form>
@@ -208,7 +211,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                                 type="text"
                                 disabled
                                 value={
-                                  resultData.trainingHours || "ไม่มีข้อมูล"
+                                  courseResultData.hours || "ไม่มีข้อมูล"
                                 }
                               />
                             </Form.Group>
@@ -226,21 +229,21 @@ export const TrainingDetails = ({ empDataRaw }) => {
                                   <Form.Control
                                     type="text"
                                     disabled
-                                    value={resultData.status || "ไม่มีข้อมูล"}
+                                    value={courseResultData.status || "ไม่มีข้อมูล"}
                                   />
                                 </Form.Group>
                               </Form>
                             </Col>
                             <Col md={4}>
                               <Form>
-                                {resultData.approvedDate ? (
+                                {courseResultData.approvedDate ? (
                                   <Form.Group className="mb-3">
                                     <Form.Label>วันที่ยืนยัน</Form.Label>
                                     <Form.Control
                                       type="text"
                                       disabled
                                       value={
-                                        resultData.approvedDate || "ไม่มีข้อมูล"
+                                        courseResultData.approvedDate || "ไม่มีข้อมูล"
                                       }
                                     />
                                   </Form.Group>
@@ -250,14 +253,14 @@ export const TrainingDetails = ({ empDataRaw }) => {
                               </Form>
                             </Col>
                             <Col md={4}>
-                              {resultData.vertifier ? (
+                              {courseResultData.vertifier ? (
                                 <Form.Group className="mb-3">
                                   <Form.Label>ผู้อนุมัติการอบรม</Form.Label>
                                   <Form.Control
                                     type="text"
                                     disabled
                                     value={
-                                      resultData.vertifier || "ไม่มีข้อมูล"
+                                      courseResultData.vertifier || "ไม่มีข้อมูล"
                                     }
                                   />
                                 </Form.Group>

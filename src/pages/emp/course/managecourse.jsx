@@ -40,8 +40,8 @@ export const ManageCourse = ({
     const token = localStorage.getItem("token");
     const empId = localStorage.getItem("empId");
     try {
-      const response = await axios.post(
-        "http://localhost:9999/checkdata/dashboard",
+       await axios.post(
+        "http://localhost:9999/courses/requests",
         {
           empId: empId,
           courseId: courseId,
@@ -68,11 +68,11 @@ export const ManageCourse = ({
         <td>{data.courseId}</td>
         <td className="text-center">{data.sessionId}</td>
         <td>{data.courseName}</td>
-        <td className="text-center">{data.trainingDate}</td>
+        <td className="text-center">{data.trainingDate.toString().split("T")[0]}</td>
         <td className="text-center">{data.periods}</td>
         <td>{data.trainingLocation}</td>
         <td className="text-center">
-          {data.status === "pending" ? (
+          {data.status === "withdraw" ? (
             <Badge pill bg="danger">
               รอยืนยันการถอน
             </Badge>

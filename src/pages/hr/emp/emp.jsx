@@ -42,15 +42,17 @@ export const Emp = ({
   const [selectedValue, setSelectedValue] = useState(itemsPerPage);
 
   const fetchEmpData = async () => {
-    const token = localStorage.getItem('token')
+    const token = localStorage.getItem("token");
     try {
-      const response = await axios.get("http://localhost:9999/checkData/checkEmp", {
-        headers: {
-          "content-type": "application/json",
-          "authorization": token,
-        },
-      });
-        setEmpDataRaw(response.data.data || []);
+      const response = await axios.get(
+        "http://localhost:9999/checkdata/checkemp",
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setEmpDataRaw(response.data.data);
     } catch (error) {
       console.error("Error fetching employee data:", error);
     }

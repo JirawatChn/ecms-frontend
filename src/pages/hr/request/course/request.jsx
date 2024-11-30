@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from "react";
 import { ButtonPage } from "../../../../components/buttonpages";
 import { MdCheck, MdClear } from "react-icons/md";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 export const CourseRequestsList = ({
   itemsPerPage,
@@ -42,73 +43,21 @@ export const CourseRequestsList = ({
 
   const [selectedValue, setSelectedValue] = useState(itemsPerPage);
 
-  const fetchRequestCourseData = () => {
-    const data = [
-      {
-        requestID: "withdraw-001",
-        sessionID: "S001",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        status: "pending",
-      },
-      {
-        requestID: "withdraw-002",
-        sessionID: "S001",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        status: "approve",
-      },
-      {
-        requestID: "withdraw-001",
-        sessionID: "S001",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        status: "deny",
-      },
-      {
-        requestID: "withdraw-002",
-        sessionID: "S001",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        status: "pending",
-      },
-      {
-        requestID: "withdraw-003",
-        sessionID: "S001",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        status: "pending",
-      },
-      {
-        requestID: "withdraw-004",
-        sessionID: "S001",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        status: "approve",
-      },
-      {
-        requestID: "withdraw-005",
-        sessionID: "S001",
-        courseID: "TLS123",
-        empID: "EMP001",
-        empName: "HSY",
-        date: "2024-04-01",
-        status: "deny",
-      },
-    ];
-    setRequestCourseDataRaw(data);
+  const fetchRequestCourseData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        "http://localhost:9999/withdrawrequest/requests",
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setRequestCourseDataRaw(response.data.data);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
   };
 
   const handleChange = (event) => {
@@ -163,22 +112,24 @@ export const CourseRequestsList = ({
       return (
         <tr key={i + 1} className="tr-cell">
           <td className="text-center">{i + 1}</td>
-          <td>{data.requestID}</td>
-          <td>{data.courseID}</td>
-          <td>{data.sessionID}</td>
-          <td>{data.empID}</td>
+          <td>{data.reqId}</td>
+          <td>{data.courseId}</td>
+          <td>{data.sessionId}</td>
+          <td>{data.empId}</td>
           <td>{data.empName}</td>
-          <td className="text-center">{data.date}</td>
+          <td className="text-center">
+            {data.createdAt.toString().split("T")[0]}
+          </td>
           <td className="text-center">
             {data.status === "pending" ? (
               <Badge pill bg="warning">
                 รออนุมัติ
               </Badge>
-            ) : data.status === "approve" ? (
+            ) : data.status === "approved" ? (
               <Badge pill bg="success">
                 อนุมัติ
               </Badge>
-            ) : data.status === "deny" ? (
+            ) : data.status === "denied" ? (
               <Badge pill bg="danger">
                 ไม่อนุมัติ
               </Badge>
@@ -191,7 +142,7 @@ export const CourseRequestsList = ({
               <Button
                 variant="success"
                 size="sm"
-                onClick={() => requestModal(data.requestID, "approve")}
+                onClick={() => requestModal(data.reqId, "approved")}
               >
                 <MdCheck />
               </Button>
@@ -204,7 +155,7 @@ export const CourseRequestsList = ({
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() => requestModal(data.requestID, "deny")}
+                onClick={() => requestModal(data.reqId, "denied")}
               >
                 <MdClear />
               </Button>
@@ -216,7 +167,7 @@ export const CourseRequestsList = ({
             <Button
               variant="link"
               size="sm"
-              onClick={() => sendData(data.requestID)}
+              onClick={() => sendData(data.reqId)}
             >
               เปิด
             </Button>
@@ -227,28 +178,60 @@ export const CourseRequestsList = ({
     return null;
   });
 
-  const [requestID, setRequestID] = useState({});
+  const [reqId, setRequestId] = useState({});
   const [modalShow, setModalShow] = useState(false);
   const [modalStatus, setModalStatus] = useState("");
+  const remark = useRef();
 
   const requestModal = (id, status) => {
     setModalShow(true);
-    setRequestID(id);
+    setRequestId(id);
     setModalStatus(status);
   };
 
-  const approveRequest = () => {
+  const approvedRequest = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/withdrawrequest/approved",
+        {
+          reqId: reqId,
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
-  const remark = useRef()
-
-  const denyRequest = () => {
-    if(remark.current.value === ""){
-      alert('กรุณากรอกหมายเหตุ')
-    }else{
-      // console.log(remark.current.value);
+  const deniedRequest = async () => {
+    if (remark.current.value === "") {
+      alert("กรุณากรอกหมายเหตุ");
+    } else {
+      const token = localStorage.getItem("token");
+      try {
+        await axios.post(
+          "http://localhost:9999/withdrawrequest/denied",
+          {
+            reqId: reqId,
+            remark: remark.current.value,
+          },
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        );        
+        window.location.reload();
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
     }
     setModalShow(false);
   };
@@ -256,7 +239,7 @@ export const CourseRequestsList = ({
   const WarningModal = (props) => {
     return (
       <>
-        {modalStatus === "approve" && (
+        {modalStatus === "approved" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
@@ -264,7 +247,7 @@ export const CourseRequestsList = ({
           >
             <Modal.Body>
               <h4>ยืนยันหรือไม่</h4>
-              <p>คุณแน่ใจหรือไม่ที่จะอนุมัติรายการ รหัสคำร้อง {requestID}</p>
+              <p>คุณแน่ใจหรือไม่ที่จะอนุมัติรายการ รหัสคำร้อง {reqId}</p>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
               <Button
@@ -275,7 +258,7 @@ export const CourseRequestsList = ({
                 ยกเลิก
               </Button>
               <Button
-                onClick={() => approveRequest()}
+                onClick={() => approvedRequest()}
                 variant="success"
                 className="flex-grow-1"
               >
@@ -284,25 +267,19 @@ export const CourseRequestsList = ({
             </Modal.Footer>
           </Modal>
         )}
-        {modalStatus === "deny" && (
+        {modalStatus === "denied" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
             centered
           >
             <Modal.Body>
-            <div>
+              <div>
                 <h4>ยืนยันหรือไม่</h4>
-                <p>
-                  คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {requestID}
-                </p>
+                <p>คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {reqId}</p>
                 <Form.Group className="mb-3">
                   <Form.Label>หมายเหตุ</Form.Label>
-                  <Form.Control
-                    type="text"
-                    ref={remark}
-                    required
-                  />
+                  <Form.Control type="text" ref={remark} required />
                 </Form.Group>
               </div>
             </Modal.Body>
@@ -315,7 +292,7 @@ export const CourseRequestsList = ({
                 ยกเลิก
               </Button>
               <Button
-                onClick={() => denyRequest()}
+                onClick={() => deniedRequest()}
                 variant="danger"
                 className="flex-grow-1"
               >
@@ -389,7 +366,7 @@ export const CourseRequestsList = ({
                       tableData
                     ) : (
                       <tr>
-                        <td colSpan="10" className="text-center">
+                        <td colSpan="11" className="text-center">
                           ไม่มีคำร้องขอถอนคอร์สอบรม
                         </td>
                       </tr>

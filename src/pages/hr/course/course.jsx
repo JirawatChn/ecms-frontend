@@ -15,6 +15,7 @@ import { useNavigate } from "react-router";
 import { Topbar } from "../../../components/topbar";
 import { Sidebar } from "../../../components/sidebar";
 import { ButtonPage } from "../../../components/buttonpages";
+import axios from "axios";
 
 export const Course = ({
   itemsPerPage,
@@ -28,11 +29,12 @@ export const Course = ({
     navigate(`/hr/course/details/${id}/${sid}`);
   };
 
-  const [requestCourseDataRaw, setRequestCourseDataRaw] = useState([]);
-  const [requestCourseData, setRequestCourseData] = useState([]);
+  const [courseDataRaw, setCourseDataRaw] = useState([]);
+  const [courseData, setCourseData] = useState([]);
+
   const [amount, setAmount] = useState(0);
   const [status, setStatus] = useState({
-    open: "open",
+    active: "active",
     ongoing: "",
     all: "",
   });
@@ -42,124 +44,6 @@ export const Course = ({
 
   const [selectedValue, setSelectedValue] = useState(itemsPerPage);
 
-  const fetchRequestCourseData = () => {
-    const data = [
-      {
-        courseId: "TLS123",
-        courseName: "Leadership Fundamentals",
-        sessions: [
-          {
-            trainingDate: "2023-08-15",
-            trainingLocation: "Bangkok Training Center",
-            periods: "09:00-17:00",
-            hours: 8,
-            courseLimit: 20,
-            courseLeft: 10,
-            sessionId: "S001",
-            status: "open",
-          },
-        ],
-      },
-      {
-        courseId: "TLS123",
-        courseName: "Leadership Fundamentals",
-        sessions: [
-          {
-            trainingDate: "2023-08-15",
-            trainingLocation: "Bangkok Training Center",
-            periods: "09:00-17:00",
-            hours: 8,
-            courseLimit: 20,
-            courseLeft: 10,
-            sessionId: "S002",
-            status: "close",
-          },
-        ],
-      },
-      {
-        courseId: "TLS123",
-        courseName: "Leadership Fundamentals",
-        sessions: [
-          {
-            trainingDate: "2023-08-15",
-            trainingLocation: "Bangkok Training Center",
-            periods: "09:00-17:00",
-            hours: 8,
-            courseLimit: 20,
-            courseLeft: 10,
-            sessionId: "S003",
-            status: "open",
-          },
-        ],
-      },
-      {
-        courseId: "TLS122",
-        courseName: "Leadership Fundamentals",
-        sessions: [
-          {
-            trainingDate: "2023-08-15",
-            trainingLocation: "Bangkok Training Center",
-            periods: "09:00-17:00",
-            hours: 8,
-            courseLimit: 20,
-            courseLeft: 10,
-            sessionId: "S003",
-            status: "ongoing",
-          },
-        ],
-      },
-      {
-        courseId: "TLS122",
-        courseName: "Leadership Fundamentals",
-        sessions: [
-          {
-            trainingDate: "2023-08-15",
-            trainingLocation: "Bangkok Training Center",
-            periods: "09:00-17:00",
-            hours: 8,
-            courseLimit: 20,
-            courseLeft: 10,
-            sessionId: "S004",
-            status: "ongoing",
-          },
-        ],
-      },
-      {
-        courseId: "TLS121",
-        courseName: "Leadership Fundamentals",
-        sessions: [
-          {
-            trainingDate: "2023-08-15",
-            trainingLocation: "Bangkok Training Center",
-            periods: "09:00-17:00",
-            hours: 8,
-            courseLimit: 20,
-            courseLeft: 10,
-            sessionId: "S003",
-            status: "complete",
-          },
-        ],
-      },
-      {
-        courseId: "TLS121",
-        courseName: "Leadership Fundamentals",
-        sessions: [
-          {
-            trainingDate: "2023-08-15",
-            trainingLocation: "Bangkok Training Center",
-            periods: "09:00-17:00",
-            hours: 8,
-            courseLimit: 20,
-            courseLeft: 10,
-            sessionId: "S001",
-            status: "complete",
-          },
-        ],
-      },
-    ];
-    setRequestCourseDataRaw(data);
-  };
-
   const handleChange = (event) => {
     const value = parseInt(event.target.value);
     setSelectedValue(value);
@@ -168,35 +52,62 @@ export const Course = ({
     // console.log(value);
   };
 
+  const fetchCourseData = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        "http://localhost:9999/courses/showcourse",
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setCourseDataRaw(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
+  };
+
   useEffect(() => {
-    fetchRequestCourseData();
+    fetchCourseData();
   }, []);
 
   useEffect(() => {
-    const selectedItem = requestCourseDataRaw.filter((data) => {
-      if (status.all === "all") {
-        return true;
-      } else if (status.open === "open") {
-        return data.sessions.some((session) => session.status === status.open);
-      } else if (status.ongoing === "ongoing") {
-        return data.sessions.some(
-          (session) => session.status === status.ongoing
-        );
-      }
-      return false;
-    });
+    let selectedItem = [];
 
-    setRequestCourseData(selectedItem);
+    if (status.all === "all") {
+      selectedItem = courseDataRaw;
+    } else if (status.active === "active") {
+      selectedItem = courseDataRaw
+        .map((data) => ({
+          ...data,
+          sessions: data.sessions.filter(
+            (session) => session.status === "active"
+          ),
+        }))
+        .filter((data) => data.sessions.length > 0);
+    } else if (status.ongoing === "ongoing") {
+      selectedItem = courseDataRaw
+        .map((data) => ({
+          ...data,
+          sessions: data.sessions.filter(
+            (session) => session.status === "ongoing"
+          ),
+        }))
+        .filter((data) => data.sessions.length > 0);
+    }
+    setCourseData(selectedItem);
     setAmount(selectedItem.length);
-  }, [requestCourseDataRaw, status]);
+  }, [courseDataRaw, status]);
 
   useEffect(() => {
-    setCurrentLenght(requestCourseData.length);
-  }, [requestCourseData]);
+    setCurrentLenght(courseData.length);
+  }, [courseData]);
 
   useEffect(() => {
-    setNumPages(Math.ceil(requestCourseData.length / itemsPerPage));
-  }, [requestCourseData, itemsPerPage]);
+    setNumPages(Math.ceil(courseData.length / itemsPerPage));
+  }, [courseData, itemsPerPage]);
 
   useEffect(() => {
     if (numPages === 0) {
@@ -210,102 +121,134 @@ export const Course = ({
     }
   }, [curPage, numPages]);
 
-  const tableData = requestCourseData.flatMap((data, i) => {
-    const start = (curPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
+  let indexCounter = 0; 
 
-    if (start <= i && i < end) {
-      return data.sessions.map((session) => (
-        <tr key={`${data.courseId}-${session.sessionId}`} className="tr-cell">
-          <td className="text-center">{i + 1}</td>
-          <td>{data.courseId}</td>
-          <td>{session.sessionId}</td>
-          <td>{data.courseName}</td>
-          <td>{session.trainingDate}</td>
-          <td>{session.trainingLocation}</td>
-          <td className="text-center">{session.hours}</td>
-          <td className="text-center">
-            {session.status === "open" ? (
-              <>
+  const tableData = courseData.flatMap((data) => {
+    return data.sessions.map((session) => {
+      const isInRange =
+        indexCounter >= (curPage - 1) * itemsPerPage &&
+        indexCounter < curPage * itemsPerPage;
+
+      if (isInRange) {
+        const row = (
+          <tr key={`${data.courseId}-${session.sessionId}`} className="tr-cell">
+            <td className="text-center">{indexCounter + 1}</td>
+            <td>{data.courseId}</td>
+            <td>{session.sessionId}</td>
+            <td>{data.courseName}</td>
+            <td>
+              {session.trainingDate
+                ? session.trainingDate.toString().split("T")[0]
+                : ""}
+            </td>
+            <td>{session.trainingLocation}</td>
+            <td className="text-center">{session.hours}</td>
+            <td className="text-center">
+              {session.courseLimit - session.courseLeft}
+            </td>
+            <td className="text-center">
+              {session.status === "active" ? (
+                <>
+                  <Button
+                    size="sm"
+                    variant="success"
+                    onClick={() =>
+                      changeStatusModal(
+                        data.courseId,
+                        session.sessionId,
+                        "start"
+                      )
+                    }
+                  >
+                    เริ่มการอบรม
+                  </Button>
+                  <Button
+                    size="sm"
+                    className="mx-3"
+                    variant="danger"
+                    onClick={() =>
+                      changeStatusModal(
+                        data.courseId,
+                        session.sessionId,
+                        "close"
+                      )
+                    }
+                  >
+                    ปิดการอบรม
+                  </Button>
+                </>
+              ) : session.status === "close" ? (
                 <Button
                   size="sm"
                   variant="success"
                   onClick={() =>
-                    changeStatusModal(data.courseId, session.sessionId, "start")
+                    changeStatusModal(
+                      data.courseId,
+                      session.sessionId,
+                      "active"
+                    )
                   }
                 >
-                  เริ่มการอบรม  
+                  เปิดการอบรม
                 </Button>
+              ) : session.status === "ongoing" ? (
                 <Button
                   size="sm"
-                  className="mx-3"
-                  variant="danger"
+                  variant="success"
                   onClick={() =>
-                    changeStatusModal(data.courseId, session.sessionId, "close")
+                    changeStatusModal(
+                      data.courseId,
+                      session.sessionId,
+                      "complete"
+                    )
                   }
                 >
-                  ปิดการอบรม
+                  อบรมเสร็จสิ้น
                 </Button>
-              </>
-            ) : session.status === "close" ? (
-              <Button
-                size="sm"
-                variant="success"
-                onClick={() =>
-                  changeStatusModal(data.courseId, session.sessionId, "open")
-                }
-              >
-                เปิดการอบรม
-              </Button>
-            ) : session.status === "ongoing" ? (
-              <Button
-                size="sm"
-                variant="success"
-                onClick={() =>
-                  changeStatusModal(data.courseId, session.sessionId, "")
-                }
-              >
-                อบรมเสร็จสิ้น
-              </Button>
-            ) : (
-              ""
-            )}
-          </td>
-          <td className="text-center">
-            {session.status === "open" ? (
-              <Badge pill bg="success">
-                กำลังเปิด
-              </Badge>
-            ) : session.status === "close" ? (
-              <Badge pill bg="secondary">
-                ปิด
-              </Badge>
-            ) : session.status === "complete" ? (
-              <Badge pill bg="primary">
-                อบรมเสร็จสิ้น
-              </Badge>
-            ) : session.status === "ongoing" ? (
-              <Badge pill bg="warning">
-                กำลังอบรม
-              </Badge>
-            ) : (
-              ""
-            )}
-          </td>
+              ) : (
+                ""
+              )}
+            </td>
+            <td className="text-center">
+              {session.status === "active" ? (
+                <Badge pill bg="success">
+                  กำลังเปิด
+                </Badge>
+              ) : session.status === "close" ? (
+                <Badge pill bg="secondary">
+                  ปิด
+                </Badge>
+              ) : session.status === "complete" ? (
+                <Badge pill bg="primary">
+                  อบรมเสร็จสิ้น
+                </Badge>
+              ) : session.status === "ongoing" ? (
+                <Badge pill bg="warning">
+                  กำลังอบรม
+                </Badge>
+              ) : (
+                ""
+              )}
+            </td>
 
-          <td className="text-center">
-            <Button
-              variant="link"
-              size="sm"
-              onClick={() => sendData(data.courseId, session.sessionId)}
-            >
-              เปิด
-            </Button>
-          </td>
-        </tr>
-      ));
-    }
-    return [];
+            <td className="text-center">
+              <Button
+                variant="link"
+                size="sm"
+                onClick={() => sendData(data.courseId, session.sessionId)}
+              >
+                เปิด
+              </Button>
+            </td>
+          </tr>
+        );
+        indexCounter++; // เพิ่มตัวนับเมื่อสร้างแถวสำเร็จ
+        return row;
+      } else {
+        indexCounter++; // เพิ่มตัวนับแม้ไม่อยู่ในช่วงของตาราง
+        return null; // ไม่คืนค่าแถวหากไม่อยู่ในช่วง
+      }
+    });
   });
 
   const [courseId, setCourseId] = useState({});
@@ -320,24 +263,98 @@ export const Course = ({
     setModalStatus(status);
   };
 
-  const openCourse = () => {
+  const completeCourse = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/courses/completecourse",
+        {
+          courseId:courseId,
+          sessionId:sessionId
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
-  const closeCourse = () => {
+  const activeCourse = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/courses/opencourse",
+        {
+          courseId:courseId,
+          sessionId:sessionId
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
     setModalShow(false);
   };
 
-  const startCourse = () => {
+  const startCourse = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/courses/startcourse",
+        {
+          courseId:courseId,
+          sessionId:sessionId
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
     setModalShow(false);
   };
 
+  const closeCourse = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/courses/closecourse",
+        {
+          courseId:courseId,
+          sessionId:sessionId
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
+    setModalShow(false);
+  };
 
   const WarningModal = (props) => {
     return (
       <>
-        {modalStatus === "open" && (
+        {modalStatus === "active" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
@@ -358,7 +375,7 @@ export const Course = ({
                 ยกเลิก
               </Button>
               <Button
-                onClick={() => openCourse()}
+                onClick={() => activeCourse()}
                 variant="success"
                 className="flex-grow-1"
               >
@@ -409,7 +426,8 @@ export const Course = ({
               <div>
                 <h4>ยืนยันหรือไม่</h4>
                 <p>
-                  คุณแน่ใจหรือไม่ที่จะเริ่มการอบรมรหัส {courseId} รอบ {sessionId}
+                  คุณแน่ใจหรือไม่ที่จะเริ่มการอบรมรหัส {courseId} รอบ{" "}
+                  {sessionId}
                 </p>
               </div>
             </Modal.Body>
@@ -427,6 +445,39 @@ export const Course = ({
                 className="flex-grow-1"
               >
                 เริ่ม
+              </Button>
+            </Modal.Footer>
+          </Modal>
+        )}
+         {modalStatus === "complete" && (
+          <Modal
+            {...props}
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+          >
+            <Modal.Body>
+              <div>
+                <h4>ยืนยันหรือไม่</h4>
+                <p>
+                  คุณแน่ใจหรือไม่ที่จะเสร็จสิ้นการอบรมรหัส {courseId} รอบ{" "}
+                  {sessionId}
+                </p>
+              </div>
+            </Modal.Body>
+            <Modal.Footer className="d-flex justify-content-between">
+              <Button
+                onClick={props.onHide}
+                variant="outline-secondary"
+                className="flex-grow-1 me-2"
+              >
+                ยกเลิก
+              </Button>
+              <Button
+                onClick={() => completeCourse()}
+                variant="success"
+                className="flex-grow-1"
+              >
+                เสร็จสิ้น
               </Button>
             </Modal.Footer>
           </Modal>
@@ -459,7 +510,7 @@ export const Course = ({
                   <Nav.Item>
                     <Nav.Link
                       href="#"
-                      onClick={() => setStatus({ open: "open" })}
+                      onClick={() => setStatus({ active: "active" })}
                       className="text-white"
                     >
                       กำลังเปิด
@@ -494,6 +545,7 @@ export const Course = ({
                       <th>วันที่อบรม</th>
                       <th>สถานที่</th>
                       <th className="text-center">จำนวนชั่วโมง</th>
+                      <th className="text-center">จำนวนคน</th>
                       <th></th>
                       <th className="text-center">สถานะ</th>
                       <th></th>

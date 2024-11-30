@@ -6,110 +6,44 @@ import { useNavigate } from "react-router";
 import { Badge, Col, Container, Row, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
-export const Reimbursement = ({ empDataRaw, setEmpDataRaw}) => {
+export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw}) => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
-  const [reimbursementDataRaw, setReimbursementDataRaw] = useState([]); 
   const [reimbursementData, setReimbursementData] = useState([]); 
 
-  const fetchReimbursementData = () => {
-    const data = [
-      {
-        requestID: "reim-001",
-        courseID: "TLS123",
-        empID: "EMP001",
-        sessionID:"S001",
-        empName: "Sooyoung",
-        department: "Sales",
-        sendDate: "2024-09-26",
-        amount: "500",
-        cardID: "100000000000",
-        bankAccount: "123123213",
-        approvedDate: "2024-10-27",
-        status: "approve",
-        vertifier: "hr_name",
-      },
-      {
-        requestID: "reim-002",
-        courseID: "TLS122",
-        empID: "EMP001",
-        sessionID:"S001",
-        empName: "Sooyoung",
-        department: "Sales",
-        sendDate: "2024-09-26",
-        amount: "500",
-        cardID: "100000000000",
-        bankAccount: "123123213",
-        status: "processing",
-        vertifier: "",
-      },
-      {
-        requestID: "reim-003",
-        courseID: "TLS122",
-        empID: "EMP001",
-        sessionID:"S001",
-        empName: "Sooyoung",
-        department: "Sales",
-        sendDate: "2024-09-26",
-        amount: "500",
-        cardID: "100000000000",
-        bankAccount: "123123213",
-        status: "deny",
-      },
-      {
-        requestID: "reim-004",
-        courseID: "TLS122",
-        sessionID:"S001",
-        empID: "EMP001",
-        empName: "Sooyoung",
-        department: "Sales",
-        sendDate: "2024-09-26",
-        amount: "500",
-        cardID: "100000000000",
-        bankAccount: "123123213",
-        status: "approve",
-      },
-    ];
-    setReimbursementDataRaw(data || []);
-  };
 
   useEffect(()=>{
-    fetchReimbursementData()
-  },[])
+    setReimbursementData(reimbursementDataRaw)
+  },[reimbursementDataRaw])
 
   const sendData = (id) =>{
     navigate(`/emp/reimbursement/details/${id}`);
   }
 
   useEffect(() => {
-    setReimbursementData(reimbursementDataRaw);
-  }, [reimbursementDataRaw]);
-
-  useEffect(() => {
     setEmpData(empDataRaw);
-  }, [empDataRaw]);
+  }, [empDataRaw]);  
 
   const tableData = reimbursementData.map((data, i) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
-        <td>{data.requestID}</td>
-        <td>{data.courseID}</td>
-        <td>{data.sessionID}</td>
-        <td>{data.empID}</td>
-        <td className="text-center">{data.sendDate}</td>
+        <td>{data.reqId}</td>
+        <td>{data.courseId}</td>
+        <td>{data.empId}</td>
+        <td className="text-center">{data.createdAt.toString().split("T")[0]}</td>
         <td className="text-center">{data.amount}</td>
         <td className="text-center">
-          {data.status === "approve"
+          {data.status === "approved"
             ? <Badge pill bg="success">อนุมัติ</Badge>
-            : data.status === "deny"
+            : data.status === "denied"
             ? <Badge pill bg="danger">ไม่อนุมัติ</Badge>
-            : data.status === "processing"
+            : data.status === "pending"
             ? <Badge pill bg="warning">รออนุมัติ</Badge>
             : "ไม่มีข้อมูล"}
         </td>
         <td className="text-center">
-          <Button variant="link" onClick={()=>sendData(data.requestID)}>เปิด</Button>
+          <Button variant="link" onClick={()=>sendData(data.reqId)}>เปิด</Button>
         </td>
       </tr>
     );
@@ -138,7 +72,7 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw}) => {
                   รหัสพนักงาน:
                   <input
                     disabled
-                    value={empData.empID ?? "ไม่มีข้อมูล"}
+                    value={empData.empId ?? "ไม่มีข้อมูล"}
                     className="mx-1"
                   />
                   ชื่อ:
@@ -166,7 +100,6 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw}) => {
                   <th className="text-center">#</th>
                   <th>รหัสคำร้อง</th>
                   <th>รหัสคอร์ส</th>
-                  <th>รอบ</th>
                   <th>รหัสพนักงาน</th>
                   <th className="text-center">วันที่ส่งคำขอ</th>
                   <th className="text-center">จำนวนเงิน (บาท)</th>

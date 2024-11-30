@@ -3,32 +3,42 @@ import { Header } from "../../../components/header";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
+import axios from "axios";
 
 export const TrainingListDetails = ({ empDataRaw }) => {
   const [empData, setEmpData] = useState({});
   const navigate = useNavigate();
-  const { courseID, sessionID } = useParams();
+  const { courseId, sessionId } = useParams();
 
   const [requestResultData, setListResultData] = useState({});
 
-  const fetchListResult = () => {
-    const data = {
-      empID: "EMP001",
-      courseID: "ABC101",
-      sessionID: "S099",
-      courseName: "เตรียมความพร้อมสู่การทำงาน 2",
-      trainingDate: "20-10-01",
-      completeDate: "20-10-01",
-      periods: "10:00-17:00",
-      trainingHours: "8",
-      trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-    };
-    setListResultData(data);
-  };
-
   useEffect(() => {
+    const fetchListResult = async () => {
+      const token = localStorage.getItem("token");
+      const cid = courseId
+      const sid = sessionId
+      try {
+        const response = await axios.post(
+          "http://localhost:9999/checkdata/enrollment/id",
+          {
+            courseId: cid,
+            sessionId:sid
+          },
+          {
+            headers: {
+              "content-type": "application/json",
+              authorization: token,
+            },
+          }
+        );
+        setListResultData(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
+    };
+
     fetchListResult();
-  }, []);
+  }, [courseId, sessionId]);
 
   useEffect(() => {
     setEmpData(empDataRaw);
@@ -46,7 +56,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
           <Card bg="primary" className="mt-2" text="white">
             <Card bg="dark" text="white" className="mt-3 h4">
               <Card.Body>
-                <p>รายละเอียดการอบรม รหัส {courseID} รอบ {sessionID}</p>
+                <p>รายละเอียดการอบรม รหัส {courseId} รอบ {sessionId}</p>
               </Card.Body>{" "}
             </Card>
             <Container>
@@ -55,7 +65,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                   รหัสพนักงาน:
                   <input
                     disabled
-                    value={empData.empID ?? "ไม่มีข้อมูล"}
+                    value={empData.empId ?? "ไม่มีข้อมูล"}
                     className="mx-1"
                   />
                   ชื่อ:
@@ -85,7 +95,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                       <Form>
                         <Form.Group className="mb-3">
                           <Form.Label>รหัสคอร์ส</Form.Label>
-                          <Form.Control type="text" value={courseID} disabled />
+                          <Form.Control type="text" value={courseId} disabled />
                         </Form.Group>
                       </Form>
                     </Col>
@@ -95,7 +105,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                           <Form.Label>รอบ</Form.Label>
                           <Form.Control
                             type="text"
-                            value={sessionID}
+                            value={sessionId}
                             disabled
                           />
                         </Form.Group>
@@ -107,7 +117,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                           <Form.Label>รหัสพนักงาน</Form.Label>
                           <Form.Control
                             type="text"
-                            value={requestResultData.empID || "ไม่มีข้อมูล"}
+                            value={requestResultData.empId || "ไม่มีข้อมูล"}
                             disabled
                           />
                         </Form.Group>
@@ -153,10 +163,10 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                         <Form.Group className="mb-3">
                           <Form.Label>วันที่อบรม</Form.Label>
                           <Form.Control
-                            type="text"
+                            type="date"
                             disabled
                             value={
-                              requestResultData.trainingDate || "ไม่มีข้อมูล"
+                              requestResultData.trainingDate ? requestResultData.trainingDate.toString().split('T')[0] : ""
                             }
                           />
                         </Form.Group>
@@ -182,7 +192,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                             type="text"
                             disabled
                             value={
-                              requestResultData.trainingHours || "ไม่มีข้อมูล"
+                              requestResultData.hours || "ไม่มีข้อมูล"
                             }
                           />
                         </Form.Group>

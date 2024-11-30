@@ -1,9 +1,45 @@
+import { useEffect, useState } from "react";
 import { Sidebar } from "../../components/sidebar";
 import { Topbar } from "../../components/topbar";
 import { Card, Col, Container, Row } from "react-bootstrap";
+import { useLocation } from "react-router";
+import axios from "axios";
 // import AreaChart from "./chart";
 
 export const HrDashboard = () => {
+  const location = useLocation(); // Current route
+
+  useEffect(() => {
+    const hasRefreshed = sessionStorage.getItem("hasRefreshed");
+    if (!hasRefreshed) {
+      sessionStorage.setItem("hasRefreshed", "true");
+      window.location.reload();
+    }
+  }, [location]);
+
+  const [dashboardData,setDashboardData] = useState({});
+
+  const fetchDashboardData = async () =>{
+    const token = localStorage.getItem("token");
+    try {
+      const response = await axios.get(
+        "http://localhost:9999/dashboard/dashboard",
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      setDashboardData(response.data.data || []);
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
+  }
+
+  useEffect(()=>{
+    fetchDashboardData()
+  },[])
+
   return (
     <div className="wrapper">
       <Sidebar actived="dashboard" iconActive={{ opacity: "100%" }} />
@@ -23,7 +59,7 @@ export const HrDashboard = () => {
                            คำร้องขอถอนคอร์สอบรม
                           </div>
                           <div className="h5 mb-0 fw-bold text-warning">
-                            1
+                            {dashboardData.courseRequests}
                           </div>
                         </Col>
                       </Row>
@@ -39,7 +75,7 @@ export const HrDashboard = () => {
                            คำร้องขอเบิกค่าอบรม
                           </div>
                           <div className="h5 mb-0 fw-bold text-warning">
-                            1
+                          {dashboardData.refunds}
                           </div>
                         </Col>
                       </Row>
@@ -55,7 +91,7 @@ export const HrDashboard = () => {
                            พนักงานปัจจุบัน
                           </div>
                           <div className="h5 mb-0 fw-bold text-success">
-                            1
+                          {dashboardData.empActives}
                           </div>
                         </Col>
                       </Row>
@@ -71,7 +107,7 @@ export const HrDashboard = () => {
                            พนักงานทั้งหมดในระบบ
                           </div>
                           <div className="h5 mb-0 fw-bold text-primary">
-                            2
+                          {dashboardData.allEmps}
                           </div>
                         </Col>
                       </Row>
@@ -89,7 +125,7 @@ export const HrDashboard = () => {
                           กำลังรอผลการอบรม
                           </div>
                           <div className="h5 mb-0 fw-bold text-warning">
-                            1
+                          {dashboardData.courseResults}
                           </div>
                         </Col>
                       </Row>
@@ -105,7 +141,7 @@ export const HrDashboard = () => {
                            จำนวนคอร์สทั้งหมด
                           </div>
                           <div className="h5 mb-0 fw-bold text-primary">
-                            6
+                          {dashboardData.courses}
                           </div>
                         </Col>
                       </Row>

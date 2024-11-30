@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Badge,
   Button,
@@ -13,37 +13,38 @@ import { useNavigate, useParams } from "react-router";
 import { Topbar } from "../../../components/topbar";
 import { Sidebar } from "../../../components/sidebar";
 import { MdArrowBackIosNew } from "react-icons/md";
+import axios from "axios";
 
 export const TrainingResultDetails = () => {
-  const { requestID } = useParams();
+  const { reqId } = useParams();
   const navigate = useNavigate();
 
   const [requestResultDataRaw, setRequestResultDataRaw] = useState({});
   const [requestResultData, setRequestResultData] = useState({});
 
-  const fetchRequestData = () => {
-    const data = {
-      requestID: "result-001",
-      courseID: "TLS123",
-      sessionID:"S001",
-      empID: "EMP001",
-      empName: "HSY",
-      department: "Sales",
-      courseName: "เตรียมความพร้อมสู่การทำงาน 3",
-      trainingDate: "20-10-01",
-      completeDate: "20-10-01",
-      periods: "10:00-17:00",
-      trainingHours: "8",
-      trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-      sendDate: "2024-03-01",
-      status: "pending",
-    };
-    setRequestResultDataRaw(data);
-  };
-
   useEffect(() => {
+    const fetchRequestData = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(
+          "http://localhost:9999/courseresult/resultsId",
+          {
+            reqId: reqId,
+          },
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        );
+        setRequestResultDataRaw(response.data.data[0]);
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
+    };
+
     fetchRequestData();
-  }, []);
+  }, [reqId]);
 
   useEffect(() => {
     setRequestResultData(requestResultDataRaw);
@@ -57,19 +58,58 @@ export const TrainingResultDetails = () => {
     setModalStatus(status);
   };
 
-  const approveRequest = () => {
+  const remark = useRef()
+
+  const passRequest = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await axios.post(
+        "http://localhost:9999/courseresult/pass",
+        {
+          reqId: reqId,
+        },
+        {
+          headers: {
+            authorization: token,
+          },
+        }
+      );
+      window.location.reload();
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
     setModalShow(false);
-    window.location.reload();
   };
 
-  const denyRequest = () => {
+  const failRequest = async () => {
+    if (remark.current.value === "") {
+      alert("กรุณากรอกหมายเหตุ");
+    } else {
+      const token = localStorage.getItem("token");
+      try {
+        await axios.post(
+          "http://localhost:9999/courseresult/fail",
+          {
+            reqId: reqId,
+            remark: remark.current.value,
+          },
+          {
+            headers: {
+              authorization: token,
+            },
+          }
+        );        
+        window.location.reload();
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
+    }
     setModalShow(false);
-    window.location.reload();
   };
   const WarningModal = (props) => {
     return (
       <>
-        {modalStatus === "approve" && (
+        {modalStatus === "pass" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
@@ -78,8 +118,8 @@ export const TrainingResultDetails = () => {
             <Modal.Body>
               <h4>ยืนยันหรือไม่</h4>
               <p>
-                คุณแน่ใจหรือไม่ที่จะให้ผ่านรายการ รหัสคอร์ส {requestResultData.courseID} รอบ{" "}
-                {requestResultData.sessionID}
+                คุณแน่ใจหรือไม่ที่จะให้ผ่านรายการ รหัส{" "}
+                {reqId}
               </p>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
@@ -91,7 +131,7 @@ export const TrainingResultDetails = () => {
                 ยกเลิก
               </Button>
               <Button
-                onClick={() => approveRequest()}
+                onClick={() => passRequest()}
                 variant="success"
                 className="flex-grow-1"
               >
@@ -100,18 +140,23 @@ export const TrainingResultDetails = () => {
             </Modal.Footer>
           </Modal>
         )}
-        {modalStatus === "deny" && (
+       {modalStatus === "fail" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
             centered
           >
             <Modal.Body>
-              <h4>ยืนยันหรือไม่</h4>
-              <p>
-                คุณแน่ใจหรือไม่ที่จะไม่ให้ผ่านรายการ รหัสคอร์ส {requestResultData.courseID} รอบ{" "}
-                {requestResultData.sessionID}
-              </p>
+              <div>
+                <h4>ยืนยันหรือไม่</h4>
+                <p>
+                  คุณแน่ใจหรือไม่ที่จะให้ไม่ผ่านรายการ รหัส {reqId} 
+                </p>
+                <Form.Group className="mb-3">
+                  <Form.Label>หมายเหตุ</Form.Label>
+                  <Form.Control type="text" ref={remark} required />
+                </Form.Group>
+              </div>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
               <Button
@@ -122,7 +167,7 @@ export const TrainingResultDetails = () => {
                 ยกเลิก
               </Button>
               <Button
-                onClick={() => denyRequest()}
+                onClick={() => failRequest()}
                 variant="danger"
                 className="flex-grow-1"
               >
@@ -151,17 +196,17 @@ export const TrainingResultDetails = () => {
                 <MdArrowBackIosNew /> กลับหน้าผลลัพธ์
               </Button>
               <div className="h3 fw-bold mb-4 d-flex align-items-center">
-                รายละเอียดการอบรม รหัสคำร้อง {requestID}
+                รายละเอียดการอบรม รหัส {reqId}
                 <h6 className="mx-3 mt-2">
                   {requestResultData.status === "pending" ? (
                     <Badge pill bg="warning">
                       รอตรวจสอบ
                     </Badge>
-                  ) : requestResultData.status === "approve" ? (
+                  ) : requestResultData.status === "pass" ? (
                     <Badge pill bg="success">
                       อนุมัติ
                     </Badge>
-                  ) : requestResultData.status === "deny" ? (
+                  ) : requestResultData.status === "fail" ? (
                     <Badge pill bg="danger">
                       ไม่อนุมัติ
                     </Badge>
@@ -184,33 +229,26 @@ export const TrainingResultDetails = () => {
                             {requestResultData.sendDate}
                           </p>
                           <p>
-                            <strong>รหัสคำร้อง</strong>{" "}
-                            {requestResultData.requestID}
+                            <strong>รหัส</strong> {requestResultData.reqId}
                           </p>
                           <p>
                             <strong>รหัสคอร์ส:</strong>{" "}
-                            {requestResultData.courseID}
+                            {requestResultData.courseId}
                           </p>
                           <p>
                             <strong>ชื่อคอร์ส:</strong>{" "}
                             {requestResultData.courseName}
                           </p>
                           <p>
-                            <strong>รอบ:</strong> {requestResultData.sessionID}
+                            <strong>รอบ:</strong>{" "}
+                            {requestResultData.sessionId}
                           </p>
-                          <p>
-                            <strong>จำนวนอบรม:</strong>{" "}
-                            {requestResultData.trainingHours} ชั่วโมง
-                          </p>
+                         
                         </Col>
                         <Col>
                           <p>
                             <strong>วันที่อบรม:</strong>{" "}
-                            {requestResultData.trainingDate}
-                          </p>
-                          <p>
-                            <strong>วันที่อบรมสำเร็จ</strong>{" "}
-                            {requestResultData.trainingHours}
+                            {requestResultData.trainingDate ? requestResultData.trainingDate.toString().split('T')[0] : "ไม่มีข้อมูล"}
                           </p>
                           <p>
                             <strong>เวลาอบรม</strong>{" "}
@@ -220,7 +258,6 @@ export const TrainingResultDetails = () => {
                             <strong>สถานที่อบรม:</strong>{" "}
                             {requestResultData.trainingLocation}
                           </p>
-   
                         </Col>
                       </Row>
                     </div>
@@ -233,7 +270,7 @@ export const TrainingResultDetails = () => {
                         รายละเอียดผู้อบรม
                       </h5>
                       <p>
-                        <strong>รหัสพนักงาน:</strong> {requestResultData.empID}
+                        <strong>รหัสพนักงาน:</strong> {requestResultData.empId}
                       </p>
                       <p>
                         <strong>ชื่อผู้อบรม:</strong>{" "}
@@ -266,13 +303,10 @@ export const TrainingResultDetails = () => {
                         </div>
                         <div className="mt-3">
                           <Button
-                          className="request-button"
+                            className="request-button"
                             variant="success"
                             onClick={() =>
-                              requestModal(
-                                requestResultData.courseID,
-                                "approve"
-                              )
+                              requestModal(reqId, "pass")
                             }
                           >
                             ผ่าน
@@ -281,7 +315,7 @@ export const TrainingResultDetails = () => {
                             variant="danger"
                             className="mx-2 request-button"
                             onClick={() =>
-                              requestModal(requestResultData.courseID, "deny")
+                              requestModal(reqId, "fail")
                             }
                           >
                             ไม่ผ่าน
@@ -289,7 +323,7 @@ export const TrainingResultDetails = () => {
                         </div>
                       </div>
                     </Card>
-                  ) : requestResultData.status === "approve" ? (
+                  ) : requestResultData.status === "pass" ? (
                     <Card className="mt-3 shadow-sm">
                       <div className="p-4">
                         <div className="d-flex align-items-center ">
@@ -299,11 +333,11 @@ export const TrainingResultDetails = () => {
                               <Badge pill bg="warning" className="mx-3">
                                 รอตรวจสอบ
                               </Badge>
-                            ) : requestResultData.status === "approve" ? (
+                            ) : requestResultData.status === "pass" ? (
                               <Badge pill bg="success" className="mx-3">
                                 อนุมัติ
                               </Badge>
-                            ) : requestResultData.status === "deny" ? (
+                            ) : requestResultData.status === "fail" ? (
                               <Badge pill bg="danger" className="mx-3">
                                 ไม่อนุมัติ
                               </Badge>
@@ -333,8 +367,7 @@ export const TrainingResultDetails = () => {
                                   type="text"
                                   disabled
                                   value={
-                                    requestResultData.approvedDate ||
-                                    "ไม่มีข้อมูล"
+                                    requestResultData.passdDate || "ไม่มีข้อมูล"
                                   }
                                 />
                               </Form.Group>
@@ -343,7 +376,7 @@ export const TrainingResultDetails = () => {
                         </div>
                       </div>
                     </Card>
-                  ) : requestResultData.status === "deny" ? (
+                  ) : requestResultData.status === "fail" ? (
                     <Card className="mt-3 shadow-sm">
                       <div className="p-4">
                         <div className="d-flex align-items-center ">
@@ -353,11 +386,11 @@ export const TrainingResultDetails = () => {
                               <Badge pill bg="warning" className="mx-3">
                                 รอตรวจสอบ
                               </Badge>
-                            ) : requestResultData.status === "approve" ? (
+                            ) : requestResultData.status === "pass" ? (
                               <Badge pill bg="success" className="mx-3">
                                 อนุมัติ
                               </Badge>
-                            ) : requestResultData.status === "deny" ? (
+                            ) : requestResultData.status === "fail" ? (
                               <Badge pill bg="danger" className="mx-3">
                                 ไม่อนุมัติ
                               </Badge>
@@ -387,8 +420,7 @@ export const TrainingResultDetails = () => {
                                   type="text"
                                   disabled
                                   value={
-                                    requestResultData.approvedDate ||
-                                    "ไม่มีข้อมูล"
+                                    requestResultData.passdDate || "ไม่มีข้อมูล"
                                   }
                                 />
                               </Form.Group>

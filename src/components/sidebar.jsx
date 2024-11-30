@@ -61,6 +61,7 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
       <div className="sidebar-heading">Operations</div>
       
       {/*  */}
+      
       <li
         className={
           "nav-item" +
@@ -129,6 +130,22 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
       </li>
       {/*  */}
     
+      <li className={"nav-item" + (actived === "results" ? " active" : "")}>
+        <Link to={"/hr/results"} className="nav-link d-flex align-items-center">
+          <div
+            className="sidebar-icon-container"
+            style={{
+              opacity: actived === "results" ? 1 : 0.35,
+            }}
+          >
+            <MdInsertChart
+              className="sidebar-icon"
+              style={actived === "results" ? iconActive : {}}
+            />
+          </div>
+          <span className="mx-2 fw-bold fs-7">ผลลัพธ์การอบรม</span>
+        </Link>
+      </li>
 
       <li
         className={
@@ -188,23 +205,6 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
             </Link>
           </div>
         </div>
-      </li>
-
-      <li className={"nav-item" + (actived === "results" ? " active" : "")}>
-        <Link to={"/hr/results"} className="nav-link d-flex align-items-center">
-          <div
-            className="sidebar-icon-container"
-            style={{
-              opacity: actived === "results" ? 1 : 0.35,
-            }}
-          >
-            <MdInsertChart
-              className="sidebar-icon"
-              style={actived === "results" ? iconActive : {}}
-            />
-          </div>
-          <span className="mx-2 fw-bold fs-7">ผลลัพธ์การอบรม</span>
-        </Link>
       </li>
 
       <li className={"nav-item" + (actived === "emp" ? " active" : "")}>

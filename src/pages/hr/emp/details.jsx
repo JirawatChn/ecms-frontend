@@ -13,41 +13,94 @@ import { Topbar } from "../../../components/topbar";
 import { MdArrowBackIosNew, MdEditNote, MdClose } from "react-icons/md";
 import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 export const EmpDetails = () => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
-  const { empID } = useParams();
+  const { empId } = useParams();
+  const [status,setStatus] = useState('')
 
   const sendData = (id) => {
     navigate(`/hr/emp/edit/${id}`);
   };
 
   const deleteEmp = (id) => {
-    const data = {
-      empID: id,
-      status: "inactive",
+    console.log(id);
+    
+    const removeEmp = async () => {
+      const token = localStorage.getItem("token");
+      try {
+       await axios.post(
+          `http://localhost:9999/manageemp/removeemp`,
+          {
+            empId: id,
+            status:status
+          },
+          {
+            headers: {
+              "content-type": "application/json",
+              authorization: token,
+            },
+          }
+        );
+        window.location.reload()
+        navigate(-1)
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
     };
-    console.log(data);
+    removeEmp()
   };
 
   useEffect(() => {
     const fetchEmpData = async () => {
-      const data = await fetch(
-        `http://localhost:9999/checkData/checkEmpId/${empID}`,
-        {
-          method: "GET",
-          headers: {
-            "content-type": "application/json",
-            "token-key": "asd",
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(
+          `http://localhost:9999/checkdata/checkempid/`,
+          {
+            empId: empId,
           },
-        }
-      ).then((res) => res.json());
-      setEmpData(data.data[0]);
+          {
+            headers: {
+              "content-type": "application/json",
+              authorization: token,
+            },
+          }
+        );
+        setEmpData(response.data.data[0] || []);
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
     };
-
+    const fetchCourseData = async () => {
+      const token = localStorage.getItem("token");
+      try {
+        const response = await axios.post(
+          `http://localhost:9999/checkdata/enrollments`,
+          {
+            empId: empId,
+          },
+          {
+            headers: {
+              "content-type": "application/json",
+              authorization: token,
+            },
+          }
+        );
+        setCourseData(response.data.data || []);
+      } catch (error) {
+        console.error("Error fetching employee data:", error);
+      }
+    };
+    fetchCourseData();
     fetchEmpData();
-  }, [empID]);
+  }, [empId]);
+
+  useEffect(()=>{
+    setStatus(empData.status)
+  },[empData])
 
   const [modalShow, setModalShow] = useState(false);
 
@@ -60,7 +113,7 @@ export const EmpDetails = () => {
       >
         <Modal.Body>
           <h4>ยืนยันหรือไม่</h4>
-          <p>คุณแน่ใจหรือไม่ที่จะลบพนักงาน รหัส {empID}</p>
+          <p>คุณแน่ใจหรือไม่ที่จะลบพนักงาน รหัส {empId}</p>
         </Modal.Body>
         <Modal.Footer className="d-flex justify-content-between">
           <Button
@@ -71,7 +124,7 @@ export const EmpDetails = () => {
             ยกเลิก
           </Button>
           <Button
-            onClick={() => deleteEmp(empID)}
+            onClick={() => deleteEmp(empId)}
             variant="danger"
             className="flex-grow-1"
           >
@@ -84,38 +137,14 @@ export const EmpDetails = () => {
 
   const [courseData, setCourseData] = useState([]);
 
-  useEffect(() => {
-    const data = [
-      {
-        courseID: "ABC100",
-        sessionID: "S047",
-        courseName: "เตรียมความพร้อมสู่การทำงาน",
-        trainingDate: "24-10-01",
-        periods: "09:00-17:00",
-        trainingLocation: "5-505",
-        status: "pending",
-      },
-      {
-        courseID: "ABC101",
-        sessionID: "S099",
-        courseName: "เตรียมความพร้อมสู่การทำงาน 2",
-        trainingDate: "25-10-01",
-        periods: "10:00-17:00",
-        trainingLocation: "มหาวิทยาลัยศรีปทุม บางเขน",
-        status: "registered",
-      },
-    ];
-    setCourseData(data);
-  }, []);
-
   const tableData = courseData.map((data, i) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td>{i + 1}</td>
-        <td>{data.courseID}</td>
-        <td>{data.sessionID}</td>
+        <td>{data.courseId}</td>
+        <td>{data.sessionId}</td>
         <td>{data.courseName}</td>
-        <td className="text-center">{data.trainingDate}</td>
+        <td className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
         <td className="text-center">{data.periods}</td>
         <td>{data.trainingLocation}</td>
       </tr>
@@ -139,12 +168,12 @@ export const EmpDetails = () => {
                 <MdArrowBackIosNew /> กลับหน้าพนักงาน
               </Button>
               <div className="h3 fw-bold mb-4 d-flex align-items-center">
-                รายละเอียดพนักงาน รหัส {empID}
+                รายละเอียดพนักงาน รหัส {empId}
               </div>
               <Button
                 variant="warning"
                 className="mb-2 shadow-sm text-white"
-                onClick={() => sendData(empID)}
+                onClick={() => sendData(empId)}
               >
                 <MdEditNote />
                 แก้ไขข้อมูล
@@ -171,7 +200,7 @@ export const EmpDetails = () => {
                             type="text"
                             disabled
                             required
-                            value={empData.empID || "ไม่มีข้อมูล"}
+                            value={empData.empId || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -200,7 +229,7 @@ export const EmpDetails = () => {
                             type="text"
                             disabled
                             required
-                            value={empData.cardID || "ไม่มีข้อมูล"}
+                            value={empData.cardId || "ไม่มีข้อมูล"}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -240,13 +269,7 @@ export const EmpDetails = () => {
                             type="date"
                             disabled
                             required
-                            value={
-                              empData.expiryDate
-                                ? new Date(empData.firstTrainingDate)
-                                    .toISOString()
-                                    .split("T")[0]
-                                : ""
-                            }
+                            value={empData.firstTrainingDate ? empData.firstTrainingDate.toString().split('T')[0] : ""}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -255,13 +278,7 @@ export const EmpDetails = () => {
                             type="date"
                             disabled
                             required
-                            value={
-                              empData.expiryDate
-                                ? new Date(empData.expiryDate)
-                                    .toISOString()
-                                    .split("T")[0]
-                                : ""
-                            }
+                            value={empData.expiryDate ? empData.expiryDate.toString().split('T')[0] : ""}
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -274,9 +291,7 @@ export const EmpDetails = () => {
                           />
                         </Form.Group>
                       </Col>
-                      <div>
-                        คอร์สอบรมที่ได้ทำการลงทะเบียน
-                      </div>
+                      <div>คอร์สอบรมที่ได้ทำการลงทะเบียน</div>
                       <Table striped borderless hover className="mt-2">
                         <thead>
                           <tr>
