@@ -19,7 +19,7 @@ export const RequestReimbursement = ({
 
   const navigate = useNavigate();
 
-  // const fetchReimbursementData = async () =>{
+  // const fetchEnrollment = async () =>{
   //   const data = []
   //   setFetchData(data)
   // }
@@ -32,13 +32,42 @@ export const RequestReimbursement = ({
     setReimbursementData(reimbursementDataRaw || []);
   }, [reimbursementDataRaw]);
 
-  const filteredData = reimbursementData.map((item) => item.courseId);
+  const [enrollmentData, setEnrollmentData] = useState("");
+
+  useEffect(() => {
+    fetchEnrollment();
+  }, []);
+
+  const fetchEnrollment = async () => {
+    const token = localStorage.getItem("token");
+    const empId = localStorage.getItem("empId");
+    try {
+      const response = await axios.post(
+        "http://localhost:9999/checkdata/enrollment/pass",
+        {
+          empId: empId,
+        },
+        {
+          headers: {
+            "content-type": "application/json",
+            authorization: token,
+          },
+        }
+      );
+      setEnrollmentData(response.data.data || []);      
+    } catch (error) {
+      console.error("Error fetching employee data:", error);
+    }
+  };
+
+  const filteredData = Array.isArray(enrollmentData)
+  ? enrollmentData.map((item) => item.courseId)
+  : [];
 
   const findRequestLenght = reimbursementData.map((item) => item.reqId);
   const reqIdLenght = findRequestLenght.length;
 
-  const createRequestId =
-    "R" + (reqIdLenght + 1).toString().padStart(3, "0");
+  const createRequestId = "R" + (reqIdLenght + 1).toString().padStart(3, "0");
   // console.log(createRequestId);
 
   const reqId = useRef();
@@ -54,14 +83,14 @@ export const RequestReimbursement = ({
     event.preventDefault(); // ป้องกันไม่ให้ form รีเฟรชหน้า
     createRequest(); // เรียกฟังก์ชันสร้างคำร้อง
   };
-  
-  const createRequest = async () =>{
+
+  const createRequest = async () => {
     const token = localStorage.getItem("token");
     const empId = localStorage.getItem("empId");
     try {
       await axios.post(
         "http://localhost:9999/reimbursements/requests",
-        { 
+        {
           reqId: reqId.current.value,
           courseId: courseId.current.value,
           amount: amount.current.value,
@@ -77,14 +106,13 @@ export const RequestReimbursement = ({
             authorization: token,
           },
         }
-        
-      ); 
-      navigate('/emp/dashboard')
-      window.location.reload()      
+      );
+      navigate("/emp/dashboard");
+      window.location.reload();
     } catch (error) {
       console.error("Error fetching employee data:", error);
     }
-  }
+  };
 
   const today = new Date();
   const formattedDate = today.toISOString().split("T")[0];
@@ -160,13 +188,24 @@ export const RequestReimbursement = ({
                           </Col>
                           <Col md={3}>
                             <Form.Label>รหัสพนักงาน</Form.Label>
-                            <Form.Control type="text" ref={empId} disabled value={empData.empId ?? "ไม่มีข้อมูล"} required />
+                            <Form.Control
+                              type="text"
+                              ref={empId}
+                              disabled
+                              value={empData.empId ?? "ไม่มีข้อมูล"}
+                              required
+                            />
                           </Col>
                         </Row>
                         <Row className="mt-3">
                           <Col md={4}>
                             <Form.Label>ชื่อพนักงาน</Form.Label>
-                            <Form.Control type="text" disabled value={empData.empName ?? "ไม่มีข้อมูล"} ref={empName}/>
+                            <Form.Control
+                              type="text"
+                              disabled
+                              value={empData.empName ?? "ไม่มีข้อมูล"}
+                              ref={empName}
+                            />
                           </Col>
                           <Col md={4}>
                             <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
@@ -239,9 +278,7 @@ export const RequestReimbursement = ({
                               className="mt-3 d-flex justify-content-end"
                               md={6}
                             >
-                              <Button type="submit">
-                                ส่งคำร้อง
-                              </Button>
+                              <Button type="submit">ส่งคำร้อง</Button>
                             </Row>
                           </Container>
                         </Col>

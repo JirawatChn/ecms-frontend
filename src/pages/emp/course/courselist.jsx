@@ -173,7 +173,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
         window.location.reload();
       } catch (error) {
         if (error.response && error.response.status === 403) {
-          alert("เวลาอบรมซ้ำกัน");
+          alert("เวลาอบรมซ้ำหรือลงคอร์สอบรมเดิม");
         } else {
           console.error("Error fetching employee data:", error);
         }

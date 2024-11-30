@@ -144,7 +144,7 @@ export const Course = ({
             <td>{session.trainingLocation}</td>
             <td className="text-center">{session.hours}</td>
             <td className="text-center">
-              {session.courseLimit - session.courseLeft}
+              {(session.courseLimit - session.courseLeft) < 0 ? 0 : (session.courseLimit - session.courseLeft) }
             </td>
             <td className="text-center">
               {session.status === "active" ? (

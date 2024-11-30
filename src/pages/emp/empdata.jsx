@@ -112,7 +112,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                               <Form.Label>วันที่อบรมครั้งแรก</Form.Label>
                               <Form.Control
                                 type="date"
-                                value={empData.firstTrainingDate ?? ""}
+                                value={empData.firstTrainingDate ? empData.firstTrainingDate.toString().split('T')[0] : "" }
                                 disabled
                               />
                             </Form.Group>
@@ -124,7 +124,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                               <Form.Label>วันหมดอายุการอบรม</Form.Label>
                               <Form.Control
                                 type="date"
-                                value={empData.expiryDate ?? ""}
+                                value={empData.expiryDate ? empData.expiryDate.toString().split('T')[0] : "" }
                                 disabled
                               />
                             </Form.Group>

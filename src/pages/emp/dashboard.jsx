@@ -61,7 +61,9 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
     } catch (error) {
       console.error("Error fetching employee data:", error);
     }
-  };  
+  };
+
+  // console.log(lastResult);
 
   const tableData = enrollmentData.map((data, i) => {
     return (
@@ -70,7 +72,9 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
         <td>{data.courseId}</td>
         <td className="text-center">{data.sessionId}</td>
         <td>{data.courseName}</td>
-        <td className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
+        <td className="text-center">
+          {data.trainingDate.toString().split("T")[0]}
+        </td>
         <td className="text-center">{data.periods}</td>
         <td>{data.trainingLocation}</td>
       </tr>
@@ -112,11 +116,18 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
                 <Card.Title>การอบรม</Card.Title>
                 <p>
                   วันที่อบรมครั้งแรก:{" "}
-                  {empData.firstTrainingDate || "ไม่มีข้อมูล"}
+                  {empData.firstTrainingDate
+                    ? empData.firstTrainingDate.toString().split("T")[0]
+                    : "ไม่มีข้อมูล"}
                 </p>
-                <p>วันหมดอายุการอบรม: {empData.expiryDate || "ไม่มีข้อมูล"}</p>
                 <p>
-                  อบรมครั้งถัดไปอีก: {empData.nextExpiryDate || "ไม่มีข้อมูล"}
+                  วันหมดอายุการอบรม:{" "}
+                  {empData.expiryDate
+                    ? empData.expiryDate.toString().split("T")[0]
+                    : "ไม่มีข้อมูล"}
+                </p>
+                <p>
+                  อบรมครั้งถัดไปอีก: {empData.nextExpiryDate + " วัน" || "ไม่มีข้อมูล"}
                 </p>
               </Card.Body>
             </Card>
@@ -131,17 +142,20 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
                 <p>รหัสคอร์ส: {lastResult.courseId || "ไม่มีข้อมูล"}</p>
                 <p>ชื่อคอร์ส: {lastResult.courseName || "ไม่มีข้อมูล"}</p>
                 <p>
-                  วันที่อบรมสำเร็จ: {lastResult.trainingDate || "ไม่มีข้อมูล"}
+                  วันที่อบรมสำเร็จ:{" "}
+                  {lastResult.trainingDate
+                    ? lastResult.trainingDate.toString().split("T")[0]
+                    : "ไม่มีข้อมูล"}
                 </p>
                 <div>ผลลัพธ์:</div>
                 <div className="h4">
-                  {lastResult.status === "Pass"
+                  {lastResult.status === "pass"
                     ? "ผ่าน"
-                    : empData.status === "Fail"
+                    : lastResult.status === "fail"
                     ? "ไม่ผ่าน"
-                    : empData.status === "Processing"
+                    : lastResult.status === "pending"
                     ? "กำลังตรวจสอบ"
-                    : "ไม่มีข้อมูล"}
+                    : ""}
                 </div>
               </Card.Body>
             </Card>

@@ -31,8 +31,8 @@ export const CreateCourse = () => {
             },
           }
         );
-        window.location.reload();
         navigate("/hr/course/create/session");
+        window.location.reload();
       } catch (error) {
         console.error("Error fetching employee data:", error);
       }

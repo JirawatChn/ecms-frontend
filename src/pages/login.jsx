@@ -1,10 +1,12 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../context/AuthContext";
+
 export const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const { setToken, setRoles, setEmpId } = useContext(AuthContext);
 
   const login = async (username, pwd) => {
@@ -20,14 +22,15 @@ export const Login = () => {
         }),
       });
 
+      if (!response.ok) {
+        throw new Error("Invalid email or password");
+      }
+
       const newData = await response.json();
-      const { token, roles, empId} = newData.data;
+      const { token, roles, empId } = newData.data;
       setToken(token);
       setRoles(roles);
-      setEmpId(empId)
-
-      // console.log("Roles:", roles); // ตรวจสอบค่า roles
-      // console.log("Token:", token);
+      setEmpId(empId);
 
       localStorage.setItem("token", token);
       localStorage.setItem("roles", roles);
@@ -38,12 +41,13 @@ export const Login = () => {
         navigate("/emp/dashboard");
       }
     } catch (error) {
-      console.error("Error occurred during login:", error.message);
+      setErrorMessage(error.message);
     }
-  };  
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setErrorMessage("");
     login(email, password);
   };
 
@@ -68,6 +72,11 @@ export const Login = () => {
             />
             <label>Password</label>
           </div>
+          {errorMessage && ( 
+            <div className="error-message text-danger d-flex justify-content-end mt-2">
+              {errorMessage}
+            </div>
+          )}
           <div className="field">
             <input type="submit" value="Login" className="mt-3" />
           </div>

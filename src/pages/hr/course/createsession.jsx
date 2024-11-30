@@ -188,7 +188,7 @@ export const CreateSession = () => {
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>เวลาอบรม</Form.Label>
-                          <Form.Control type="number" ref={periods} />
+                          <Form.Control type="text" ref={periods} />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>สถานที่อบรม</Form.Label>
