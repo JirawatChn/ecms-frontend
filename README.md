@@ -34,7 +34,7 @@ Hr</br>
 username : admin</br>
 username : admin</br>
 </br>
-</hr>
+<hr>
 -- Emp Page --</br>
 </br>
 Dashbaord Page : </br>
