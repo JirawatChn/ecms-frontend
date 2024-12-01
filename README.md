@@ -1,16 +1,7 @@
 # ECMS Website Application
 
 เว็บไซด์นี้ใช้ API ในการดึงข้อมูลมาจาก Back-end</br>
-โดยจะมีทั้งหมด 2 versions คือ</br>
-</br>
-Complete version :</br>
-เป็น Website Application version เชื่อมต่อกับ Database และ Back-end แล้ว</br>
 [https://github.com/JirawatChn/ecms-frontend](https://github.com/JirawatChn/ecms-frontend)</br>
-</br>
-Github version :</br>
-เป็น Website Application version ที่ทำการใช้ข้อมูลตัวอย่างในการแสดงข้อมูล</br>
-[https://github.com/JirawatChn/ecms-github-frontend](https://github.com/JirawatChn/ecms-github-frontend)</br>
-<hr>
 </br>
 Developer : </br>
 Jirawat Chanasit</br>
@@ -20,21 +11,6 @@ Jirawat Chanasit</br>
     -Hr</br>
 </br>
 <hr>
-
--- Login Page --</br>
-ผู้ใช้จะต้อง login ก่อนเข้าสู่ระบบ</br>
-</br>
-โดยใน verion github สามารถทดลองเข้าสู่ระบบได้ด้วย</br>
-</br>
-Emp</br>
-username : emp</br>
-password : emp</br>
-</br>
-Hr</br>
-username : admin</br>
-username : admin</br>
-</br>
-</hr>
 -- Emp Page --</br>
 </br>
 Dashbaord Page : </br>
