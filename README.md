@@ -10,7 +10,7 @@ Complete version :</br>
 Github version :</br>
 เป็น Website Application version ที่ทำการใช้ข้อมูลตัวอย่างในการแสดงข้อมูล</br>
 [https://github.com/JirawatChn/ecms-github-frontend](https://github.com/JirawatChn/ecms-github-frontend)</br>
-</hr>
+<hr>
 </br>
 Developer : </br>
 Jirawat Chanasit</br>
@@ -19,7 +19,7 @@ Jirawat Chanasit</br>
     -Emp</br>
     -Hr</br>
 </br>
-</hr>
+<hr>
 
 -- Login Page --</br>
 ผู้ใช้จะต้อง login ก่อนเข้าสู่ระบบ</br>
@@ -81,7 +81,7 @@ Personal Information Page : </br>
 path /emp/details</br>
 ใช้ในการดูข้อมูลส่วนตัวของพนักงาน</br>
 </br>
-</hr>
+<hr>
 -- Hr Page --</br>
 </br>
 Dashbaord Page : </br>
