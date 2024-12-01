@@ -9,11 +9,12 @@ Jirawat Chanasit</br>
 แบ่ง Users ออกเป็น 2 ส่วนในการทำงาน คือ</br>
     -Emp</br>
     -Hr</br>
-</br>
 <hr>
+</br>
 -- Login Page --</br>
 ผู้ใช้จะต้อง login ก่อนเข้าสู่ระบบ</br>
 </br>
+<hr>
 -- Emp Page --</br>
 </br>
 Dashbaord Page : </br>
