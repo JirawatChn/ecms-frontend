@@ -23,19 +23,24 @@ export const EmpDetails = () => {
   }
 
   useEffect(() => {
-    const fetchEmpData = async () => {
-      const data = await fetch(`http://localhost:9999/checkData/checkEmpId/${empID}`, {
-        method: "GET",
-        headers: {
-          "content-type": "application/json",
-          "token-key": "asd",
-        },
-      }).then((res) => res.json());  
-      setEmpData(data.data[0]);
+    const fetchEmpData = () => {
+      const data = 
+        {
+          empID: "EMP001",
+          empName: "HSY",
+          department: "Sales",
+          firstTrainingDate: "2024-10-01",
+          email:"x.x@gmail.com",
+          tel:"0000000",
+          cardId:"123123",
+          status: "active",
+        }
+      ;
+      setEmpData(data);
     };
   
     fetchEmpData();
-  }, [empID]);    
+  }, [empID]);      
 
   const [modalShow, setModalShow] = useState(false);
 

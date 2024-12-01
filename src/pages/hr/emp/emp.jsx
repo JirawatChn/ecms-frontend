@@ -40,15 +40,42 @@ export const Emp = ({
 
   const [selectedValue, setSelectedValue] = useState(itemsPerPage);
 
-  const fetchEmpData = async () => {
-    const data = await fetch("http://localhost:9999/checkData/checkEmp", {
-      method: "GET",
-      headers: {
-        "content-type": "application/json",
-        "token-key":"asd"
+  const fetchEmpData = () => {
+    const data = [
+      {
+        empID: "EMP001",
+        empName: "HSY",
+        department: "Sales",
+        email:"x.x@gmail.com",
+        tel:"0000000",
+        status: "active",
       },
-    }).then((res) => res.json());    
-    setEmpDataRaw(data.data);
+      {
+        empID: "EMP002",
+        empName: "HSY",
+        department: "Sales",
+        email:"x.x@gmail.com",
+        tel:"0000000",
+        status: "active",
+      },
+      {
+        empID: "EMP003",
+        empName: "HSY",
+        department: "Sales",
+        email:"x.x@gmail.com",
+        tel:"0000000",
+        status: "active",
+      },
+      {
+        empID: "EMP004",
+        empName: "HSY",
+        department: "Sales",
+        email:"x.x@gmail.com",
+        tel:"0000000",
+        status: "inactive",
+      },
+    ];
+    setEmpDataRaw(data);
   };
 
   const handleChange = (event) => {

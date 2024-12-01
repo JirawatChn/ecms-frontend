@@ -34,7 +34,7 @@ export const Topbar = ({ content }) => {
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <Dropdown.Item onClick={()=>navigate('/hr/profile')}>My Profile</Dropdown.Item>
-                <Dropdown.Item href="#/logout">Logout</Dropdown.Item>
+                <Dropdown.Item onClick={()=>navigate('/')}>Logout</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </Navbar.Collapse>
