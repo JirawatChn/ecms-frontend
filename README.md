@@ -13,18 +13,6 @@ Jirawat Chanasit</br>
 <hr>
 -- Login Page --</br>
 ผู้ใช้จะต้อง login ก่อนเข้าสู่ระบบ</br>
-</br>
-โดยใน verion github สามารถทดลองเข้าสู่ระบบได้ด้วย</br>
-</br>
-Emp</br>
-username : emp</br>
-password : emp</br>
-</br>
-Hr</br>
-username : admin</br>
-username : admin</br>
-</br>
-<hr>
 -- Emp Page --</br>
 </br>
 Dashbaord Page : </br>
