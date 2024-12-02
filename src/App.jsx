@@ -35,6 +35,7 @@ import { CourseDetails } from "./pages/hr/course/details";
 import { EditCourse } from "./pages/hr/course/edit";
 import { Custom404 } from "./pages/404";
 import axios from "axios";
+import { Aboutus } from "./pages/aboutus";
 
 function App() {
   const [empDataRaw, setEmpDataRaw] = useState({});
@@ -153,6 +154,7 @@ function App() {
       <BrowserRouter basename="ecms">
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/aboutus" element={<Aboutus />} />
           <Route path="*" element={<Custom404 />} />
           <Route element={<ProtectRoutes isAllowed="Emp" />}>
             <Route
