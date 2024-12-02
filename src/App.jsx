@@ -27,6 +27,7 @@ import { EditHrProfile } from "./pages/hr/profile/edit";
 import { Training } from "./pages/emp/training/training";
 import { TrainingRequestDetails } from "./pages/emp/training/trainingrequest";
 import { TrainingDetails } from "./pages/emp/training/trainingdetails";
+import { Aboutus } from "./aboutus";
 
 function App() {
   const [empDataRaw, setEmpDataRaw] = useState({});
@@ -145,6 +146,7 @@ function App() {
       <BrowserRouter basename="ecms">
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/aboutus" element={<Aboutus />} />
           <Route
             path="/emp/dashboard"
             element={
