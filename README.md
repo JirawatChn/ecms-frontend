@@ -3,7 +3,7 @@
 เว็บไซด์นี้ใช้ API ในการดึงข้อมูลมาจาก Back-end</br>
 [https://github.com/JirawatChn/ecms-frontend](https://github.com/JirawatChn/ecms-frontend)</br>
 </br>
-<u><b>ถ้าไม่ได้เชื่อมต่อกับ Back-end สามารถใช้ข้อมูลตัวอย่างได้จาก Branch noapi
+<ui><b>ถ้าไม่ได้เชื่อมต่อกับ Back-end สามารถใช้ข้อมูลตัวอย่างได้จาก Branch noapi</b><ui>
 </br>
 Developer : </br>
 Jirawat Chanasit</br>
