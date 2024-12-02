@@ -1,10 +1,10 @@
 import { Card, Col, Container, Nav, Navbar, Row } from "react-bootstrap";
 import { useNavigate } from "react-router";
-import imgSrc1 from "../image/65039678.png";
-import imgSrc2 from "../image/65042386.png";
-import imgSrc3 from "../image/65061447.jpg";
-import imgSrc4 from "../image/65065930.png";
-import imgSrc5 from "../image/65070100.jpg";
+import imgSrc1 from "./image/65039678.png";
+import imgSrc2 from "./image/65042386.png";
+import imgSrc3 from "./image/65061447.jpg";
+import imgSrc4 from "./image/65065930.png";
+import imgSrc5 from "./image/65070100.jpg";
 
 export const Aboutus = () => {
   const navigate = useNavigate();
