@@ -24,7 +24,7 @@ export const Aboutus = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mx-3">
-              <Nav.Link onClick={() => navigate("/login")}>Login</Nav.Link>
+              <Nav.Link onClick={() => navigate("/")}>Login</Nav.Link>
               <Nav.Link onClick={() => navigate("/aboutus")}>Aboutus</Nav.Link>
             </Nav>
           </Navbar.Collapse>
