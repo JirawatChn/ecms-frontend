@@ -113,7 +113,7 @@ export const Results = ({
         <tr key={i + 1} className="tr-cell">
           <td className="text-center">{i + 1}</td>
           <td>{data.reqId}</td>
-          <td>{data.reqId}</td>
+          <td>{data.courseId}</td>
           <td>{data.sessionId}</td>
           <td>{data.empId}</td>
           <td>{data.empName}</td>

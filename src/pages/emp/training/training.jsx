@@ -47,7 +47,7 @@ export const Training = ({ empDataRaw, enrollmentDataRaw}) => {
 
   return (
     <div>
-      <Header content={"ผลลัพธ์การอบรม"} />
+      <Header content={"การอบรม"} />
       <div className="mt-3 d-flex justify-content-center">
         <div style={{ width: "80rem" }} className="mt-4">
           <div className="d-flex justify-content-between">

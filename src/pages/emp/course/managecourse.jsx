@@ -80,7 +80,7 @@ export const ManageCourse = ({
             ""
           )}
         </td>
-        <td className="text-center">
+        <td className="text-center">{data.status === "withdraw" ? "" :
           <Button
             variant="link"
             onClick={() =>
@@ -89,6 +89,7 @@ export const ManageCourse = ({
           >
             ลบ
           </Button>
+          }
         </td>
       </tr>
     );
