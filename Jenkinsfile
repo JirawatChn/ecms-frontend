@@ -19,7 +19,7 @@ pipeline {
             steps {
                 bat "docker build -t ecmsfrontend ."
                 bat "docker rm -f ecmsfrontendrun || true" // Remove existing container if it exists
-                bat "docker run -d --name ecmsfrontendrun -p 8080:80 ecmsfrontend:latest"
+                bat "docker run -d --name ecmsfrontendrun -p 50010:80 ecmsfrontend:latest"
                 echo 'Building Docker'
             }
         }
