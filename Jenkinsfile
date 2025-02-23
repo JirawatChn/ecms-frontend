@@ -18,7 +18,6 @@ pipeline {
          stage('Build') {
             steps {
                 bat "docker build -t ecmsfrontend ."
-                bat "docker create --name ecmsfrontend ecmsfrontend:latest"
                 bat "docker run -d --name ecmsfrontend -p 8080:80 ecmsfrontend:latest"
                 echo 'Building Docker'
             }
