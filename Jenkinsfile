@@ -17,7 +17,10 @@ pipeline {
         }
         stage('Build') {
             steps {
-                print 'Building the project'
+                sh "docker build -t ecms-frontend ."
+                sh "docker create --name ecms-frontend ecms-frontend:lastest"
+                sh "docker run -d --name ecms-frontend -p 8080:80 ecms-frontend:lastest"
+                print 'Building Docker'
             }
         }
         stage('Test') {
