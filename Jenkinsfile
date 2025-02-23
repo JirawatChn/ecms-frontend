@@ -18,10 +18,8 @@ pipeline {
          stage('Build') {
             steps {
                 bat "docker build -t ecmsfrontend ."
-                script {
-                bat "docker create --name ecmsfrontendrun ecmsfrontend:latest"
+                bat "docker rm -f ecmsfrontendrun || true" // Remove existing container if it exists
                 bat "docker run -d --name ecmsfrontendrun -p 8080:80 ecmsfrontend:latest"
-                }
                 echo 'Building Docker'
             }
         }
