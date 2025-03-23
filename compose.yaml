@@ -1,0 +1,13 @@
+services:
+  backend:
+    image: projectcsi401
+    ports:
+      - "30100:9999"
+  frontend:
+    image: ecmsfrontend
+    ports:
+      - "30000:3000"
+    depends_on:
+      backend:
+        condition: service_started
+
