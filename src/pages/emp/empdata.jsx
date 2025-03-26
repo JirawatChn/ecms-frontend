@@ -104,6 +104,18 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                             </Form.Group>
                           </Form>
                         </Col>
+                        <Col md={4}>
+                          <Form>
+                            <Form.Group className="mb-3">
+                              <Form.Label>รหัสประจำตัวประชาชน</Form.Label>
+                              <Form.Control
+                                type="email"
+                                value={empData.idCard ?? ""}
+                                disabled
+                              />
+                            </Form.Group>
+                          </Form>
+                        </Col>
                       </Row>
                       <Row>
                         <Col md={3}>

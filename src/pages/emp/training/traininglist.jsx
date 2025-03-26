@@ -46,7 +46,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
 
   return (
     <div>
-      <Header content={"เบิกค่าอบรม"} />
+      <Header content={"การอบรม"} />
       <div className="mt-3 d-flex justify-content-center">
         <div style={{ width: "80rem" }} className="mt-4">
           <Button variant="outline-primary" onClick={() => navigate(-1)}>
