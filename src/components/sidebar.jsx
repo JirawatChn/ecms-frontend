@@ -36,7 +36,7 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
 
       <hr className="sidebar-divider my-0" />
 
-      <li className={"nav-item" + (actived === "dashboard" ? " active" : "")}>
+      <li className={"nav-item" + (actived === "dashboard" ? " active" : "")} id="dashboard">
         <Link
           to={"/hr/dashboard"}
           className="nav-link  d-flex align-items-center"
@@ -69,6 +69,7 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
             ? " active"
             : "")
         }
+        id="courses"
       >
         <Link
           className="nav-link collapsed d-flex align-items-center"
@@ -108,6 +109,7 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
               className="collapse-item"
               to="/hr/course/create/course"
               style={actived === "create-course" ? highlight : {}}
+              id="create-course"
             >
               สร้างคอร์สอบรม
             </Link>
@@ -115,6 +117,7 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
               className="collapse-item"
               to="/hr/course/create/session"
               style={actived === "create-session" ? highlight : {}}
+              id="create-session"
             >
               สร้างรอบอบรม
             </Link>
@@ -122,6 +125,7 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
               className="collapse-item"
               to="/hr/course"
               style={actived === "course" ? highlight : {}}
+              id="course"
             >
               คอร์สอบรม
             </Link>
@@ -130,7 +134,7 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
       </li>
       {/*  */}
     
-      <li className={"nav-item" + (actived === "results" ? " active" : "")}>
+      <li className={"nav-item" + (actived === "results" ? " active" : "")} id="results">
         <Link to={"/hr/results"} className="nav-link d-flex align-items-center">
           <div
             className="sidebar-icon-container"
@@ -154,6 +158,7 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
             ? " active"
             : "")
         }
+        id="requests"
       >
         <Link
           className="nav-link collapsed d-flex align-items-center"
@@ -193,6 +198,7 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
               className="collapse-item"
               to="/hr/withdraw/requests"
               style={actived === "withdraw" ? highlight : {}}
+              id="withdraw"
             >
               ถอนคอร์สอบรม
             </Link>
@@ -200,6 +206,7 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
               className="collapse-item"
               to="/hr/reimbursement/requests"
               style={actived === "reim" ? highlight : {}}
+              id="reim"
             >
               เบิกค่าอบรม
             </Link>
@@ -207,7 +214,7 @@ export const Sidebar = ({ actived, iconActive, courseCollapse,collapse, highligh
         </div>
       </li>
 
-      <li className={"nav-item" + (actived === "emp" ? " active" : "")}>
+      <li className={"nav-item" + (actived === "emp" ? " active" : "")} id="emp">
         <Link to={"/hr/emp"} className="nav-link d-flex align-items-center">
           <div
             className="sidebar-icon-container"

@@ -35,7 +35,7 @@ export const Training = ({ empDataRaw, enrollmentDataRaw}) => {
         <td>{data.trainingLocation}</td>
         <td className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
         <td className="text-center">
-          <Button size="sm" variant="link" onClick={()=>sendData(data.courseId,data.sessionId)}>
+          <Button size="sm" variant="link" onClick={()=>sendData(data.courseId,data.sessionId)} id={"open-"+i}>
             เปิด
           </Button>
         </td>
@@ -55,6 +55,7 @@ export const Training = ({ empDataRaw, enrollmentDataRaw}) => {
               variant="outline-primary"
               onClick={() => navigate("/emp/dashboard")}
               className="shadow"
+              id="back"
             >
               <MdArrowBackIosNew /> กลับสู่หน้าหลัก
             </Button>
@@ -62,6 +63,7 @@ export const Training = ({ empDataRaw, enrollmentDataRaw}) => {
               variant="link"
               onClick={() => navigate("/emp/trainings/history")}
               className="ms-auto"
+              id="history"
             >
               ประวัติการอบรม
             </Button>

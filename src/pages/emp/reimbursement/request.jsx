@@ -125,6 +125,7 @@ export const RequestReimbursement = ({
           <Button
             variant="outline-primary"
             onClick={() => navigate("/emp/reimbursement")}
+            id="back"
           >
             <MdArrowBackIosNew /> กลับหน้าเบิกค่าอบรม
           </Button>
@@ -177,10 +178,10 @@ export const RequestReimbursement = ({
                             />
                           </Col>
                           <Col md={3}>
-                            <Form.Label>รหัสคอร์ส</Form.Label>
-                            <Form.Select ref={courseId}>
+                            <Form.Label>รหัสคอร์ส</Form.Label>  
+                            <Form.Select ref={courseId} id="courseId" required>
                               {filteredData.map((data, i) => (
-                                <option key={i} value={data ?? "ไม่มีข้อมูล"}>
+                                <option key={i} value={data ?? "ไม่มีข้อมูล"} id={"courseId-"+i}>
                                   {data}
                                 </option>
                               ))}
@@ -243,6 +244,7 @@ export const RequestReimbursement = ({
                                 <Form.Control
                                   type="text"
                                   ref={cardId}
+                                  id="cardId"
                                   required
                                 />
                               </Col>
@@ -253,6 +255,7 @@ export const RequestReimbursement = ({
                                 <Form.Control
                                   type="text"
                                   ref={bankAccount}
+                                  id="bankAccount"
                                   required
                                 />
                               </Col>
@@ -268,6 +271,7 @@ export const RequestReimbursement = ({
                                 <Form.Control
                                   type="text"
                                   ref={amount}
+                                  id="amount"
                                   required
                                 />
                               </Col>

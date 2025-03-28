@@ -97,16 +97,30 @@ export const Course = ({
         }))
         .filter((data) => data.sessions.length > 0);
     }
+
     setCourseData(selectedItem);
-    setAmount(selectedItem.length);
+
+    // 👇 คำนวณจำนวน session รวมทั้งหมดของคอร์สที่เหลืออยู่
+    const totalSessions = selectedItem.reduce((acc, course) => {
+      return acc + (course.sessions?.length || 0);
+    }, 0);
+
+    setAmount(totalSessions); // แก้ตรงนี้
+    setCurrentLenght(totalSessions); // ตรงนี้ด้วยถ้าต้องใช้ร่วมกัน
   }, [courseDataRaw, status]);
 
   useEffect(() => {
-    setCurrentLenght(courseData.length);
+    const totalSessions = courseData.reduce((acc, course) => {
+      return acc + (course.sessions?.length || 0);
+    }, 0);
+    setCurrentLenght(totalSessions);
   }, [courseData]);
 
   useEffect(() => {
-    setNumPages(Math.ceil(courseData.length / itemsPerPage));
+    const totalSessions = courseData.reduce((acc, course) => {
+      return acc + (course.sessions?.length || 0);
+    }, 0);
+    setNumPages(Math.ceil(totalSessions / itemsPerPage));
   }, [courseData, itemsPerPage]);
 
   useEffect(() => {
@@ -121,135 +135,137 @@ export const Course = ({
     }
   }, [curPage, numPages]);
 
-  let indexCounter = 0; 
-
-  const tableData = courseData.flatMap((data) => {
-    return data.sessions.map((session) => {
-      const isInRange =
-        indexCounter >= (curPage - 1) * itemsPerPage &&
-        indexCounter < curPage * itemsPerPage;
-
-      if (isInRange) {
-        const row = (
-          <tr key={`${data.courseId}-${session.sessionId}`} className="tr-cell">
-            <td className="text-center">{indexCounter + 1}</td>
-            <td>{data.courseId}</td>
-            <td>{session.sessionId}</td>
-            <td>{data.courseName}</td>
-            <td>
-              {session.trainingDate
-                ? session.trainingDate.toString().split("T")[0]
-                : ""}
-            </td>
-            <td>{session.trainingLocation}</td>
-            <td className="text-center">{session.hours}</td>
-            <td className="text-center">
-              {(session.courseLimit - session.courseLeft) < 0 ? 0 : (session.courseLimit - session.courseLeft) }
-            </td>
-            <td className="text-center">
-              {session.status === "active" ? (
-                <>
-                  <Button
-                    size="sm"
-                    variant="success"
-                    onClick={() =>
-                      changeStatusModal(
-                        data.courseId,
-                        session.sessionId,
-                        "start"
-                      )
-                    }
-                  >
-                    เริ่มการอบรม
-                  </Button>
-                  <Button
-                    size="sm"
-                    className="mx-3"
-                    variant="danger"
-                    onClick={() =>
-                      changeStatusModal(
-                        data.courseId,
-                        session.sessionId,
-                        "close"
-                      )
-                    }
-                  >
-                    ปิดการอบรม
-                  </Button>
-                </>
-              ) : session.status === "close" ? (
-                <Button
-                  size="sm"
-                  variant="success"
-                  onClick={() =>
-                    changeStatusModal(
-                      data.courseId,
-                      session.sessionId,
-                      "active"
-                    )
-                  }
-                >
-                  เปิดการอบรม
-                </Button>
-              ) : session.status === "ongoing" ? (
-                <Button
-                  size="sm"
-                  variant="success"
-                  onClick={() =>
-                    changeStatusModal(
-                      data.courseId,
-                      session.sessionId,
-                      "complete"
-                    )
-                  }
-                >
-                  อบรมเสร็จสิ้น
-                </Button>
-              ) : (
-                ""
-              )}
-            </td>
-            <td className="text-center">
-              {session.status === "active" ? (
-                <Badge pill bg="success">
-                  กำลังเปิด
-                </Badge>
-              ) : session.status === "close" ? (
-                <Badge pill bg="secondary">
-                  ปิด
-                </Badge>
-              ) : session.status === "complete" ? (
-                <Badge pill bg="primary">
-                  อบรมเสร็จสิ้น
-                </Badge>
-              ) : session.status === "ongoing" ? (
-                <Badge pill bg="warning">
-                  กำลังอบรม
-                </Badge>
-              ) : (
-                ""
-              )}
-            </td>
-
-            <td className="text-center">
+  const priority = {
+    active: 0,
+    ongoing: 1,
+    complete: 3,
+    close: 2,
+  };
+  
+  let indexCounter = 0;
+  
+  const allSessions = courseData
+    .flatMap((course) =>
+      course.sessions.map((session) => ({
+        courseId: course.courseId,
+        courseName: course.courseName,
+        session,
+      }))
+    )
+    .sort((a, b) => priority[a.session.status] - priority[b.session.status]);
+  
+  const tableData = allSessions.map(({ courseId, courseName, session }) => {
+    const isInRange =
+      indexCounter >= (curPage - 1) * itemsPerPage &&
+      indexCounter < curPage * itemsPerPage;
+  
+    const row = isInRange ? (
+      <tr key={`${courseId}-${session.sessionId}`} className="tr-cell">
+        <td className="text-center">{indexCounter + 1}</td>
+        <td>{courseId}</td>
+        <td>{session.sessionId}</td>
+        <td>{courseName}</td>
+        <td>
+          {session.trainingDate
+            ? session.trainingDate.toString().split("T")[0]
+            : ""}
+        </td>
+        <td>{session.trainingLocation}</td>
+        <td className="text-center">{session.hours}</td>
+        <td className="text-center">
+          {session.courseLimit - session.courseLeft < 0
+            ? 0
+            : session.courseLimit - session.courseLeft}
+        </td>
+        <td className="text-center">
+          {session.status === "active" ? (
+            <>
               <Button
-                variant="link"
                 size="sm"
-                onClick={() => sendData(data.courseId, session.sessionId)}
+                variant="success"
+                onClick={() =>
+                  changeStatusModal(courseId, session.sessionId, "start")
+                }
+                id={"start-" + indexCounter}
               >
-                เปิด
+                เริ่มการอบรม
               </Button>
-            </td>
-          </tr>
-        );
-        indexCounter++; // เพิ่มตัวนับเมื่อสร้างแถวสำเร็จ
-        return row;
-      } else {
-        indexCounter++; // เพิ่มตัวนับแม้ไม่อยู่ในช่วงของตาราง
-        return null; // ไม่คืนค่าแถวหากไม่อยู่ในช่วง
-      }
-    });
+              <Button
+                size="sm"
+                className="mx-3"
+                variant="danger"
+                onClick={() =>
+                  changeStatusModal(courseId, session.sessionId, "close")
+                }
+                id={"close-" + indexCounter}
+              >
+                ปิดการอบรม
+              </Button>
+            </>
+          ) : session.status === "close" ? (
+            <Button
+              size="sm"
+              variant="success"
+              onClick={() =>
+                changeStatusModal(courseId, session.sessionId, "active")
+              }
+              id={"open-" + indexCounter}
+            >
+              เปิดการอบรม
+            </Button>
+          ) : session.status === "ongoing" ? (
+            <Button
+              size="sm"
+              variant="success"
+              onClick={() =>
+                changeStatusModal(courseId, session.sessionId, "complete")
+              }
+              id={"complete-" + indexCounter}
+            >
+              อบรมเสร็จสิ้น
+            </Button>
+          ) : (
+            ""
+          )}
+        </td>
+        <td className="text-center">
+          {session.status === "active" ? (
+            <Badge pill bg="success">
+              กำลังเปิด
+            </Badge>
+          ) : session.status === "close" ? (
+            <Badge pill bg="secondary">
+              ปิด
+            </Badge>
+          ) : session.status === "complete" ? (
+            <Badge pill bg="primary">
+              อบรมเสร็จสิ้น
+            </Badge>
+          ) : session.status === "ongoing" ? (
+            <Badge pill bg="warning">
+              กำลังอบรม
+            </Badge>
+          ) : (
+            ""
+          )}
+        </td>
+        <td className="text-center">
+          <Button
+            variant="link"
+            size="sm"
+            onClick={() => sendData(courseId, session.sessionId)}
+            id={"detail-" + indexCounter}
+          >
+            เปิด
+          </Button>
+        </td>
+      </tr>
+    ) : null;
+  
+    indexCounter++;
+    return row;
   });
+  
 
   const [courseId, setCourseId] = useState({});
   const [sessionId, setSessionId] = useState({});
@@ -269,8 +285,8 @@ export const Course = ({
       await axios.post(
         "http://localhost:9999/courses/completecourse",
         {
-          courseId:courseId,
-          sessionId:sessionId
+          courseId: courseId,
+          sessionId: sessionId,
         },
         {
           headers: {
@@ -291,8 +307,8 @@ export const Course = ({
       await axios.post(
         "http://localhost:9999/courses/opencourse",
         {
-          courseId:courseId,
-          sessionId:sessionId
+          courseId: courseId,
+          sessionId: sessionId,
         },
         {
           headers: {
@@ -313,8 +329,8 @@ export const Course = ({
       await axios.post(
         "http://localhost:9999/courses/startcourse",
         {
-          courseId:courseId,
-          sessionId:sessionId
+          courseId: courseId,
+          sessionId: sessionId,
         },
         {
           headers: {
@@ -335,8 +351,8 @@ export const Course = ({
       await axios.post(
         "http://localhost:9999/courses/closecourse",
         {
-          courseId:courseId,
-          sessionId:sessionId
+          courseId: courseId,
+          sessionId: sessionId,
         },
         {
           headers: {
@@ -449,7 +465,7 @@ export const Course = ({
             </Modal.Footer>
           </Modal>
         )}
-         {modalStatus === "complete" && (
+        {modalStatus === "complete" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
@@ -512,6 +528,7 @@ export const Course = ({
                       href="#"
                       onClick={() => setStatus({ active: "active" })}
                       className="text-white"
+                      id="active"
                     >
                       กำลังเปิด
                     </Nav.Link>
@@ -521,6 +538,7 @@ export const Course = ({
                       eventKey="1"
                       onClick={() => setStatus({ ongoing: "ongoing" })}
                       className="text-white"
+                      id="ongoing"
                     >
                       กำลังอบรม
                     </Nav.Link>
@@ -530,6 +548,7 @@ export const Course = ({
                       eventKey="2"
                       onClick={() => setStatus({ all: "all" })}
                       className="text-white"
+                      id="all"
                     >
                       ทั้งหมด
                     </Nav.Link>

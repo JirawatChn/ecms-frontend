@@ -62,6 +62,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                 variant="link"
                 onClick={() => navigate("/hr/profile")}
                 className="back-button"
+                id="back"
               >
                 <MdArrowBackIosNew /> ยกเลิกการแก้ไข
               </Button>
@@ -83,6 +84,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                             disabled
                             required
                             value={empData.empId || "ไม่มีข้อมูล"}
+                            id="empId"
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -91,6 +93,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                             type="text"
                             onChange={(e) => setDepartment(e.target.value)}
                             defaultValue={empData.department}
+                            id="department"
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -99,6 +102,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                             type="text"
                             onChange={(e) => setEmpName(e.target.value)}
                             defaultValue={empData.empName}
+                            id="empName"
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -110,6 +114,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                             required
                             onChange={(e) => setCardId(e.target.value)}
                             defaultValue={empData.cardId}
+                            id="cardId"
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -119,6 +124,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                             required
                             onChange={(e) => setEmail(e.target.value)}
                             defaultValue={empData.email}
+                            id="email"
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -127,12 +133,13 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                             type="text"
                             onChange={(e) => setTel(e.target.value)}
                             defaultValue={empData.tel}
+                            id="tel"
                           />
                         </Form.Group>
                       </Col>
                       <Container>
                         <Row className="mt-3 d-flex justify-content-end" md={6}>
-                          <Button type="submit">แก้ไขข้อมูล</Button>
+                          <Button type="submit" id="submit">แก้ไขข้อมูล</Button>
                         </Row>
                       </Container>
                     </Row>

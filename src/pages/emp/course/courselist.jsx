@@ -52,6 +52,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
             variant="primary"
             size="sm"
             onClick={() => showCourseDetails(data.courseId)}
+            id={'select-'+i}
           >
             เลือก
           </Button>
@@ -110,6 +111,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                 size="sm"
                 variant="primary"
                 onClick={() => setSelectedSId(data)}
+                id={'select-'+i}
               >
                 {data}
               </Button>
@@ -247,6 +249,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                         selectedSessionId.current.value
                       )
                     }
+                    id="register"
                   >
                     ลงทะเบียน
                   </Button>
@@ -281,6 +284,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
           <Button
             variant="outline-primary"
             onClick={() => navigate("/emp/dashboard")}
+            id="back"
           >
             <MdArrowBackIosNew /> กลับสู่หน้าหลัก
           </Button>
@@ -314,6 +318,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                   <Button
                     variant="dark"
                     onClick={() => navigate("/emp/course/manage")}
+                    id="add-remove"
                   >
                     ไปที่หน้าเพิ่ม-ถอน
                   </Button>

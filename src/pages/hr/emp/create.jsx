@@ -95,6 +95,7 @@ export const CreateEmp = () => {
                 variant="link"
                 onClick={() => navigate("/hr/emp")}
                 className="back-button"
+                id="back"
               >
                 <MdArrowBackIosNew /> กลับหน้าพนักงาน
               </Button>
@@ -106,6 +107,7 @@ export const CreateEmp = () => {
                   <h5 className="mb-3 border-bottom pb-2">รายละเอียดพนักงาน</h5>
                   <Form onSubmit={handleSubmit}>
                     <Row>
+                      <Col md={4}></Col>
                       <Col md={4}>
                         <Form.Group className="mb-3">
                           <Form.Label>รหัสพนักงาน</Form.Label>
@@ -115,44 +117,46 @@ export const CreateEmp = () => {
                             required
                             ref={empId}
                             value={createEmpId}
+                            id="empId"
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
-                          <Form.Control type="text" ref={department} />
+                          <Form.Control type="text" ref={department} id="department"/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>ชื่อพนักงาน</Form.Label>
-                          <Form.Control type="text" ref={empName} />
+                          <Form.Control type="text" ref={empName} id="empName"/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>
                             เลขที่ประจําตัวประชาชนของพนักงาน
                           </Form.Label>
-                          <Form.Control type="text" required ref={cardId} />
+                          <Form.Control type="text" required ref={cardId} id="cardId"/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>อีเมลล์พนักงาน</Form.Label>
-                          <Form.Control type="text" required ref={email} />
+                          <Form.Control type="text" required ref={email} id="email"/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>เบอร์โทรศัพท์พนักงาน</Form.Label>
-                          <Form.Control type="text" ref={tel} />
+                          <Form.Control type="text" ref={tel} id="tel"/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>สิทธิ์การใช้งาน</Form.Label>
                           <Form.Select
                             aria-label="Default select example"
                             ref={roles}
+                            id="roles"
                           >
-                            <option value="Emp">Emp</option>
-                            <option value="Hr">Hr</option>
+                            <option value="Emp" id="emp">Emp</option>
+                            <option value="Hr" id="hr">Hr</option>
                           </Form.Select>
                         </Form.Group>
                       </Col>
                       <Container>
                         <Row className="mt-3 d-flex justify-content-end" md={6}>
-                          <Button type="submit">สร้างพนักงาน</Button>
+                          <Button type="submit" id="submit">สร้างพนักงาน</Button>
                         </Row>
                       </Container>
                     </Row>

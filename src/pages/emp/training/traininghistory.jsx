@@ -6,11 +6,11 @@ import { MdArrowBackIosNew } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-export const TrainingHistory = ({ empDataRaw,courseResultDataRaw}) => {
+export const TrainingHistory = ({ empDataRaw, courseResultDataRaw }) => {
   const navigate = useNavigate();
-  const sendData = (id) =>{
+  const sendData = (id) => {
     navigate(`/emp/trainings/history/${id}`);
-  }
+  };
 
   const [empData, setEmpData] = useState({});
   const [courseResultData, setCourseResultData] = useState([]);
@@ -19,9 +19,9 @@ export const TrainingHistory = ({ empDataRaw,courseResultDataRaw}) => {
     setEmpData(empDataRaw);
   }, [empDataRaw]);
 
-  useEffect(()=>{
-    setCourseResultData(courseResultDataRaw || [])
-  },[courseResultDataRaw])
+  useEffect(() => {
+    setCourseResultData(courseResultDataRaw || []);
+  }, [courseResultDataRaw]);
 
   const tableData = courseResultData.map((data, i) => {
     return (
@@ -31,17 +31,31 @@ export const TrainingHistory = ({ empDataRaw,courseResultDataRaw}) => {
         <td>{data.courseId}</td>
         <td>{data.sessionId}</td>
         <td>{data.courseName}</td>
-        <td className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
         <td className="text-center">
-          {data.status === "pass"
-            ? <Badge pill bg="success">ผ่าน</Badge>
-            : data.status === "fail"
-            ? <Badge pill bg="danger">ไม่ผ่าน</Badge>
-            : data.status === "pending"
-            ? <Badge pill bg="warning">กำลังตรวจสอบ</Badge>
-            : "ไม่มีข้อมูล"}
+          {data.trainingDate.toString().split("T")[0]}
         </td>
-        <td><Button variant="link" size="sm" onClick={()=>sendData(data.reqId)}>เปิด</Button></td>
+        <td className="text-center">
+          {data.status === "pass" ? (
+            <Badge pill bg="success">
+              ผ่าน
+            </Badge>
+          ) : data.status === "fail" ? (
+            <Badge pill bg="danger">
+              ไม่ผ่าน
+            </Badge>
+          ) : data.status === "pending" ? (
+            <Badge pill bg="warning">
+              กำลังตรวจสอบ
+            </Badge>
+          ) : (
+            "ไม่มีข้อมูล"
+          )}
+        </td>
+        <td>
+          <Button variant="link" size="sm" onClick={() => sendData(data.reqId)} id={"open-" + i}>
+            เปิด
+          </Button>
+        </td>
       </tr>
     );
   });
@@ -55,6 +69,7 @@ export const TrainingHistory = ({ empDataRaw,courseResultDataRaw}) => {
             variant="outline-primary"
             onClick={() => navigate("/emp/trainings")}
             className="shadow"
+            id="back"
           >
             <MdArrowBackIosNew /> กลับสู่หน้าการอบรม
           </Button>

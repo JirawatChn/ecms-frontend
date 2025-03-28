@@ -75,14 +75,25 @@ export const CourseRequestsList = ({
   useEffect(() => {
     const selectedItem = requestCourseDataRaw.filter((data) => {
       if (status.all === "all") {
-        return requestCourseDataRaw;
+        return true; // เอาทุกอัน
       }
       return status.pending === data.status;
     });
-
-    setRequestCourseData(selectedItem);
-    setAmount(selectedItem.length);
+  
+    const priority = {
+      pending: 0,
+      approved: 1,
+      denied: 2,
+    };
+  
+    const sortedItem = selectedItem.sort(
+      (a, b) => priority[a.status] - priority[b.status]
+    );
+  
+    setRequestCourseData(sortedItem);
+    setAmount(sortedItem.length);
   }, [requestCourseDataRaw, status]);
+  
 
   useEffect(() => {
     setCurrentLenght(requestCourseData.length);
@@ -143,6 +154,7 @@ export const CourseRequestsList = ({
                 variant="success"
                 size="sm"
                 onClick={() => requestModal(data.reqId, "approved")}
+                id={"approve-" + i}
               >
                 <MdCheck />
               </Button>
@@ -156,6 +168,7 @@ export const CourseRequestsList = ({
                 variant="danger"
                 size="sm"
                 onClick={() => requestModal(data.reqId, "denied")}
+                id={"deny-" + i}
               >
                 <MdClear />
               </Button>
@@ -168,6 +181,7 @@ export const CourseRequestsList = ({
               variant="link"
               size="sm"
               onClick={() => sendData(data.reqId)}
+              id={"open-" + i}
             >
               เปิด
             </Button>
@@ -227,7 +241,7 @@ export const CourseRequestsList = ({
               authorization: token,
             },
           }
-        );        
+        );
         window.location.reload();
       } catch (error) {
         console.error("Error fetching employee data:", error);
@@ -254,6 +268,7 @@ export const CourseRequestsList = ({
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="modal-cancel"
               >
                 ยกเลิก
               </Button>
@@ -261,6 +276,7 @@ export const CourseRequestsList = ({
                 onClick={() => approvedRequest()}
                 variant="success"
                 className="flex-grow-1"
+                id="modal-approve"
               >
                 อนุมัติ
               </Button>
@@ -279,7 +295,7 @@ export const CourseRequestsList = ({
                 <p>คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {reqId}</p>
                 <Form.Group className="mb-3">
                   <Form.Label>หมายเหตุ</Form.Label>
-                  <Form.Control type="text" ref={remark} required />
+                  <Form.Control type="text" ref={remark} required id="remark"/>
                 </Form.Group>
               </div>
             </Modal.Body>
@@ -288,6 +304,7 @@ export const CourseRequestsList = ({
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="modal-cancel"
               >
                 ยกเลิก
               </Button>
@@ -295,6 +312,7 @@ export const CourseRequestsList = ({
                 onClick={() => deniedRequest()}
                 variant="danger"
                 className="flex-grow-1"
+                id="modal-deny"
               >
                 ไม่อนุมัติ
               </Button>
@@ -331,6 +349,7 @@ export const CourseRequestsList = ({
                       href="#"
                       onClick={() => setStatus({ pending: "pending" })}
                       className="text-white"
+                      id="pending"
                     >
                       รออนุมัติ
                     </Nav.Link>
@@ -340,6 +359,7 @@ export const CourseRequestsList = ({
                       eventKey="1"
                       onClick={() => setStatus({ all: "all" })}
                       className="text-white"
+                      id="all"
                     >
                       ทั้งหมด
                     </Nav.Link>

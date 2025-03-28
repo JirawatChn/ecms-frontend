@@ -47,6 +47,7 @@ export const ReimbursementDetails = ({
           <Button
             variant="outline-primary"
             onClick={() => navigate("/emp/reimbursement")}
+            id="back"
           >
             <MdArrowBackIosNew /> กลับหน้าเบิกค่าอบรม
           </Button>

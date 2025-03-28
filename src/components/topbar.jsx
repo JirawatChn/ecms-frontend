@@ -52,13 +52,13 @@ export const Topbar = ({ content}) => {
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
-            <Dropdown align="end">
+            <Dropdown align="end" id="dropdown">
               <Dropdown.Toggle variant="primary">
                 <span>{name || "ไม่มีข้อมูล"}</span>
               </Dropdown.Toggle>
               <Dropdown.Menu>
-                <Dropdown.Item onClick={()=>navigate('/hr/profile')}>My Profile</Dropdown.Item>
-                <Dropdown.Item onClick={()=>handleLogout()}>Logout</Dropdown.Item>
+                <Dropdown.Item onClick={()=>navigate('/hr/profile')} id="my-profile">My Profile</Dropdown.Item>
+                <Dropdown.Item onClick={()=>handleLogout()} id="logout">Logout</Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown>
           </Navbar.Collapse>

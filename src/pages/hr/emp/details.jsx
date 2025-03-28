@@ -120,6 +120,7 @@ export const EmpDetails = () => {
             onClick={props.onHide}
             variant="outline-secondary"
             className="flex-grow-1 me-2"
+            id="modal-cancel-button"
           >
             ยกเลิก
           </Button>
@@ -127,6 +128,7 @@ export const EmpDetails = () => {
             onClick={() => deleteEmp(empId)}
             variant="danger"
             className="flex-grow-1"
+            id="modal-delete-button"
           >
             ลบ
           </Button>
@@ -164,6 +166,7 @@ export const EmpDetails = () => {
                 variant="link"
                 onClick={() => navigate("/hr/emp")}
                 className="back-button"
+                id="back"
               >
                 <MdArrowBackIosNew /> กลับหน้าพนักงาน
               </Button>
@@ -174,18 +177,20 @@ export const EmpDetails = () => {
                 variant="warning"
                 className="mb-2 shadow-sm text-white"
                 onClick={() => sendData(empId)}
+                id="edit-button"
               >
                 <MdEditNote />
                 แก้ไขข้อมูล
               </Button>
-              <Button
+             {status === 'active' ? <Button
                 variant="danger"
                 className="mb-2 shadow-sm text-white mx-2"
                 onClick={() => setModalShow(true)}
+                id="delete-button"
               >
                 <MdClose />
                 ลบพนักงาน
-              </Button>
+              </Button> : ""}
               <Card className="h-100 shadow-sm">
                 <div className="p-4">
                   <h5 className="mb-3 border-bottom pb-2 d-flex">

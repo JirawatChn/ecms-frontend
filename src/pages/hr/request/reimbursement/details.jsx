@@ -52,7 +52,7 @@ export const RequestReimbursementDetails = () => {
 
   const [modalShow, setModalShow] = useState(false);
   const [modalStatus, setModalStatus] = useState("");
-  const remark = useRef()
+  const remark = useRef();
 
   const requestModal = (id, status) => {
     setModalShow(true);
@@ -105,7 +105,7 @@ export const RequestReimbursementDetails = () => {
     }
     setModalShow(false);
   };
-  
+
   const WarningModal = (props) => {
     return (
       <>
@@ -124,6 +124,7 @@ export const RequestReimbursementDetails = () => {
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="modal-cancel"
               >
                 ยกเลิก
               </Button>
@@ -131,13 +132,14 @@ export const RequestReimbursementDetails = () => {
                 onClick={() => approvedRequest()}
                 variant="success"
                 className="flex-grow-1"
+                id="modal-approve"
               >
                 อนุมัติ
               </Button>
             </Modal.Footer>
           </Modal>
         )}
-       {modalStatus === "denied" && (
+        {modalStatus === "denied" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
@@ -146,15 +148,14 @@ export const RequestReimbursementDetails = () => {
             <Modal.Body>
               <div>
                 <h4>ยืนยันหรือไม่</h4>
-                <p>
-                  คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {reqId}
-                </p>
+                <p>คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {reqId}</p>
                 <Form.Group className="mb-3">
                   <Form.Label>หมายเหตุ</Form.Label>
                   <Form.Control
                     type="text"
                     ref={remark}
                     required
+                    id="modal-remark"
                   />
                 </Form.Group>
               </div>
@@ -164,6 +165,7 @@ export const RequestReimbursementDetails = () => {
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="modal-cancel"
               >
                 ยกเลิก
               </Button>
@@ -171,6 +173,7 @@ export const RequestReimbursementDetails = () => {
                 onClick={() => deniedRequest()}
                 variant="danger"
                 className="flex-grow-1"
+                id="modal-deny"
               >
                 ไม่อนุมัติ
               </Button>
@@ -198,6 +201,7 @@ export const RequestReimbursementDetails = () => {
                 variant="link"
                 onClick={() => navigate("/hr/Reimbursement/requests")}
                 className="back-button"
+                id="back"
               >
                 <MdArrowBackIosNew /> กลับหน้าคำร้อง
               </Button>
@@ -230,7 +234,11 @@ export const RequestReimbursementDetails = () => {
                       </h5>
                       <p>
                         <strong>วันที่ส่งคำร้อง:</strong>{" "}
-                        {requestReimbursementData.createdAt ? requestReimbursementData.createdAt.toString().split('T')[0] : "ไม่มีข้อมูล"}
+                        {requestReimbursementData.createdAt
+                          ? requestReimbursementData.createdAt
+                              .toString()
+                              .split("T")[0]
+                          : "ไม่มีข้อมูล"}
                       </p>
                       <p>
                         <strong>รหัสคำร้อง:</strong>{" "}
@@ -296,7 +304,7 @@ export const RequestReimbursementDetails = () => {
                         </div>
                         <div className="mt-3">
                           <Button
-                          className="request-button"
+                            className="request-button"
                             variant="success"
                             onClick={() =>
                               requestModal(
@@ -304,6 +312,7 @@ export const RequestReimbursementDetails = () => {
                                 "approved"
                               )
                             }
+                            id="approve"
                           >
                             อนุมัติคำร้อง
                           </Button>
@@ -316,6 +325,7 @@ export const RequestReimbursementDetails = () => {
                                 "denied"
                               )
                             }
+                            id="deny"
                           >
                             ไม่อนุมัติคำร้อง
                           </Button>
@@ -355,9 +365,11 @@ export const RequestReimbursementDetails = () => {
                                   type="text"
                                   disabled
                                   value={
-                                    requestReimbursementData.createdAt.toString().split('T')[0] ||
-                                    "ไม่มีข้อมูล"
+                                    requestReimbursementData.createdAt
+                                      .toString()
+                                      .split("T")[0] || "ไม่มีข้อมูล"
                                   }
+                                  id="approved-date"
                                 />
                               </Form.Group>
                             </Col>
@@ -401,6 +413,7 @@ export const RequestReimbursementDetails = () => {
                                     requestReimbursementData.remark ||
                                     "ไม่มีข้อมูล"
                                   }
+                                  id="remark"
                                 />
                               </Form.Group>
                             </Col>
@@ -411,9 +424,11 @@ export const RequestReimbursementDetails = () => {
                                   type="text"
                                   disabled
                                   value={
-                                    requestReimbursementData.createdAt.toString().split('T')[0] ||
-                                    "ไม่มีข้อมูล"
+                                    requestReimbursementData.createdAt
+                                      .toString()
+                                      .split("T")[0] || "ไม่มีข้อมูล"
                                   }
+                                  id="approved-date"
                                 />
                               </Form.Group>
                             </Col>

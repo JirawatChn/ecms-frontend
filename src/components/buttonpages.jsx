@@ -14,7 +14,12 @@ export const ButtonPage = ({
   if (curPage > 1) {
     const customKey = "prevButton";
     buttons.push(
-      <Button className="mx-1" key={customKey} onClick={() => setCurPage(curPage - 1)}>
+      <Button
+        className="mx-1"
+        key={customKey}
+        onClick={() => setCurPage(curPage - 1)}
+        id="prevButton"
+      >
         Prev
       </Button>
     );
@@ -28,6 +33,7 @@ export const ButtonPage = ({
         className="mx-1"
         variant={curPage === i ? "primary" : "outline-primary"} // Use the variant to conditionally style the button
         onClick={() => setCurPage(i)}
+        id={`pageButton-${i}`}
       >
         {i}
       </Button>
@@ -43,6 +49,7 @@ export const ButtonPage = ({
         className="mx-1"
         variant="primary" // Use the variant for primary styling
         onClick={() => setCurPage(curPage + 1)}
+        id="nextButton"
       >
         Next
       </Button>

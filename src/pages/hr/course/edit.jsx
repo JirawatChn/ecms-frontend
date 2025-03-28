@@ -116,6 +116,7 @@ export const EditCourse = () => {
                 variant="link"
                 onClick={() => sendData()}
                 className="back-button"
+                id="back"
               >
                 <MdArrowBackIosNew /> ยกเลิกการแก้ไข
               </Button>
@@ -164,6 +165,7 @@ export const EditCourse = () => {
                             defaultValue={
                               courseData.sessions?.[0]?.courseLimit || ""
                             }
+                            id="courseLimit"
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -172,6 +174,7 @@ export const EditCourse = () => {
                             type="text"
                             onChange={(e) => setHours(e.target.value)}
                             defaultValue={courseData.sessions?.[0]?.hours || ""}
+                            id="hours"
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -182,6 +185,7 @@ export const EditCourse = () => {
                             defaultValue={
                               courseData.sessions?.[0]?.periods || ""
                             }
+                            id="periods"
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -194,6 +198,7 @@ export const EditCourse = () => {
                             defaultValue={
                               courseData.sessions?.[0]?.trainingLocation || ""
                             }
+                            id="trainingLocation"
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
@@ -206,12 +211,13 @@ export const EditCourse = () => {
                               new Date().toISOString().split("T")[0]
                             }
                             min={new Date().toISOString().split("T")[0]}
+                            id="trainingDate"
                           />
                         </Form.Group>
                       </Col>
                       <Container>
                         <Row className="mt-3 d-flex justify-content-end" md={6}>
-                          <Button type="submit">แก้ไขข้อมูล</Button>
+                          <Button type="submit" id="submit">แก้ไขข้อมูล</Button>
                         </Row>
                       </Container>
                     </Row>

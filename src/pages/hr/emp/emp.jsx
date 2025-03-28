@@ -73,14 +73,24 @@ export const Emp = ({
   useEffect(() => {
     const selectedItem = empDataRaw.filter((data) => {
       if (status.all === "all") {
-        return empDataRaw;
+        return true; // เอาทุก status
       }
-      return status.active === data.status; // กรองเฉพาะตามสถานะที่ต้องการ
+      return status.active === data.status; // เงื่อนไขเฉพาะ
     });
-
-    setEmpData(selectedItem);
-    setAmount(selectedItem.length);
+  
+    const priority = {
+      active: 0,
+      inactive: 1,
+    };
+  
+    const sortedItem = selectedItem.sort(
+      (a, b) => priority[a.status] - priority[b.status]
+    );
+  
+    setEmpData(sortedItem);
+    setAmount(sortedItem.length);
   }, [empDataRaw, status]);
+  
 
   useEffect(() => {
     setCurrentLenght(empData.length);
@@ -134,6 +144,7 @@ export const Emp = ({
               variant="link"
               size="sm"
               onClick={() => sendData(data.empId)}
+              id={"open-"+i}
             >
               เปิด
             </Button>
@@ -169,6 +180,7 @@ export const Emp = ({
                           eventKey="#"
                           onClick={() => setStatus({ active: "active" })}
                           className="text-white"
+                          id="active"
                         >
                           ปัจจุบัน
                         </Nav.Link>
@@ -178,6 +190,7 @@ export const Emp = ({
                           eventKey="1"
                           onClick={() => setStatus({ all: "all" })}
                           className="text-white"
+                          id="all"
                         >
                           ทั้งหมด
                         </Nav.Link>
@@ -189,6 +202,7 @@ export const Emp = ({
                     <Button
                       variant="dark"
                       onClick={() => navigate("/hr/emp/create")}
+                      id="create"
                     >
                       สร้างพนักงานใหม่
                     </Button>

@@ -86,6 +86,7 @@ export const ManageCourse = ({
             onClick={() =>
               withdrawCourseModal(data.courseId, data.sessionId)
             }
+            id={'delete-'+i}
           >
             ลบ
           </Button>
@@ -114,6 +115,7 @@ export const ManageCourse = ({
             onClick={props.onHide}
             variant="outline-secondary"
             className="flex-grow-1 me-2"
+            id="cancel"
           >
             ยกเลิก
           </Button>
@@ -121,6 +123,7 @@ export const ManageCourse = ({
             onClick={() => withdrawCourse()}
             variant="primary"
             className="flex-grow-1"
+            id="confirm"
           >
             ยืนยัน
           </Button>
@@ -139,6 +142,7 @@ export const ManageCourse = ({
             variant="outline-primary"
             onClick={() => navigate("/emp/dashboard")}
             className="shadow"
+            id="back"
           >
             <MdArrowBackIosNew /> กลับสู่หน้าหลัก
           </Button>
@@ -202,6 +206,7 @@ export const ManageCourse = ({
                         variant="primary"
                         className="text-decoration-none"
                         onClick={() => navigate("/emp/course")}
+                        id="add-course"
                       >
                         + ลงทะเบียนคอร์สเพิ่ม
                       </Button>

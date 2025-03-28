@@ -173,6 +173,7 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
                     "--icon-hover": "#9b3e3e",
                   }}
                   onClick={() => navigate("/emp/course")}
+                  id="course"
                 >
                   <div className="card-menu-circle">
                     <MdAssignment className="icon" />
@@ -189,6 +190,7 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
                     "--icon-hover": "#9b5f3f",
                   }}
                   onClick={() => navigate("/emp/course/manage")}
+                  id="manage"
                 >
                   <div className="card-menu-circle">
                     <MdOutlineWifiProtectedSetup className="icon" />
@@ -209,6 +211,7 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
                     "--icon-hover": "#6a9e3f",
                   }}
                   onClick={() => navigate("/emp/reimbursement")}
+                  id="reimbursement"
                 >
                   <div className="card-menu-circle">
                     <MdOutlineAttachMoney className="icon" />
@@ -225,6 +228,7 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
                     "--icon-hover": "#3c7a99",
                   }}
                   onClick={() => navigate("/emp/trainings")}
+                  id="trainings"
                 >
                   <div className="card-menu-circle">
                     <MdInsertChart className="icon" />
@@ -241,6 +245,7 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
                     "--icon-hover": "#3d549b",
                   }}
                   onClick={() => navigate("/emp/details")}
+                  id="details"
                 >
                   <div className="card-menu-circle">
                     <MdAccountCircle className="icon" />

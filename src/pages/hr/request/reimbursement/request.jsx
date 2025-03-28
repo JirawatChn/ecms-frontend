@@ -77,14 +77,25 @@ export const ReimbursementRequestsList = ({
   useEffect(() => {
     const selectedItem = reimbursementRequestDataRaw.filter((data) => {
       if (status.all === "all") {
-        return reimbursementRequestDataRaw;
+        return true; // คืน true เพื่อรับทุก status
       }
       return status.pending === data.status;
     });
-
-    setReimbursementRequestData(selectedItem);
-    setAmount(selectedItem.length);
+  
+    const priority = {
+      pending: 0,
+      approved: 1,
+      denied: 2,
+    };
+  
+    const sortedItem = selectedItem.sort(
+      (a, b) => priority[a.status] - priority[b.status]
+    );
+  
+    setReimbursementRequestData(sortedItem);
+    setAmount(sortedItem.length);
   }, [reimbursementRequestDataRaw, status]);
+  
 
   useEffect(() => {
     setCurrentLenght(reimbursementRequestData.length);
@@ -143,6 +154,7 @@ export const ReimbursementRequestsList = ({
                 variant="success"
                 size="sm"
                 onClick={() => requestModal(data.reqId, "approved")}
+                id={'approve-'+i}
               >
                 <MdCheck />
               </Button>
@@ -156,6 +168,7 @@ export const ReimbursementRequestsList = ({
                 variant="danger"
                 size="sm"
                 onClick={() => requestModal(data.reqId, "denied")}
+                id={"deny-"+i}
               >
                 <MdClear />
               </Button>
@@ -168,6 +181,7 @@ export const ReimbursementRequestsList = ({
               variant="link"
               size="sm"
               onClick={() => sendData(data.reqId)}
+              id={'open-'+i}
             >
               เปิด
             </Button>
@@ -253,6 +267,7 @@ export const ReimbursementRequestsList = ({
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="modal-cancel"
               >
                 ยกเลิก
               </Button>
@@ -260,6 +275,7 @@ export const ReimbursementRequestsList = ({
                 onClick={() => approvedRequest()}
                 variant="success"
                 className="flex-grow-1"
+                id="modal-approve"
               >
                 อนุมัติ
               </Button>
@@ -284,6 +300,7 @@ export const ReimbursementRequestsList = ({
                     type="text"
                     ref={remark}
                     required
+                    id="modal-remark"
                   />
                 </Form.Group>
               </div>
@@ -293,6 +310,7 @@ export const ReimbursementRequestsList = ({
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="modal-cancel"
               >
                 ยกเลิก
               </Button>
@@ -300,6 +318,7 @@ export const ReimbursementRequestsList = ({
                 onClick={() => deniedRequest()}
                 variant="danger"
                 className="flex-grow-1"
+                id="modal-deny"
               >
                 ไม่อนุมัติ
               </Button>
@@ -336,6 +355,7 @@ export const ReimbursementRequestsList = ({
                       href="#"
                       onClick={() => setStatus({ pending: "pending" })}
                       className="text-white"
+                      id="pending"
                     >
                       รออนุมัติ
                     </Nav.Link>
@@ -345,6 +365,7 @@ export const ReimbursementRequestsList = ({
                       eventKey="1"
                       onClick={() => setStatus({ all: "all" })}
                       className="text-white"
+                      id="all"
                     >
                       ทั้งหมด
                     </Nav.Link>

@@ -6,23 +6,26 @@ import { useNavigate } from "react-router";
 import { Badge, Col, Container, Row, Table } from "react-bootstrap";
 import { useEffect, useState } from "react";
 
-export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw}) => {
+export const Reimbursement = ({
+  empDataRaw,
+  setEmpDataRaw,
+  reimbursementDataRaw,
+}) => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
-  const [reimbursementData, setReimbursementData] = useState([]); 
+  const [reimbursementData, setReimbursementData] = useState([]);
 
+  useEffect(() => {
+    setReimbursementData(reimbursementDataRaw);
+  }, [reimbursementDataRaw]);
 
-  useEffect(()=>{
-    setReimbursementData(reimbursementDataRaw)
-  },[reimbursementDataRaw])
-
-  const sendData = (id) =>{
+  const sendData = (id) => {
     navigate(`/emp/reimbursement/details/${id}`);
-  }
+  };
 
   useEffect(() => {
     setEmpData(empDataRaw);
-  }, [empDataRaw]);  
+  }, [empDataRaw]);
 
   const tableData = reimbursementData.map((data, i) => {
     return (
@@ -31,19 +34,31 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw})
         <td>{data.reqId}</td>
         <td>{data.courseId}</td>
         <td>{data.empId}</td>
-        <td className="text-center">{data.createdAt.toString().split("T")[0]}</td>
+        <td className="text-center">
+          {data.createdAt.toString().split("T")[0]}
+        </td>
         <td className="text-center">{data.amount}</td>
         <td className="text-center">
-          {data.status === "approved"
-            ? <Badge pill bg="success">อนุมัติ</Badge>
-            : data.status === "denied"
-            ? <Badge pill bg="danger">ไม่อนุมัติ</Badge>
-            : data.status === "pending"
-            ? <Badge pill bg="warning">รออนุมัติ</Badge>
-            : "ไม่มีข้อมูล"}
+          {data.status === "approved" ? (
+            <Badge pill bg="success">
+              อนุมัติ
+            </Badge>
+          ) : data.status === "denied" ? (
+            <Badge pill bg="danger">
+              ไม่อนุมัติ
+            </Badge>
+          ) : data.status === "pending" ? (
+            <Badge pill bg="warning">
+              รออนุมัติ
+            </Badge>
+          ) : (
+            "ไม่มีข้อมูล"
+          )}
         </td>
         <td className="text-center">
-          <Button variant="link" onClick={()=>sendData(data.reqId)}>เปิด</Button>
+          <Button variant="link" onClick={() => sendData(data.reqId)} id={"open-"+i}>
+            เปิด
+          </Button>
         </td>
       </tr>
     );
@@ -58,6 +73,7 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw})
             variant="outline-primary"
             onClick={() => navigate("/emp/dashboard")}
             className="shadow"
+            id="back"
           >
             <MdArrowBackIosNew /> กลับสู่หน้าหลัก
           </Button>
@@ -89,7 +105,13 @@ export const Reimbursement = ({ empDataRaw, setEmpDataRaw,reimbursementDataRaw})
                   />
                 </Col>
                 <Col md={2} className="d-flex justify-content-end">
-                  <Button variant="dark" onClick={()=>navigate('/emp/reimbursement/request')}>ส่งคำร้องขอเบิกค่าอบรม</Button>
+                  <Button
+                    variant="dark"
+                    onClick={() => navigate("/emp/reimbursement/request")}
+                    id="request"
+                  >
+                    ส่งคำร้องขอเบิกค่าอบรม
+                  </Button>
                 </Col>
               </Row>
             </Container>

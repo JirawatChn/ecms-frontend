@@ -83,6 +83,7 @@ export const Login = () => {
                 type="text"
                 required
                 onChange={(e) => setEmail(e.target.value)}
+                id="email"
               />
               <label>Email Address</label>
             </div>
@@ -91,6 +92,7 @@ export const Login = () => {
                 type="password"
                 required
                 onChange={(e) => setPassword(e.target.value)}
+                id="password"
               />
               <label>Password</label>
             </div>
@@ -100,7 +102,7 @@ export const Login = () => {
               </div>
             )}
             <div className="field">
-              <input type="submit" value="Login" className="mt-3" />
+              <input type="submit" value="Login" className="mt-3" id="submit"/>
             </div>
           </form>
         </div>

@@ -57,6 +57,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
           <Button
             variant="outline-primary"
             onClick={() => navigate(-1)}
+            id="back"
           >
             <MdArrowBackIosNew /> กลับสู่หน้าการอบรม
           </Button>
@@ -177,18 +178,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                             </Form.Group>
                           </Form>
                         </Col>
-                        <Col md={2}>
-                          <Form>
-                            <Form.Group className="mb-3">
-                              <Form.Label>เวลาอบรม</Form.Label>
-                              <Form.Control
-                                type="text"
-                                disabled
-                                value={courseResultData.periods || "ไม่มีข้อมูล"}
-                              />
-                            </Form.Group>
-                          </Form>
-                        </Col>
+                        
                       </Row>
                       <Row>
                         <Col md={4}>
@@ -206,17 +196,16 @@ export const TrainingDetails = ({ empDataRaw }) => {
                         <Col md={2}>
                           <Form>
                             <Form.Group className="mb-3">
-                              <Form.Label>จำนวนชั่วโมง</Form.Label>
+                              <Form.Label>เวลาอบรม</Form.Label>
                               <Form.Control
                                 type="text"
                                 disabled
-                                value={
-                                  courseResultData.hours || "ไม่มีข้อมูล"
-                                }
+                                value={courseResultData.periods || "ไม่มีข้อมูล"}
                               />
                             </Form.Group>
                           </Form>
                         </Col>
+                        
                         <ListGroup.Item variant="dark" className="mt-3">
                           ผลลัพธ์การอบรม
                         </ListGroup.Item>

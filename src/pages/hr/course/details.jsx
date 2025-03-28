@@ -172,6 +172,7 @@ export const CourseDetails = () => {
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="cancel-button"
               >
                 ยกเลิก
               </Button>
@@ -179,6 +180,7 @@ export const CourseDetails = () => {
                 onClick={() => completeCourse()}
                 variant="success"
                 className="flex-grow-1"
+                id="complete-button"
               >
                 เสร็จสิ้น
               </Button>
@@ -203,6 +205,7 @@ export const CourseDetails = () => {
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="cancel-button"
               >
                 ยกเลิก
               </Button>
@@ -210,6 +213,7 @@ export const CourseDetails = () => {
                 onClick={() => closeCourse()}
                 variant="danger"
                 className="flex-grow-1"
+                id="close-button"
               >
                 ปิด
               </Button>
@@ -234,6 +238,7 @@ export const CourseDetails = () => {
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="cancel-button"
               >
                 ยกเลิก
               </Button>
@@ -241,6 +246,7 @@ export const CourseDetails = () => {
                 onClick={() => startCourse()}
                 variant="success"
                 className="flex-grow-1"
+                id="start-button"
               >
                 เริ่ม
               </Button>
@@ -265,6 +271,7 @@ export const CourseDetails = () => {
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="cancel-button"
               >
                 ยกเลิก
               </Button>
@@ -272,6 +279,7 @@ export const CourseDetails = () => {
                 onClick={() => activeCourse()}
                 variant="success"
                 className="flex-grow-1"
+                id="open-button"
               >
                 เปิด
               </Button>
@@ -300,6 +308,7 @@ export const CourseDetails = () => {
                 variant="link"
                 onClick={() => navigate("/hr/course")}
                 className="back-button"
+                id="back"
               >
                 <MdArrowBackIosNew /> กลับหน้าคอร์สอบรม
               </Button>
@@ -335,6 +344,7 @@ export const CourseDetails = () => {
                 variant="warning"
                 className="mb-2 shadow-sm text-white"
                 onClick={() => sendData()}
+                id="edit-button"
               >
                 <MdEditNote />
                 แก้ไขข้อมูล
@@ -424,6 +434,7 @@ export const CourseDetails = () => {
                                 className="request-button"
                                 variant="success"
                                 onClick={() => requestModal("complete")}
+                                id="complete-button"
                               >
                                 อบรมเสร็จสิ้น
                               </Button>
@@ -435,6 +446,7 @@ export const CourseDetails = () => {
                                 className="request-button"
                                 variant="success"
                                 onClick={() => requestModal("active")}
+                                id="start-button"
                               >
                                 เริ่มการอบรม
                               </Button>
@@ -442,6 +454,7 @@ export const CourseDetails = () => {
                                 variant="danger"
                                 className="mx-2 request-button"
                                 onClick={() => requestModal("close")}
+                                id="close-button"
                               >
                                 ปิดการอบรม
                               </Button>
@@ -452,6 +465,7 @@ export const CourseDetails = () => {
                                 className="request-button"
                                 variant="success"
                                 onClick={() => requestModal("start")}
+                                id="open-button"
                               >
                                 เปิดการอบรม
                               </Button>

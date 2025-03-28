@@ -75,14 +75,26 @@ export const Results = ({
   useEffect(() => {
     const selectedItem = resultsDataRaw.filter((data) => {
       if (status.all === "all") {
-        return resultsDataRaw;
+        return true; // เอาทุกอัน
       }
       return status.pending === data.status;
     });
-
-    setResultsData(selectedItem);
-    setAmount(selectedItem.length);
+  
+    // 🟢 เรียงตาม priority: pending > pass > fail
+    const priority = {
+      pending: 0,
+      pass: 1,
+      fail: 2,
+    };
+  
+    const sortedItem = selectedItem.sort(
+      (a, b) => priority[a.status] - priority[b.status]
+    );
+  
+    setResultsData(sortedItem);
+    setAmount(sortedItem.length);
   }, [resultsDataRaw, status]);
+  
 
   useEffect(() => {
     setCurrentLenght(resultsData.length);
@@ -143,6 +155,7 @@ export const Results = ({
                 onClick={() =>
                   requestModal(data.reqId, "pass")
                 }
+                id={'pass-'+i}
               >
                 <MdCheck />
               </Button>
@@ -158,6 +171,7 @@ export const Results = ({
                 onClick={() =>
                   requestModal(data.reqId, "fail")
                 }
+                id={'fail-'+i}
               >
                 <MdClear />
               </Button>
@@ -170,6 +184,7 @@ export const Results = ({
               variant="link"
               size="sm"
               onClick={() => sendData(data.reqId)}
+              id={'open-'+i}
             >
               เปิด
             </Button>
@@ -261,6 +276,7 @@ export const Results = ({
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="modal-cancel"
               >
                 ยกเลิก
               </Button>
@@ -268,6 +284,7 @@ export const Results = ({
                 onClick={() => passRequest()}
                 variant="success"
                 className="flex-grow-1"
+                id="modal-pass"
               >
                 ผ่าน
               </Button>
@@ -297,6 +314,7 @@ export const Results = ({
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="modal-cancel"
               >
                 ยกเลิก
               </Button>
@@ -304,6 +322,7 @@ export const Results = ({
                 onClick={() => failRequest()}
                 variant="danger"
                 className="flex-grow-1"
+                id="modal-fail"
               >
                 ไม่ผ่าน
               </Button>
@@ -335,6 +354,7 @@ export const Results = ({
                       href="#"
                       onClick={() => setStatus({ pending: "pending" })}
                       className="text-white"
+                      id="pending"
                     >
                       รอตรวจสอบ
                     </Nav.Link>
@@ -344,6 +364,7 @@ export const Results = ({
                       eventKey="1"
                       onClick={() => setStatus({ all: "all" })}
                       className="text-white"
+                      id="all"
                     >
                       ทั้งหมด
                     </Nav.Link>

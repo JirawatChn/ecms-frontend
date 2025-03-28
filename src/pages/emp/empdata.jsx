@@ -110,7 +110,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                               <Form.Label>รหัสประจำตัวประชาชน</Form.Label>
                               <Form.Control
                                 type="email"
-                                value={empData.idCard ?? ""}
+                                value={empData.cardId ?? ""}
                                 disabled
                               />
                             </Form.Group>

@@ -58,7 +58,7 @@ export const TrainingResultDetails = () => {
     setModalStatus(status);
   };
 
-  const remark = useRef()
+  const remark = useRef();
 
   const passRequest = async () => {
     const token = localStorage.getItem("token");
@@ -98,7 +98,7 @@ export const TrainingResultDetails = () => {
               authorization: token,
             },
           }
-        );        
+        );
         window.location.reload();
       } catch (error) {
         console.error("Error fetching employee data:", error);
@@ -117,16 +117,14 @@ export const TrainingResultDetails = () => {
           >
             <Modal.Body>
               <h4>ยืนยันหรือไม่</h4>
-              <p>
-                คุณแน่ใจหรือไม่ที่จะให้ผ่านรายการ รหัส{" "}
-                {reqId}
-              </p>
+              <p>คุณแน่ใจหรือไม่ที่จะให้ผ่านรายการ รหัส {reqId}</p>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
               <Button
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="modal-cancel"
               >
                 ยกเลิก
               </Button>
@@ -134,13 +132,14 @@ export const TrainingResultDetails = () => {
                 onClick={() => passRequest()}
                 variant="success"
                 className="flex-grow-1"
+                id="modal-pass"
               >
                 ผ่าน
               </Button>
             </Modal.Footer>
           </Modal>
         )}
-       {modalStatus === "fail" && (
+        {modalStatus === "fail" && (
           <Modal
             {...props}
             aria-labelledby="contained-modal-title-vcenter"
@@ -149,12 +148,10 @@ export const TrainingResultDetails = () => {
             <Modal.Body>
               <div>
                 <h4>ยืนยันหรือไม่</h4>
-                <p>
-                  คุณแน่ใจหรือไม่ที่จะให้ไม่ผ่านรายการ รหัส {reqId} 
-                </p>
+                <p>คุณแน่ใจหรือไม่ที่จะให้ไม่ผ่านรายการ รหัส {reqId}</p>
                 <Form.Group className="mb-3">
                   <Form.Label>หมายเหตุ</Form.Label>
-                  <Form.Control type="text" ref={remark} required />
+                  <Form.Control type="text" ref={remark} required id="remark"/>
                 </Form.Group>
               </div>
             </Modal.Body>
@@ -163,6 +160,7 @@ export const TrainingResultDetails = () => {
                 onClick={props.onHide}
                 variant="outline-secondary"
                 className="flex-grow-1 me-2"
+                id="modal-cancel"
               >
                 ยกเลิก
               </Button>
@@ -170,6 +168,7 @@ export const TrainingResultDetails = () => {
                 onClick={() => failRequest()}
                 variant="danger"
                 className="flex-grow-1"
+                id="modal-fail"
               >
                 ไม่ผ่าน
               </Button>
@@ -192,6 +191,7 @@ export const TrainingResultDetails = () => {
                 variant="link"
                 onClick={() => navigate("/hr/results")}
                 className="back-button"
+                id="back"
               >
                 <MdArrowBackIosNew /> กลับหน้าผลลัพธ์
               </Button>
@@ -226,10 +226,14 @@ export const TrainingResultDetails = () => {
                         <Col>
                           <p>
                             <strong>วันที่ส่งคำร้อง:</strong>{" "}
-                            {requestResultData.sendDate}
+                            {requestResultData.createdAt
+                              ? requestResultData.createdAt
+                                  .toString()
+                                  .split("T")[0]
+                              : "ไม่มีข้อมูล"}
                           </p>
                           <p>
-                            <strong>รหัส</strong> {requestResultData.reqId}
+                            <strong>รหัส:</strong> {requestResultData.reqId}
                           </p>
                           <p>
                             <strong>รหัสคอร์ส:</strong>{" "}
@@ -240,15 +244,17 @@ export const TrainingResultDetails = () => {
                             {requestResultData.courseName}
                           </p>
                           <p>
-                            <strong>รอบ:</strong>{" "}
-                            {requestResultData.sessionId}
+                            <strong>รอบ:</strong> {requestResultData.sessionId}
                           </p>
-                         
                         </Col>
                         <Col>
                           <p>
                             <strong>วันที่อบรม:</strong>{" "}
-                            {requestResultData.trainingDate ? requestResultData.trainingDate.toString().split('T')[0] : "ไม่มีข้อมูล"}
+                            {requestResultData.trainingDate
+                              ? requestResultData.trainingDate
+                                  .toString()
+                                  .split("T")[0]
+                              : "ไม่มีข้อมูล"}
                           </p>
                           <p>
                             <strong>เวลาอบรม</strong>{" "}
@@ -305,18 +311,16 @@ export const TrainingResultDetails = () => {
                           <Button
                             className="request-button"
                             variant="success"
-                            onClick={() =>
-                              requestModal(reqId, "pass")
-                            }
+                            onClick={() => requestModal(reqId, "pass")}
+                            id="pass-button"
                           >
                             ผ่าน
                           </Button>
                           <Button
                             variant="danger"
                             className="mx-2 request-button"
-                            onClick={() =>
-                              requestModal(reqId, "fail")
-                            }
+                            onClick={() => requestModal(reqId, "fail")}
+                            id="fail-button"
                           >
                             ไม่ผ่าน
                           </Button>

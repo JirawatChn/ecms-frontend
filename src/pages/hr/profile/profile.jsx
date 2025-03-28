@@ -5,19 +5,19 @@ import { MdArrowBackIosNew, MdEditNote } from "react-icons/md";
 import { useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 
-export const ProfileHr = ({empDataRaw,setEmpDataRaw}) => {
+export const ProfileHr = ({ empDataRaw, setEmpDataRaw }) => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
-  
-  useEffect(()=>{
-    setEmpData(empDataRaw)
-  },[empDataRaw])    
+
+  useEffect(() => {
+    setEmpData(empDataRaw);
+  }, [empDataRaw]);
 
   return (
     <div className="wrapper">
       <Sidebar actived="emp" iconActive={{ opacity: "100%" }} />
       <div id="content-wrapper" className="d-flex flex-column">
-        <Topbar content={"พนักงาน"}/>
+        <Topbar content={"พนักงาน"} />
         <div className="content">
           <div className="mx-2">
             <Container fluid>
@@ -25,13 +25,19 @@ export const ProfileHr = ({empDataRaw,setEmpDataRaw}) => {
                 variant="link"
                 onClick={() => navigate("/hr/emp")}
                 className="back-button"
+                id="back"
               >
                 <MdArrowBackIosNew /> กลับหน้าพนักงาน
               </Button>
               <div className="h3 fw-bold mb-4 d-flex align-items-center">
                 ข้อมูลส่วนตัว
               </div>
-              <Button variant="warning" className="mb-2 shadow-sm text-white" onClick={()=>navigate('/hr/edit/profile')}>
+              <Button
+                variant="warning"
+                className="mb-2 shadow-sm text-white"
+                onClick={() => navigate("/hr/edit/profile")}
+                id="edit-button"
+              >
                 <MdEditNote />
                 แก้ไขข้อมูล
               </Button>
@@ -41,63 +47,63 @@ export const ProfileHr = ({empDataRaw,setEmpDataRaw}) => {
                     ข้อมูลทั่วไป
                   </h5>
                   <Row>
-                      <Col md={4}>
-                        <Form.Group className="mb-3">
-                          <Form.Label>รหัสพนักงาน</Form.Label>
-                          <Form.Control
-                            type="text"
-                            disabled
-                            required
-                            value={empData.empId || "ไม่มีข้อมูล"}
-                          />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                          <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
-                          <Form.Control
-                            type="text"
-                            disabled
-                            required
-                            value={empData.department || "ไม่มีข้อมูล"}
-                          />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                          <Form.Label>ชื่อพนักงาน</Form.Label>
-                          <Form.Control
-                            type="text"
-                            disabled
-                            required
-                            value={empData.empName || "ไม่มีข้อมูล"}
-                          />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                          <Form.Label>
-                            เลขที่ประจําตัวประชาชนของพนักงาน
-                          </Form.Label>
-                          <Form.Control
-                            type="text"
-                            disabled
-                            required
-                            value={empData.cardId || "ไม่มีข้อมูล"}
-                          />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                          <Form.Label>อีเมลล์พนักงาน</Form.Label>
-                          <Form.Control
-                            type="text"
-                            disabled
-                            required
-                            value={empData.email || "ไม่มีข้อมูล"}
-                          />
-                        </Form.Group>
-                        <Form.Group className="mb-3">
-                          <Form.Label>เบอร์โทรศัพท์พนักงาน</Form.Label>
-                          <Form.Control
-                            type="text"
-                            disabled
-                            required
-                            value={empData.tel || "ไม่มีข้อมูล"}
-                          />
-                        </Form.Group>
+                    <Col md={4}>
+                      <Form.Group className="mb-3">
+                        <Form.Label>รหัสพนักงาน</Form.Label>
+                        <Form.Control
+                          type="text"
+                          disabled
+                          required
+                          value={empData.empId || "ไม่มีข้อมูล"}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
+                        <Form.Control
+                          type="text"
+                          disabled
+                          required
+                          value={empData.department || "ไม่มีข้อมูล"}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>ชื่อพนักงาน</Form.Label>
+                        <Form.Control
+                          type="text"
+                          disabled
+                          required
+                          value={empData.empName || "ไม่มีข้อมูล"}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>
+                          เลขที่ประจําตัวประชาชนของพนักงาน
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          disabled
+                          required
+                          value={empData.cardId || "ไม่มีข้อมูล"}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>อีเมลล์พนักงาน</Form.Label>
+                        <Form.Control
+                          type="text"
+                          disabled
+                          required
+                          value={empData.email || "ไม่มีข้อมูล"}
+                        />
+                      </Form.Group>
+                      <Form.Group className="mb-3">
+                        <Form.Label>เบอร์โทรศัพท์พนักงาน</Form.Label>
+                        <Form.Control
+                          type="text"
+                          disabled
+                          required
+                          value={empData.tel || "ไม่มีข้อมูล"}
+                        />
+                      </Form.Group>
                     </Col>
                   </Row>
                 </div>

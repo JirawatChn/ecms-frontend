@@ -132,6 +132,7 @@ export const CreateSession = () => {
                 variant="link"
                 onClick={() => navigate("/hr/course/create/course")}
                 className="back-button"
+                id="back"
               >
                 <MdArrowBackIosNew /> กลับหน้าสร้างคอร์สอบรม
               </Button>
@@ -153,12 +154,14 @@ export const CreateSession = () => {
                             required
                             ref={courseId}
                             onChange={handleSelectChange}
+                            id="select-course"
                           >
                             <option value="">กรุณาเลือกคอร์ส</option>
                             {selectCourseId.map((course) => (
                               <option
                                 key={course.courseId}
                                 value={course.courseId}
+                                id={course.courseId}
                               >
                                 {course.courseId} - {course.courseName}
                               </option>
@@ -176,23 +179,24 @@ export const CreateSession = () => {
                             ref={sessionId}
                             disabled
                             value={newSession || ""}
+                            id="sessionId"
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>จำนวนที่นั่ง</Form.Label>
-                          <Form.Control type="number" ref={courseLimit} />
+                          <Form.Control type="number" ref={courseLimit} id="courseLimit"/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>จำนวนชั่วโมงอบรม</Form.Label>
-                          <Form.Control type="number" ref={hours} />
+                          <Form.Control type="number" ref={hours} id="hours"/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>เวลาอบรม</Form.Label>
-                          <Form.Control type="text" ref={periods} />
+                          <Form.Control type="text" ref={periods} id="periods"/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>สถานที่อบรม</Form.Label>
-                          <Form.Control type="text" ref={trainingLocation} />
+                          <Form.Control type="text" ref={trainingLocation} id="trainingLocation"/>
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>วันที่อบรม</Form.Label>
@@ -200,12 +204,13 @@ export const CreateSession = () => {
                             type="date"
                             ref={trainingDate}
                             min={new Date().toISOString().split("T")[0]}
+                            id="trainingDate"
                           />
                         </Form.Group>
                       </Col>
                       <Container>
                         <Row className="mt-3 d-flex justify-content-end" md={6}>
-                          <Button type="submit">สร้างรอบ</Button>
+                          <Button type="submit" id="submit">สร้างรอบ</Button>
                         </Row>
                       </Container>
                     </Row>

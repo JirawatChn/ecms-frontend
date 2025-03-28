@@ -23,7 +23,7 @@ export const Header = ({content}) => {
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">
             <Navbar.Text>
-              <Button variant="dark" onClick={()=>handleLogout()}>Logout</Button>
+              <Button variant="dark" onClick={()=>handleLogout()} id="logout">Logout</Button>
             </Navbar.Text>
           </Navbar.Collapse>
         </Container>

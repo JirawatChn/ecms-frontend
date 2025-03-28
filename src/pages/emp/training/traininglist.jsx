@@ -15,14 +15,14 @@ export const TrainingListDetails = ({ empDataRaw }) => {
   useEffect(() => {
     const fetchListResult = async () => {
       const token = localStorage.getItem("token");
-      const cid = courseId
-      const sid = sessionId
+      const cid = courseId;
+      const sid = sessionId;
       try {
         const response = await axios.post(
           "http://localhost:9999/checkdata/enrollment/id",
           {
             courseId: cid,
-            sessionId:sid
+            sessionId: sid,
           },
           {
             headers: {
@@ -49,14 +49,20 @@ export const TrainingListDetails = ({ empDataRaw }) => {
       <Header content={"การอบรม"} />
       <div className="mt-3 d-flex justify-content-center">
         <div style={{ width: "80rem" }} className="mt-4">
-          <Button variant="outline-primary" onClick={() => navigate(-1)}>
+          <Button
+            variant="outline-primary"
+            onClick={() => navigate(-1)}
+            id="back"
+          >
             <MdArrowBackIosNew /> กลับสู่หน้าการอบรม
           </Button>
 
           <Card bg="primary" className="mt-2" text="white">
             <Card bg="dark" text="white" className="mt-3 h4">
               <Card.Body>
-                <p>รายละเอียดการอบรม รหัส {courseId} รอบ {sessionId}</p>
+                <p>
+                  รายละเอียดการอบรม รหัส {courseId} รอบ {sessionId}
+                </p>
               </Card.Body>{" "}
             </Card>
             <Container>
@@ -155,7 +161,6 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                         </Form.Group>
                       </Form>
                     </Col>
-                    
                   </Row>
                   <Row>
                     <Col md={4}>
@@ -166,7 +171,11 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                             type="date"
                             disabled
                             value={
-                              requestResultData.trainingDate ? requestResultData.trainingDate.toString().split('T')[0] : ""
+                              requestResultData.trainingDate
+                                ? requestResultData.trainingDate
+                                    .toString()
+                                    .split("T")[0]
+                                : ""
                             }
                           />
                         </Form.Group>
@@ -184,20 +193,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                         </Form.Group>
                       </Form>
                     </Col>
-                    <Col md={2}>
-                      <Form>
-                        <Form.Group className="mb-3">
-                          <Form.Label>จำนวนชั่วโมง</Form.Label>
-                          <Form.Control
-                            type="text"
-                            disabled
-                            value={
-                              requestResultData.hours || "ไม่มีข้อมูล"
-                            }
-                          />
-                        </Form.Group>
-                      </Form>
-                    </Col>
+                    
                   </Row>
                 </Container>
               </Card>

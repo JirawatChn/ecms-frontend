@@ -58,6 +58,7 @@ export const CreateCourse = () => {
                   variant="link"
                   onClick={() => navigate("/hr/course")}
                   className="back-button d-flex justify-content-start"
+                  id="back"
                 >
                   <MdArrowBackIosNew /> กลับหน้าคอร์สอบรม
                 </Button>
@@ -65,6 +66,7 @@ export const CreateCourse = () => {
                   variant="link"
                   onClick={() => navigate("/hr/course/create/session")}
                   className="back-button  d-flex justify-content-end"
+                  id="forward"
                 >
                   ไปหน้าสร้างรอบอบรม <MdArrowForwardIos />
                 </Button>
@@ -81,16 +83,16 @@ export const CreateCourse = () => {
                       <Col md={4}>
                         <Form.Group className="mb-3">
                           <Form.Label>รหัสคอร์ส</Form.Label>
-                          <Form.Control type="text" required ref={courseId} />
+                          <Form.Control type="text" required ref={courseId} id="courseId"/>
                         </Form.Group>
                         <Form.Group className="mb-4">
                           <Form.Label>ชื่อคอร์ส</Form.Label>
-                          <Form.Control type="text" ref={courseName} />
+                          <Form.Control type="text" ref={courseName} id="courseName"/>
                         </Form.Group>
                       </Col>
                       <Container>
                         <Row className="mt-3 d-flex justify-content-end" md={6}>
-                          <Button type="submit">สร้างคอร์ส</Button>
+                          <Button type="submit" id="submit">สร้างคอร์ส</Button>
                         </Row>
                       </Container>
                     </Row>
