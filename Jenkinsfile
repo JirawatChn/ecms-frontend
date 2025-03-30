@@ -25,6 +25,9 @@ pipeline {
         }
         stage('Test') {
             steps {
+                bat "pip install robotframework"
+                bat "pip install robotframework-seleniumlibrary"
+                bat "robot emp-ecms.robot"
                 print 'Test'
             }
         }
