@@ -25,9 +25,17 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh "pip install robotframework"
-                sh "pip install robotframework-seleniumlibrary"
-                sh "robot emp-ecms.robot"
+                checkout([
+                $class: 'GitSCM',
+                branches: [[name: '*/main']],
+                userRemoteConfigs: [ [
+                    credentialsId: 'jirawatchn',
+                    url: 'https://github.com/JirawatChn/ecms-autotest'
+                ] ]
+                ])
+                bat "pip install robotframework"
+                bat "pip install robotframework-seleniumlibrary"
+                bat "robot emp-ecms.robot"
                 print 'Test'
             }
         }
