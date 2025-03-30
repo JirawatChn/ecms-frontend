@@ -52,7 +52,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
             variant="primary"
             size="sm"
             onClick={() => showCourseDetails(data.courseId)}
-            id={'select-'+i}
+            id={'open-'+i}
           >
             เลือก
           </Button>
