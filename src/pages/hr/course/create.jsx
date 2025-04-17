@@ -87,7 +87,7 @@ export const CreateCourse = () => {
                         </Form.Group>
                         <Form.Group className="mb-4">
                           <Form.Label>ชื่อคอร์ส</Form.Label>
-                          <Form.Control type="text" ref={courseName} id="courseName"/>
+                          <Form.Control type="text" required ref={courseName} id="courseName" />
                         </Form.Group>
                       </Col>
                       <Container>
