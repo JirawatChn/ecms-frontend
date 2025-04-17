@@ -91,6 +91,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                           <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
                           <Form.Control
                             type="text"
+                            required
                             onChange={(e) => setDepartment(e.target.value)}
                             defaultValue={empData.department}
                             id="department"
@@ -100,6 +101,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                           <Form.Label>ชื่อพนักงาน</Form.Label>
                           <Form.Control
                             type="text"
+                            required
                             onChange={(e) => setEmpName(e.target.value)}
                             defaultValue={empData.empName}
                             id="empName"
@@ -131,6 +133,7 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
                           <Form.Label>เบอร์โทรศัพท์พนักงาน</Form.Label>
                           <Form.Control
                             type="text"
+                            required
                             onChange={(e) => setTel(e.target.value)}
                             defaultValue={empData.tel}
                             id="tel"
