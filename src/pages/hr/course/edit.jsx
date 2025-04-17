@@ -23,8 +23,8 @@ export const EditCourse = () => {
 
     const dataToSubmit = {};
 
-    dataToSubmit.courseId = courseId
-    dataToSubmit.sessionId = sessionId
+    dataToSubmit.courseId = courseId;
+    dataToSubmit.sessionId = sessionId;
 
     if (courseName) {
       dataToSubmit.courseName = courseName;
@@ -161,6 +161,7 @@ export const EditCourse = () => {
                           <Form.Label>จำนวนที่นั่ง</Form.Label>
                           <Form.Control
                             type="text"
+                            required
                             onChange={(e) => setCourseLimit(e.target.value)}
                             defaultValue={
                               courseData.sessions?.[0]?.courseLimit || ""
@@ -172,6 +173,7 @@ export const EditCourse = () => {
                           <Form.Label>จำนวนชั่วโมงอบรม</Form.Label>
                           <Form.Control
                             type="text"
+                            required
                             onChange={(e) => setHours(e.target.value)}
                             defaultValue={courseData.sessions?.[0]?.hours || ""}
                             id="hours"
@@ -181,6 +183,7 @@ export const EditCourse = () => {
                           <Form.Label>เวลาอบรม</Form.Label>
                           <Form.Control
                             type="text"
+                            required
                             onChange={(e) => setPeriods(e.target.value)}
                             defaultValue={
                               courseData.sessions?.[0]?.periods || ""
@@ -192,6 +195,7 @@ export const EditCourse = () => {
                           <Form.Label>สถานที่อบรม</Form.Label>
                           <Form.Control
                             type="text"
+                            required
                             onChange={(e) =>
                               setTrainingLocation(e.target.value)
                             }
@@ -205,6 +209,7 @@ export const EditCourse = () => {
                           <Form.Label>วันที่อบรม</Form.Label>
                           <Form.Control
                             type="date"
+                            required
                             onChange={(e) => setTrainingDate(e.target.value)}
                             defaultValue={
                               courseData.sessions?.[0]?.trainingDate ||
@@ -217,7 +222,9 @@ export const EditCourse = () => {
                       </Col>
                       <Container>
                         <Row className="mt-3 d-flex justify-content-end" md={6}>
-                          <Button type="submit" id="submit">แก้ไขข้อมูล</Button>
+                          <Button type="submit" id="submit">
+                            แก้ไขข้อมูล
+                          </Button>
                         </Row>
                       </Container>
                     </Row>
