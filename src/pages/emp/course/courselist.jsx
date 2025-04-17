@@ -45,8 +45,8 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
-        <td>{data.courseId}</td>
-        <td>{data.courseName}</td>
+        <td id={"courseId-"+i}>{data.courseId}</td>
+        <td id={"courseName-"+i}>{data.courseName}</td>
         <td className="text-end">
           <Button
             variant="primary"

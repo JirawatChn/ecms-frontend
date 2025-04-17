@@ -3,6 +3,7 @@ import { MdFlag } from "react-icons/md";
 import { useNavigate } from "react-router"
 
 export const Custom404 = () =>{
+    const roles = localStorage.getItem('roles')
     const navigate = useNavigate()
     return(
         <div className="error-form w-screen mx-auto grid place-items-center text-center px-8 bg-gray-100">
@@ -21,7 +22,7 @@ export const Custom404 = () =>{
                 <Button
                     color="warning"
                     className="w-full px-4 md:w-[8rem]"
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate(`/${roles}/dashboard`)}
                 >
                     Go Back
                 </Button>

@@ -65,15 +65,15 @@ export const ManageCourse = ({
     return (
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
-        <td>{data.courseId}</td>
-        <td className="text-center">{data.sessionId}</td>
-        <td>{data.courseName}</td>
-        <td className="text-center">{data.trainingDate.toString().split("T")[0]}</td>
-        <td className="text-center">{data.periods}</td>
-        <td>{data.trainingLocation}</td>
-        <td className="text-center">
+        <td id={"courseId-"+i}>{data.courseId}</td>
+        <td id={"sessionId-"+i} className="text-center">{data.sessionId}</td>
+        <td id={"courseName-"+i}>{data.courseName}</td>
+        <td id={"trainingDate-"+i} className="text-center">{data.trainingDate.toString().split("T")[0]}</td>
+        <td id={"periods-"+i} className="text-center">{data.periods}</td>
+        <td id={"trainingLocation-"+i}>{data.trainingLocation}</td>
+        <td className="text-center" id={"status-"+i}>
           {data.status === "withdraw" ? (
-            <Badge pill bg="danger">
+            <Badge pill bg="danger" >
               รอยืนยันการถอน
             </Badge>
           ) : (

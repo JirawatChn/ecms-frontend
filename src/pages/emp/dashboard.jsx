@@ -69,14 +69,14 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td>{i + 1}</td>
-        <td>{data.courseId}</td>
-        <td className="text-center">{data.sessionId}</td>
-        <td>{data.courseName}</td>
-        <td className="text-center">
+        <td id={"courseId-"+i}>{data.courseId}</td>
+        <td id={"sessionId-"+i} className="text-center">{data.sessionId}</td>
+        <td id={"courseName-"+i}>{data.courseName}</td>
+        <td id={"trainingDate-"+i} className="text-center">
           {data.trainingDate.toString().split("T")[0]}
         </td>
-        <td className="text-center">{data.periods}</td>
-        <td>{data.trainingLocation}</td>
+        <td id={"periods-"+i} className="text-center">{data.periods}</td>
+        <td id={"trainingLocation-"+i}>{data.trainingLocation}</td>
       </tr>
     );
   });
@@ -94,16 +94,15 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
               className="mt-3 shadow"
             >
               <Card.Body>
-                <Card.Title className="fw-bold">
+                <Card.Title className="fw-bold" id="empId">
                   ID: {empData.empId || "ไม่มีข้อมูล"}
                 </Card.Title>
-                <p className="fw-bold h5">
-                  {" "}
+                <p className="fw-bold h5" id="empName">
                   {empData.empName || "ไม่มีข้อมูล"}
                 </p>
-                <p>แผนก: {empData.department || "ไม่มีข้อมูล"}</p>
-                <p>หมายเลขโทรศัพท์: {empData.tel || "ไม่มีข้อมูล"}</p>
-                <p>อีเมล: {empData.email || "ไม่มีข้อมูล"}</p>
+                <p id="department">แผนก: {empData.department || "ไม่มีข้อมูล"}</p>
+                <p id="tel">หมายเลขโทรศัพท์: {empData.tel || "ไม่มีข้อมูล"}</p>
+                <p id="email">อีเมล: {empData.email || "ไม่มีข้อมูล"}</p>
               </Card.Body>
             </Card>
             <Card
@@ -114,20 +113,20 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
             >
               <Card.Body>
                 <Card.Title>การอบรม</Card.Title>
-                <p>
-                  วันที่อบรมครั้งแรก:{" "}
+                <p id="firstTrainingDate">
+                  วันที่อบรมครั้งแรก:
                   {empData.firstTrainingDate
                     ? empData.firstTrainingDate.toString().split("T")[0]
                     : "ไม่มีข้อมูล"}
                 </p>
-                <p>
-                  วันหมดอายุการอบรม:{" "}
+                <p id="expiryDate">
+                  วันหมดอายุการอบรม:
                   {empData.expiryDate
                     ? empData.expiryDate.toString().split("T")[0]
                     : "ไม่มีข้อมูล"}
                 </p>
-                <p>
-                  อบรมครั้งถัดไปอีก: {empData.nextExpiryDate + " วัน" || "ไม่มีข้อมูล"}
+                <p id="nextExpiryDate">
+                  อบรมครั้งถัดไปอีก: {empData.nextExpiryDate|| "ไม่มีข้อมูล"}
                 </p>
               </Card.Body>
             </Card>
@@ -139,16 +138,16 @@ export const EmpDashboard = ({ empDataRaw, enrollmentDataRaw }) => {
             >
               <Card.Body>
                 <Card.Title>ผลลัพธ์การอบรมครั้งล่าสุด</Card.Title>
-                <p>รหัสคอร์ส: {lastResult.courseId || "ไม่มีข้อมูล"}</p>
-                <p>ชื่อคอร์ส: {lastResult.courseName || "ไม่มีข้อมูล"}</p>
-                <p>
-                  วันที่อบรมสำเร็จ:{" "}
+                <p id="courseId">รหัสคอร์ส: {lastResult.courseId || "ไม่มีข้อมูล"}</p>
+                <p id="courseName">ชื่อคอร์ส: {lastResult.courseName || "ไม่มีข้อมูล"}</p>
+                <p id="trainingDate">
+                  วันที่อบรมสำเร็จ:
                   {lastResult.trainingDate
                     ? lastResult.trainingDate.toString().split("T")[0]
                     : "ไม่มีข้อมูล"}
                 </p>
                 <div>ผลลัพธ์:</div>
-                <div className="h4">
+                <div className="h4" id="result">
                   {lastResult.status === "pass"
                     ? "ผ่าน"
                     : lastResult.status === "fail"

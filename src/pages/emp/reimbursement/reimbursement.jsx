@@ -27,28 +27,38 @@ export const Reimbursement = ({
     setEmpData(empDataRaw);
   }, [empDataRaw]);
 
-  const tableData = reimbursementData.map((data, i) => {
+  const statusOrder = {
+    pending: 0,
+    approved: 1,
+    denied: 2,
+  };
+  
+  const sortedData = [...reimbursementData].sort((a, b) => {
+    return statusOrder[a.status] - statusOrder[b.status];
+  });
+  
+  const tableData = sortedData.map((data, i) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
-        <td>{data.reqId}</td>
-        <td>{data.courseId}</td>
-        <td>{data.empId}</td>
-        <td className="text-center">
+        <td id={"reqId-" + i}>{data.reqId}</td>
+        <td id={"courseId-" + i}>{data.courseId}</td>
+        <td id={"empId-" + i}>{data.empId}</td>
+        <td id={"createdAt-" + i} className="text-center">
           {data.createdAt.toString().split("T")[0]}
         </td>
-        <td className="text-center">{data.amount}</td>
+        <td id={"amount-" + i} className="text-center">{data.amount}</td>
         <td className="text-center">
           {data.status === "approved" ? (
-            <Badge pill bg="success">
+            <Badge pill bg="success" id={"status-" + i}>
               อนุมัติ
             </Badge>
           ) : data.status === "denied" ? (
-            <Badge pill bg="danger">
+            <Badge pill bg="danger" id={"status-" + i}>
               ไม่อนุมัติ
             </Badge>
           ) : data.status === "pending" ? (
-            <Badge pill bg="warning">
+            <Badge pill bg="warning" id={"status-" + i}>
               รออนุมัติ
             </Badge>
           ) : (
@@ -56,13 +66,14 @@ export const Reimbursement = ({
           )}
         </td>
         <td className="text-center">
-          <Button variant="link" onClick={() => sendData(data.reqId)} id={"open-"+i}>
+          <Button variant="link" onClick={() => sendData(data.reqId)} id={"open-" + i}>
             เปิด
           </Button>
         </td>
       </tr>
     );
   });
+  
 
   return (
     <div>

@@ -48,6 +48,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                               <Form.Label>รหัสพนักงาน</Form.Label>
                               <Form.Control
                                 type="text"
+                                id="empId"
                                 value={empData.empId ?? ""}
                                 disabled
                               />
@@ -60,6 +61,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                               <Form.Label>ชื่อพนักงาน</Form.Label>
                               <Form.Control
                                 type="text"
+                                id="empName"
                                 value={empData.empName ?? ""}
                                 disabled
                               />
@@ -72,6 +74,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                               <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
                               <Form.Control
                                 type="text"
+                                id="department"
                                 value={empData.department ?? ""}
                                 disabled
                               />
@@ -86,6 +89,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                               <Form.Label>อีเมลพนักงาน</Form.Label>
                               <Form.Control
                                 type="email"
+                                id="email"
                                 value={empData.email ?? ""}
                                 disabled
                               />
@@ -98,6 +102,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                               <Form.Label>หมายเลขโทรศัพท์</Form.Label>
                               <Form.Control
                                 type="text"
+                                id="tel"
                                 value={empData.tel ?? ""}
                                 disabled
                               />
@@ -109,7 +114,8 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>รหัสประจำตัวประชาชน</Form.Label>
                               <Form.Control
-                                type="email"
+                                type="text"
+                                id="cardId"
                                 value={empData.cardId ?? ""}
                                 disabled
                               />
@@ -123,7 +129,8 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>วันที่อบรมครั้งแรก</Form.Label>
                               <Form.Control
-                                type="date"
+                                type="text"
+                                id="firstTrainingDate"
                                 value={empData.firstTrainingDate ? empData.firstTrainingDate.toString().split('T')[0] : "" }
                                 disabled
                               />
@@ -135,7 +142,8 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>วันหมดอายุการอบรม</Form.Label>
                               <Form.Control
-                                type="date"
+                                type="text"
+                                id="expiryDate"
                                 value={empData.expiryDate ? empData.expiryDate.toString().split('T')[0] : "" }
                                 disabled
                               />
@@ -148,6 +156,7 @@ export const EmpData = ({ empDataRaw, setEmpDataRaw }) => {
                               <Form.Label>อบรมครั้งถัดไปอีก</Form.Label>
                               <Form.Control
                                 type="text"
+                                id="nextExpiryDate"
                                 value={empData.nextExpiryDate ?? ""}
                                 disabled
                               />

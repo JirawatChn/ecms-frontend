@@ -58,7 +58,7 @@ export const HrDashboard = () => {
                           <div className="text-xs fw-bold  text-uppercase mb-1">
                            คำร้องขอถอนคอร์สอบรม
                           </div>
-                          <div className="h5 mb-0 fw-bold text-warning">
+                          <div className="h5 mb-0 fw-bold text-warning" id="courseRequests">
                             {dashboardData.courseRequests}
                           </div>
                         </Col>
@@ -74,7 +74,7 @@ export const HrDashboard = () => {
                           <div className="text-xs fw-bold text-uppercase mb-1">
                            คำร้องขอเบิกค่าอบรม
                           </div>
-                          <div className="h5 mb-0 fw-bold text-warning">
+                          <div className="h5 mb-0 fw-bold text-warning" id="refunds">
                           {dashboardData.refunds}
                           </div>
                         </Col>
@@ -90,7 +90,7 @@ export const HrDashboard = () => {
                           <div className="text-xs fw-bold text-uppercase mb-1">
                            พนักงานปัจจุบัน
                           </div>
-                          <div className="h5 mb-0 fw-bold text-success">
+                          <div className="h5 mb-0 fw-bold text-success" id="empActives">
                           {dashboardData.empActives}
                           </div>
                         </Col>
@@ -106,7 +106,7 @@ export const HrDashboard = () => {
                           <div className="text-xs fw-bold  text-uppercase mb-1">
                            พนักงานทั้งหมดในระบบ
                           </div>
-                          <div className="h5 mb-0 fw-bold text-primary">
+                          <div className="h5 mb-0 fw-bold text-primary" id="allEmps">
                           {dashboardData.allEmps}
                           </div>
                         </Col>
@@ -124,7 +124,7 @@ export const HrDashboard = () => {
                           <div className="text-xs fw-bold  text-uppercase mb-1">
                           กำลังรอผลการอบรม
                           </div>
-                          <div className="h5 mb-0 fw-bold text-warning">
+                          <div className="h5 mb-0 fw-bold text-warning" id="courseResults">
                           {dashboardData.courseResults}
                           </div>
                         </Col>
@@ -140,7 +140,7 @@ export const HrDashboard = () => {
                           <div className="text-xs fw-bold  text-uppercase mb-1">
                            จำนวนคอร์สทั้งหมด
                           </div>
-                          <div className="h5 mb-0 fw-bold text-primary">
+                          <div className="h5 mb-0 fw-bold text-primary" id="courses">
                           {dashboardData.courses}
                           </div>
                         </Col>

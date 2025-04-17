@@ -27,24 +27,24 @@ export const TrainingHistory = ({ empDataRaw, courseResultDataRaw }) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
-        <td>{data.reqId}</td>
-        <td>{data.courseId}</td>
-        <td>{data.sessionId}</td>
-        <td>{data.courseName}</td>
-        <td className="text-center">
+        <td id={"reqId-"+i}>{data.reqId}</td>
+        <td id={"courseId-"+i}>{data.courseId}</td>
+        <td id={"sessionId-"+i}>{data.sessionId}</td>
+        <td id={`courseName-${i}`}>{data.courseName}</td>
+        <td id={"trainingDate-"+i} className="text-center">
           {data.trainingDate.toString().split("T")[0]}
         </td>
-        <td className="text-center">
+        <td className="text-center" >
           {data.status === "pass" ? (
-            <Badge pill bg="success">
+            <Badge pill bg="success" id={"status-"+i}>
               ผ่าน
             </Badge>
           ) : data.status === "fail" ? (
-            <Badge pill bg="danger">
+            <Badge pill bg="danger" id={"status-"+i}>
               ไม่ผ่าน
             </Badge>
           ) : data.status === "pending" ? (
-            <Badge pill bg="warning">
+            <Badge pill bg="warning" id={"status-"+i}>
               กำลังตรวจสอบ
             </Badge>
           ) : (

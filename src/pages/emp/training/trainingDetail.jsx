@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import axios from "axios";
 
-export const TrainingListDetails = ({ empDataRaw }) => {
+export const TrainingDetails = ({ empDataRaw }) => {
   const [empData, setEmpData] = useState({});
   const navigate = useNavigate();
   const { courseId, sessionId } = useParams();
@@ -101,7 +101,12 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                       <Form>
                         <Form.Group className="mb-3">
                           <Form.Label>รหัสคอร์ส</Form.Label>
-                          <Form.Control type="text" value={courseId} disabled />
+                          <Form.Control
+                            type="text"
+                            value={courseId}
+                            disabled
+                            id="courseId"
+                          />
                         </Form.Group>
                       </Form>
                     </Col>
@@ -110,6 +115,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                         <Form.Group className="mb-3">
                           <Form.Label>รอบ</Form.Label>
                           <Form.Control
+                            id="sessionId"
                             type="text"
                             value={sessionId}
                             disabled
@@ -122,6 +128,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                         <Form.Group className="mb-3">
                           <Form.Label>รหัสพนักงาน</Form.Label>
                           <Form.Control
+                            id="empId"
                             type="text"
                             value={requestResultData.empId || "ไม่มีข้อมูล"}
                             disabled
@@ -137,6 +144,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                         <Form.Group className="mb-3">
                           <Form.Label>ชื่อคอร์ส</Form.Label>
                           <Form.Control
+                            id="courseName"
                             type="text"
                             value={
                               requestResultData.courseName || "ไม่มีข้อมูล"
@@ -151,6 +159,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                         <Form.Group className="mb-3">
                           <Form.Label>สถานที่อบรม</Form.Label>
                           <Form.Control
+                            id="trainingLocation"
                             type="text"
                             value={
                               requestResultData.trainingLocation ||
@@ -168,7 +177,8 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                         <Form.Group className="mb-3">
                           <Form.Label>วันที่อบรม</Form.Label>
                           <Form.Control
-                            type="date"
+                            id="trainingDate"
+                            type="text"
                             disabled
                             value={
                               requestResultData.trainingDate
@@ -186,6 +196,7 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                         <Form.Group className="mb-3">
                           <Form.Label>เวลาอบรม</Form.Label>
                           <Form.Control
+                            id="periods"
                             type="text"
                             disabled
                             value={requestResultData.periods || "ไม่มีข้อมูล"}
@@ -193,7 +204,6 @@ export const TrainingListDetails = ({ empDataRaw }) => {
                         </Form.Group>
                       </Form>
                     </Col>
-                    
                   </Row>
                 </Container>
               </Card>

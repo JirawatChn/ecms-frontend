@@ -95,7 +95,7 @@ export const EditEmp = () => {
             },
           }
         );
-        setEmpData(response.data.data[0] || []);
+        setEmpData(response.data.data || []);
       } catch (error) {
         console.error("Error fetching employee data:", error);
       }
@@ -213,7 +213,7 @@ export const EditEmp = () => {
                                 ? empData.firstTrainingDate
                                     .toString()
                                     .split("T")[0]
-                                : ""
+                                : "ไม่มีข้อมูล"
                             }
                             id="firstTrainingDate"
                           />
@@ -221,12 +221,25 @@ export const EditEmp = () => {
                         <Form.Group className="mb-3">
                           <Form.Label>วันหมดอายุการอบรม</Form.Label>
                           <Form.Control
-                            type="date"
+                            type="text"
                             disabled
                             value={
                               empData.expiryDate
                                 ? empData.expiryDate.toString().split("T")[0]
-                                : ""
+                                : "ไม่มีข้อมูล"
+                            }
+                            id="expiryDate"
+                          />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                          <Form.Label>อายุการเข้ารับการอบรมรวม</Form.Label>
+                          <Form.Control
+                            type="text"
+                            disabled
+                            value={
+                              empData.trainingDuration
+                                ? empData.trainingDuration
+                                : "ไม่มีข้อมูล"
                             }
                             id="expiryDate"
                           />

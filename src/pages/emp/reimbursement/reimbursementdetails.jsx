@@ -104,6 +104,7 @@ export const ReimbursementDetails = ({
                             <Form.Group className="mb-3">
                               <Form.Label>รหัสคำขอเบิกเงิน</Form.Label>
                               <Form.Control
+                                id="reqId"
                                 type="text"
                                 value={
                                   filterData.length > 0
@@ -122,6 +123,7 @@ export const ReimbursementDetails = ({
                             <Form.Group className="mb-3">
                               <Form.Label>รหัสคอร์ส</Form.Label>
                               <Form.Control
+                                id="courseId"
                                 type="text"
                                 value={
                                   filterData.length > 0
@@ -140,6 +142,7 @@ export const ReimbursementDetails = ({
                             <Form.Group className="mb-3">
                               <Form.Label>รหัสพนักงาน</Form.Label>
                               <Form.Control
+                                id="empId"
                                 type="text"
                                 value={empData.empId || "ไม่มีข้อมูล"}
                                 disabled
@@ -154,6 +157,7 @@ export const ReimbursementDetails = ({
                             <Form.Group className="mb-3">
                               <Form.Label>ชื่อพนักงาน</Form.Label>
                               <Form.Control
+                                id="empName"
                                 type="text"
                                 value={empData.empName || "ไม่มีข้อมูล"}
                                 disabled
@@ -166,9 +170,9 @@ export const ReimbursementDetails = ({
                             <Form.Group className="mb-3">
                               <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
                               <Form.Control
+                                id="department"
                                 type="text"
                                 value={empData.department || "ไม่มีข้อมูล"}
-
                                 disabled
                               />
                             </Form.Group>
@@ -181,11 +185,17 @@ export const ReimbursementDetails = ({
                             <Form.Group className="mb-3">
                               <Form.Label>วันที่ส่งคำขอเบิก</Form.Label>
                               <Form.Control
-                                type="date"
+                                id="createdAt"
+                                type="text"
                                 value={
                                   filterData.length > 0
                                     ? filterData
-                                        .map((item) => item.createdAt.toString().split("T")[0])
+                                        .map(
+                                          (item) =>
+                                            item.createdAt
+                                              .toString()
+                                              .split("T")[0]
+                                        )
                                         .join(",")
                                     : ""
                                 }
@@ -211,6 +221,7 @@ export const ReimbursementDetails = ({
                                 <Form.Group className="mb-3">
                                   <Form.Label>เลขประจำตัวประชาชน</Form.Label>
                                   <Form.Control
+                                    id="cardId"
                                     type="text"
                                     value={
                                       filterData.length > 0
@@ -231,6 +242,7 @@ export const ReimbursementDetails = ({
                                     เลขที่บัญชีเงินฝากธนาคาร
                                   </Form.Label>
                                   <Form.Control
+                                    id="bankAccount"
                                     type="text"
                                     disabled
                                     value={
@@ -256,6 +268,7 @@ export const ReimbursementDetails = ({
                                 <Form.Group className="mb-3">
                                   <Form.Label>จำนวนเงิน (บาท)</Form.Label>
                                   <Form.Control
+                                    id="amount"
                                     type="text"
                                     disabled
                                     value={
@@ -281,6 +294,7 @@ export const ReimbursementDetails = ({
                                 <Form.Group className="mb-3">
                                   <Form.Label>สถานะ</Form.Label>
                                   <Form.Control
+                                    id="status"
                                     type="text"
                                     disabled
                                     value={
@@ -299,18 +313,23 @@ export const ReimbursementDetails = ({
                                 {filterData.length > 0 &&
                                 filterData.some(
                                   (item) =>
-                                    item.approvedDate !== "" &&
-                                    item.approvedDate
+                                    item.createdAt !== "" && item.createdAt
                                 ) ? (
                                   <Form.Group className="mb-3">
                                     <Form.Label>วันที่ยืนยัน</Form.Label>
                                     <Form.Control
+                                      id="approvedDate"
                                       type="text"
                                       disabled
                                       value={
                                         filterData.length > 0
                                           ? filterData
-                                              .map((item) => item.approvedDate)
+                                              .map(
+                                                (item) =>
+                                                  item.createdAt
+                                                    .toString()
+                                                    .split("T")[0]
+                                              )
                                               .join(",")
                                           : "ไม่มีข้อมูล"
                                       }

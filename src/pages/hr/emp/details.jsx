@@ -19,7 +19,7 @@ export const EmpDetails = () => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
   const { empId } = useParams();
-  const [status,setStatus] = useState('')
+  const [status, setStatus] = useState("");
 
   const sendData = (id) => {
     navigate(`/hr/emp/edit/${id}`);
@@ -27,15 +27,15 @@ export const EmpDetails = () => {
 
   const deleteEmp = (id) => {
     console.log(id);
-    
+
     const removeEmp = async () => {
       const token = localStorage.getItem("token");
       try {
-       await axios.post(
+        await axios.post(
           `http://localhost:9999/manageemp/removeemp`,
           {
             empId: id,
-            status:status
+            status: status,
           },
           {
             headers: {
@@ -44,13 +44,13 @@ export const EmpDetails = () => {
             },
           }
         );
-        window.location.reload()
-        navigate(-1)
+        window.location.reload();
+        navigate(-1);
       } catch (error) {
         console.error("Error fetching employee data:", error);
       }
     };
-    removeEmp()
+    removeEmp();
   };
 
   useEffect(() => {
@@ -59,9 +59,7 @@ export const EmpDetails = () => {
       try {
         const response = await axios.post(
           `http://localhost:9999/checkdata/checkempid/`,
-          {
-            empId: empId,
-          },
+          { empId },
           {
             headers: {
               "content-type": "application/json",
@@ -69,19 +67,27 @@ export const EmpDetails = () => {
             },
           }
         );
-        setEmpData(response.data.data[0] || []);
+
+        if (response.data?.message?.includes("not found")) {
+          navigate("/notfound");
+          return;
+        }
+
+        setEmpData(response.data.data || []);
       } catch (error) {
         console.error("Error fetching employee data:", error);
+        if (error?.response?.data?.message?.includes("not found")) {
+          navigate("/notfound");
+        }
       }
     };
+
     const fetchCourseData = async () => {
       const token = localStorage.getItem("token");
       try {
         const response = await axios.post(
           `http://localhost:9999/checkdata/enrollments`,
-          {
-            empId: empId,
-          },
+          { empId },
           {
             headers: {
               "content-type": "application/json",
@@ -91,16 +97,17 @@ export const EmpDetails = () => {
         );
         setCourseData(response.data.data || []);
       } catch (error) {
-        console.error("Error fetching employee data:", error);
+        console.error("Error fetching course data:", error);
       }
     };
+
     fetchCourseData();
     fetchEmpData();
-  }, [empId]);
+  }, [empId, navigate]);
 
-  useEffect(()=>{
-    setStatus(empData.status)
-  },[empData])
+  useEffect(() => {
+    setStatus(empData.status);
+  }, [empData]);
 
   const [modalShow, setModalShow] = useState(false);
 
@@ -143,12 +150,14 @@ export const EmpDetails = () => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td>{i + 1}</td>
-        <td>{data.courseId}</td>
-        <td>{data.sessionId}</td>
-        <td>{data.courseName}</td>
-        <td className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
-        <td className="text-center">{data.periods}</td>
-        <td>{data.trainingLocation}</td>
+        <td id={"courseId-"+i}>{data.courseId}</td>
+        <td id={"sessionId-"+i}>{data.sessionId}</td>
+        <td id={"courseName-"+i}>{data.courseName}</td>
+        <td id={"trainingDate-"+i} className="text-center" >
+          {data.trainingDate.toString().split("T")[0]}
+        </td>
+        <td id={"periods-"+i} className="text-center">{data.periods}</td>
+        <td id={"trainingLocation-"+i}>{data.trainingLocation}</td>
       </tr>
     );
   });
@@ -182,15 +191,19 @@ export const EmpDetails = () => {
                 <MdEditNote />
                 แก้ไขข้อมูล
               </Button>
-             {status === 'active' ? <Button
-                variant="danger"
-                className="mb-2 shadow-sm text-white mx-2"
-                onClick={() => setModalShow(true)}
-                id="delete-button"
-              >
-                <MdClose />
-                ลบพนักงาน
-              </Button> : ""}
+              {status === "active" ? (
+                <Button
+                  variant="danger"
+                  className="mb-2 shadow-sm text-white mx-2"
+                  onClick={() => setModalShow(true)}
+                  id="delete-button"
+                >
+                  <MdClose />
+                  ลบพนักงาน
+                </Button>
+              ) : (
+                ""
+              )}
               <Card className="h-100 shadow-sm">
                 <div className="p-4">
                   <h5 className="mb-3 border-bottom pb-2 d-flex">
@@ -202,6 +215,7 @@ export const EmpDetails = () => {
                         <Form.Group className="mb-3">
                           <Form.Label>รหัสพนักงาน</Form.Label>
                           <Form.Control
+                            id="empId"
                             type="text"
                             disabled
                             required
@@ -211,6 +225,7 @@ export const EmpDetails = () => {
                         <Form.Group className="mb-3">
                           <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
                           <Form.Control
+                            id="department"
                             type="text"
                             disabled
                             required
@@ -220,6 +235,7 @@ export const EmpDetails = () => {
                         <Form.Group className="mb-3">
                           <Form.Label>ชื่อพนักงาน</Form.Label>
                           <Form.Control
+                            id="empName"
                             type="text"
                             disabled
                             required
@@ -231,6 +247,7 @@ export const EmpDetails = () => {
                             เลขที่ประจําตัวประชาชนของพนักงาน
                           </Form.Label>
                           <Form.Control
+                            id="cardId"
                             type="text"
                             disabled
                             required
@@ -240,6 +257,7 @@ export const EmpDetails = () => {
                         <Form.Group className="mb-3">
                           <Form.Label>อีเมลล์พนักงาน</Form.Label>
                           <Form.Control
+                            id="email"
                             type="text"
                             disabled
                             required
@@ -249,6 +267,7 @@ export const EmpDetails = () => {
                         <Form.Group className="mb-3">
                           <Form.Label>เบอร์โทรศัพท์พนักงาน</Form.Label>
                           <Form.Control
+                            id="tel"
                             type="text"
                             disabled
                             required
@@ -258,6 +277,7 @@ export const EmpDetails = () => {
                         <Form.Group className="mb-3">
                           <Form.Label>สิทธิ์การใช้งาน</Form.Label>
                           <Form.Control
+                            id="roles"
                             type="text"
                             disabled
                             required
@@ -271,24 +291,50 @@ export const EmpDetails = () => {
                         <Form.Group className="mb-3">
                           <Form.Label>วันที่อบรมครั้งแรก</Form.Label>
                           <Form.Control
-                            type="date"
+                            id="firstTrainingDate"
+                            type="text"
                             disabled
                             required
-                            value={empData.firstTrainingDate ? empData.firstTrainingDate.toString().split('T')[0] : ""}
+                            value={
+                              empData.firstTrainingDate
+                                ? empData.firstTrainingDate
+                                    .toString()
+                                    .split("T")[0]
+                                : ""
+                            }
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>วันหมดอายุการอบรม</Form.Label>
                           <Form.Control
-                            type="date"
+                            id="expiryDate"
+                            type="text"
                             disabled
                             required
-                            value={empData.expiryDate ? empData.expiryDate.toString().split('T')[0] : ""}
+                            value={
+                              empData.expiryDate
+                                ? empData.expiryDate.toString().split("T")[0]
+                                : ""
+                            }
+                          />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                          <Form.Label>อายุการเข้ารับการอบรมรวม</Form.Label>
+                          <Form.Control
+                            id="trainingDuration"
+                            type="text"
+                            disabled
+                            value={
+                              empData.trainingDuration
+                                ? empData.trainingDuration
+                                : "ไม่มีข้อมูล"
+                            }
                           />
                         </Form.Group>
                         <Form.Group className="mb-3">
                           <Form.Label>อบรมครั้งถัดไปอีก</Form.Label>
                           <Form.Control
+                            id="nextExpiryDate"
                             type="text"
                             disabled
                             required

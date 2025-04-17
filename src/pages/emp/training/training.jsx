@@ -29,11 +29,11 @@ export const Training = ({ empDataRaw, enrollmentDataRaw}) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
-        <td>{data.courseId}</td>
-        <td>{data.sessionId}</td>
-        <td>{data.courseName}</td>
-        <td>{data.trainingLocation}</td>
-        <td className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
+        <td id={"courseId-"+i}>{data.courseId}</td>
+        <td id={"sessionId-"+i}>{data.sessionId}</td>
+        <td id={"courseName-"+i}>{data.courseName}</td>
+        <td id={"trainingLocation-"+i}>{data.trainingLocation}</td>
+        <td id={"trainingDate-"+i} className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
         <td className="text-center">
           <Button size="sm" variant="link" onClick={()=>sendData(data.courseId,data.sessionId)} id={"open-"+i}>
             เปิด

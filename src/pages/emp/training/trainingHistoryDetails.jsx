@@ -13,15 +13,15 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import axios from "axios";
 
-export const TrainingDetails = ({ empDataRaw }) => {
+export const TrainingHistoryDetails = ({ empDataRaw }) => {
   const [empData, setEmpData] = useState({});
   const navigate = useNavigate();
-  const [courseResultData,setCourseResultData] = useState([])
+  const [courseResultData, setCourseResultData] = useState([]);
 
-  const {reqId} = useParams();  
+  const { reqId } = useParams();
 
-  useEffect(()=>{
-    const fetchResultById = async () =>{
+  useEffect(() => {
+    const fetchResultById = async () => {
       const token = localStorage.getItem("token");
       try {
         const response = await axios.post(
@@ -40,10 +40,10 @@ export const TrainingDetails = ({ empDataRaw }) => {
       } catch (error) {
         console.error("Error fetching employee data:", error);
       }
-    }
-  
-    fetchResultById()
-  },[reqId])  
+    };
+
+    fetchResultById();
+  }, [reqId]);
 
   useEffect(() => {
     setEmpData(empDataRaw);
@@ -106,6 +106,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>รหัส</Form.Label>
                               <Form.Control
+                                id="reqId"
                                 type="text"
                                 value={reqId || "ไม่มีข้อมูล"}
                                 disabled
@@ -118,8 +119,11 @@ export const TrainingDetails = ({ empDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>รหัสคอร์ส</Form.Label>
                               <Form.Control
+                                id="courseId"
                                 type="text"
-                                value={courseResultData.courseId || "ไม่มีข้อมูล"}
+                                value={
+                                  courseResultData.courseId || "ไม่มีข้อมูล"
+                                }
                                 disabled
                               />
                             </Form.Group>
@@ -130,8 +134,11 @@ export const TrainingDetails = ({ empDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>รอบ</Form.Label>
                               <Form.Control
+                                id="sessionId"
                                 type="text"
-                                value={courseResultData.sessionId || "ไม่มีข้อมูล"}
+                                value={
+                                  courseResultData.sessionId || "ไม่มีข้อมูล"
+                                }
                                 disabled
                               />
                             </Form.Group>
@@ -142,6 +149,7 @@ export const TrainingDetails = ({ empDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>รหัสพนักงาน</Form.Label>
                               <Form.Control
+                                id="empId"
                                 type="text"
                                 value={courseResultData.empId || "ไม่มีข้อมูล"}
                                 disabled
@@ -157,8 +165,11 @@ export const TrainingDetails = ({ empDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>ชื่อคอร์ส</Form.Label>
                               <Form.Control
+                                id="courseName"
                                 type="text"
-                                value={courseResultData.courseName || "ไม่มีข้อมูล"}
+                                value={
+                                  courseResultData.courseName || "ไม่มีข้อมูล"
+                                }
                                 disabled
                               />
                             </Form.Group>
@@ -169,16 +180,17 @@ export const TrainingDetails = ({ empDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>สถานที่อบรม</Form.Label>
                               <Form.Control
+                                id="trainingLocation"
                                 type="text"
                                 value={
-                                  courseResultData.trainingLocation || "ไม่มีข้อมูล"
+                                  courseResultData.trainingLocation ||
+                                  "ไม่มีข้อมูล"
                                 }
                                 disabled
                               />
                             </Form.Group>
                           </Form>
                         </Col>
-                        
                       </Row>
                       <Row>
                         <Col md={4}>
@@ -186,9 +198,16 @@ export const TrainingDetails = ({ empDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>วันที่อบรม</Form.Label>
                               <Form.Control
-                                type="date"
+                                id="trainingDate"
+                                type="text"
                                 disabled
-                                value={courseResultData.trainingDate ? courseResultData.trainingDate.toString().split('T')[0] : ""}
+                                value={
+                                  courseResultData.trainingDate
+                                    ? courseResultData.trainingDate
+                                        .toString()
+                                        .split("T")[0]
+                                    : ""
+                                }
                               />
                             </Form.Group>
                           </Form>
@@ -198,14 +217,17 @@ export const TrainingDetails = ({ empDataRaw }) => {
                             <Form.Group className="mb-3">
                               <Form.Label>เวลาอบรม</Form.Label>
                               <Form.Control
+                                id="periods"
                                 type="text"
                                 disabled
-                                value={courseResultData.periods || "ไม่มีข้อมูล"}
+                                value={
+                                  courseResultData.periods || "ไม่มีข้อมูล"
+                                }
                               />
                             </Form.Group>
                           </Form>
                         </Col>
-                        
+
                         <ListGroup.Item variant="dark" className="mt-3">
                           ผลลัพธ์การอบรม
                         </ListGroup.Item>
@@ -216,23 +238,28 @@ export const TrainingDetails = ({ empDataRaw }) => {
                                 <Form.Group className="mb-3">
                                   <Form.Label>สถานะ</Form.Label>
                                   <Form.Control
+                                    id="status"
                                     type="text"
                                     disabled
-                                    value={courseResultData.status || "ไม่มีข้อมูล"}
+                                    value={
+                                      courseResultData.status || "ไม่มีข้อมูล"
+                                    }
                                   />
                                 </Form.Group>
                               </Form>
                             </Col>
                             <Col md={4}>
                               <Form>
-                                {courseResultData.approvedDate ? (
+                                {courseResultData.createdAt ? (
                                   <Form.Group className="mb-3">
                                     <Form.Label>วันที่ยืนยัน</Form.Label>
                                     <Form.Control
+                                      id="approvedDate"
                                       type="text"
                                       disabled
                                       value={
-                                        courseResultData.approvedDate || "ไม่มีข้อมูล"
+                                        courseResultData.createdAt.toString().split("T")[0] ||
+                                        "ไม่มีข้อมูล"
                                       }
                                     />
                                   </Form.Group>
@@ -246,10 +273,12 @@ export const TrainingDetails = ({ empDataRaw }) => {
                                 <Form.Group className="mb-3">
                                   <Form.Label>ผู้อนุมัติการอบรม</Form.Label>
                                   <Form.Control
+                                    id="vertifier"
                                     type="text"
                                     disabled
                                     value={
-                                      courseResultData.vertifier || "ไม่มีข้อมูล"
+                                      courseResultData.vertifier ||
+                                      "ไม่มีข้อมูล"
                                     }
                                   />
                                 </Form.Group>

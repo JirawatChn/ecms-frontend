@@ -25,8 +25,6 @@ import { EditEmp } from "./pages/hr/emp/edit";
 import { ProfileHr } from "./pages/hr/profile/profile";
 import { EditHrProfile } from "./pages/hr/profile/edit";
 import { Training } from "./pages/emp/training/training";
-import { TrainingListDetails } from "./pages/emp/training/traininglist";
-import { TrainingDetails } from "./pages/emp/training/trainingdetails";
 import ProtectRoutes from "./components/protectroutes";
 import { Course } from "./pages/hr/course/course";
 import { CreateCourse } from "./pages/hr/course/create";
@@ -36,6 +34,8 @@ import { EditCourse } from "./pages/hr/course/edit";
 import { Custom404 } from "./pages/404";
 import axios from "axios";
 import { Aboutus } from "./pages/aboutus";
+import { TrainingDetails } from "./pages/emp/training/trainingDetail";
+import { TrainingHistoryDetails } from "./pages/emp/training/trainingHistoryDetails";
 
 function App() {
   const [empDataRaw, setEmpDataRaw] = useState({});
@@ -201,7 +201,7 @@ function App() {
             <Route
               path="/emp/trainings/details/:courseId/:sessionId"
               element={
-                <TrainingListDetails
+                <TrainingDetails
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
                   enrollmentDataRaw={enrollmentDataRaw}
@@ -221,7 +221,7 @@ function App() {
             <Route
               path="/emp/trainings/history/:reqId"
               element={
-                <TrainingDetails
+                <TrainingHistoryDetails
                   empDataRaw={empDataRaw}
                   setEmpDataRaw={setEmpDataRaw}
                   courseResultDataRaw={courseResultDataRaw}

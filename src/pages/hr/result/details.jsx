@@ -28,23 +28,37 @@ export const TrainingResultDetails = () => {
       try {
         const response = await axios.post(
           "http://localhost:9999/courseresult/resultsId",
-          {
-            reqId: reqId,
-          },
+          { reqId },
           {
             headers: {
               authorization: token,
             },
           }
         );
+        if (
+          response.data?.message &&
+          response.data.message.toLowerCase().includes("not found")
+        ) {
+          navigate("/notfound");
+          return;
+        }
+
         setRequestResultDataRaw(response.data.data[0]);
       } catch (error) {
-        console.error("Error fetching employee data:", error);
+        console.error("Error fetching request data:", error);
+        const msg = error?.response?.data?.message;
+        if (msg && msg.toLowerCase().includes("failed")) {
+          navigate("/notfound");
+        } else {
+          navigate("/error");
+        }
       }
     };
 
-    fetchRequestData();
-  }, [reqId]);
+    if (reqId) {
+      fetchRequestData();
+    }
+  }, [reqId, navigate]);
 
   useEffect(() => {
     setRequestResultData(requestResultDataRaw);
@@ -151,7 +165,7 @@ export const TrainingResultDetails = () => {
                 <p>คุณแน่ใจหรือไม่ที่จะให้ไม่ผ่านรายการ รหัส {reqId}</p>
                 <Form.Group className="mb-3">
                   <Form.Label>หมายเหตุ</Form.Label>
-                  <Form.Control type="text" ref={remark} required id="remark"/>
+                  <Form.Control type="text" ref={remark} required id="remark" />
                 </Form.Group>
               </div>
             </Modal.Body>
@@ -371,7 +385,7 @@ export const TrainingResultDetails = () => {
                                   type="text"
                                   disabled
                                   value={
-                                    requestResultData.passdDate || "ไม่มีข้อมูล"
+                                    requestResultData.createdAt.toString().split("T")[0] || "ไม่มีข้อมูล"
                                   }
                                 />
                               </Form.Group>
@@ -424,7 +438,7 @@ export const TrainingResultDetails = () => {
                                   type="text"
                                   disabled
                                   value={
-                                    requestResultData.passdDate || "ไม่มีข้อมูล"
+                                    requestResultData.createdAt.toString().split('T')[0] || "ไม่มีข้อมูล"
                                   }
                                 />
                               </Form.Group>
