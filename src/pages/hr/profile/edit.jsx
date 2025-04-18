@@ -4,12 +4,11 @@ import { Topbar } from "../../../components/topbar";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
   const navigate = useNavigate();
   const [empData, setEmpData] = useState({});
-
-  const [empId] = useState("");
   const [empName, setEmpName] = useState("");
   const [department, setDepartment] = useState("");
   const [cardId, setCardId] = useState("");
@@ -18,11 +17,11 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const dataToSubmit = {};
-    if (empId) {
-      dataToSubmit.empId = empData.empId;
-    }
+  
+    const dataToSubmit = {
+      empId: empData.empId, 
+    };
+  
     if (empName) {
       dataToSubmit.empName = empName;
     }
@@ -38,13 +37,34 @@ export const EditHrProfile = ({ empDataRaw, setEmpDataRaw }) => {
     if (email) {
       dataToSubmit.email = email;
     }
-
-    if (Object.keys(dataToSubmit).length > 0) {
-      console.log("Data to submit:", dataToSubmit);
+  
+    if (Object.keys(dataToSubmit).length > 1) {
+      // ต้องมากกว่า 1 เพราะ empId มีแน่ๆ อยู่แล้ว
+      const editEmp = async () => {
+        const token = localStorage.getItem("token");
+        try {
+          await axios.post(
+            `http://localhost:9999/manageemp/editEmp`,
+            dataToSubmit,
+            {
+              headers: {
+                "content-type": "application/json",
+                authorization: token,
+              },
+            }
+          );
+          window.location.reload();
+          navigate(-1);
+        } catch (error) {
+          console.error("Error updating employee data:", error);
+        }
+      };
+      editEmp();
     } else {
       console.log("No new data to submit.");
     }
   };
+  
 
   useEffect(() => {
     setEmpData(empDataRaw);
