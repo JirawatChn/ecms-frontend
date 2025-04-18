@@ -300,7 +300,7 @@ export const EmpDetails = () => {
                                 ? empData.firstTrainingDate
                                     .toString()
                                     .split("T")[0]
-                                : ""
+                                : "ไม่มีข้อมูล"
                             }
                           />
                         </Form.Group>
@@ -314,7 +314,7 @@ export const EmpDetails = () => {
                             value={
                               empData.expiryDate
                                 ? empData.expiryDate.toString().split("T")[0]
-                                : ""
+                                : "ไม่มีข้อมูล"
                             }
                           />
                         </Form.Group>
