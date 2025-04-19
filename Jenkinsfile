@@ -19,7 +19,7 @@ pipeline {
             steps {
                 bat "docker build -t ecmsfrontend ."
                 bat "docker rm -f ecmsfrontendrun || true"
-                bat "docker run -d --name ecmsfrontendrun -p 3000:54100 ecmsfrontend:latest"
+                bat "docker run -d --name ecmsfrontendrun -p 3000:3000 ecmsfrontend:latest"
                 echo 'Docker is running'
             }
         }
