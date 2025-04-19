@@ -5,6 +5,7 @@ import imgSrc2 from "../image/65042386.png";
 import imgSrc3 from "../image/65061447.jpg";
 import imgSrc4 from "../image/65065930.png";
 import imgSrc5 from "../image/65070100.jpg";
+import imgSrc6 from "../image/65047343.png"
 
 export const Aboutus = () => {
   const navigate = useNavigate();
@@ -56,6 +57,14 @@ export const Aboutus = () => {
               <Card.Img variant="top" src={imgSrc2} />
               <div className="d-flex justify-content-center fw-semibold">
                 นายธีภพ เพ็ชรเปี่ยม
+              </div>
+            </Card>
+          </Col>
+          <Col md={2}>
+            <Card>
+              <Card.Img variant="top" src={imgSrc6} />
+              <div className="d-flex justify-content-center fw-semibold">
+                นายธนกฤษ ขุนเพ็ง
               </div>
             </Card>
           </Col>
