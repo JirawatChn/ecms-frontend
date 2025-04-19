@@ -51,6 +51,7 @@ export const ProfileHr = ({ empDataRaw, setEmpDataRaw }) => {
                       <Form.Group className="mb-3">
                         <Form.Label>รหัสพนักงาน</Form.Label>
                         <Form.Control
+                          id="empId"
                           type="text"
                           disabled
                           required
@@ -60,6 +61,7 @@ export const ProfileHr = ({ empDataRaw, setEmpDataRaw }) => {
                       <Form.Group className="mb-3">
                         <Form.Label>ฝ่ายหรือแผนกที่สังกัด</Form.Label>
                         <Form.Control
+                          id="department"
                           type="text"
                           disabled
                           required
@@ -69,6 +71,7 @@ export const ProfileHr = ({ empDataRaw, setEmpDataRaw }) => {
                       <Form.Group className="mb-3">
                         <Form.Label>ชื่อพนักงาน</Form.Label>
                         <Form.Control
+                          id="empName"
                           type="text"
                           disabled
                           required
@@ -80,6 +83,7 @@ export const ProfileHr = ({ empDataRaw, setEmpDataRaw }) => {
                           เลขที่ประจําตัวประชาชนของพนักงาน
                         </Form.Label>
                         <Form.Control
+                          id="cardId"
                           type="text"
                           disabled
                           required
@@ -89,6 +93,7 @@ export const ProfileHr = ({ empDataRaw, setEmpDataRaw }) => {
                       <Form.Group className="mb-3">
                         <Form.Label>อีเมลล์พนักงาน</Form.Label>
                         <Form.Control
+                          id="email"
                           type="text"
                           disabled
                           required
@@ -98,6 +103,7 @@ export const ProfileHr = ({ empDataRaw, setEmpDataRaw }) => {
                       <Form.Group className="mb-3">
                         <Form.Label>เบอร์โทรศัพท์พนักงาน</Form.Label>
                         <Form.Control
+                          id="tel"
                           type="text"
                           disabled
                           required

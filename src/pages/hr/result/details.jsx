@@ -271,7 +271,7 @@ export const TrainingResultDetails = () => {
                               : "ไม่มีข้อมูล"}
                           </p>
                           <p>
-                            <strong>เวลาอบรม</strong>{" "}
+                            <strong>เวลาอบรม:</strong>{" "}
                             {requestResultData.periods}
                           </p>
                           <p>

@@ -26,17 +26,28 @@ pipeline {
         stage('Test') {
             steps {
                 checkout([
-                $class: 'GitSCM',
-                branches: [[name: '*/main']],
-                userRemoteConfigs: [ [
-                    credentialsId: 'jirawatchn',
-                    url: 'https://github.com/JirawatChn/ecms-autotest'
-                ] ]
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        credentialsId: 'jirawatchn',
+                        url: 'https://github.com/JirawatChn/ecms-autotest'
+                    ]]
                 ])
                 bat "pip install robotframework"
                 bat "pip install robotframework-seleniumlibrary"
-                bat "robot emp-ecms.robot"
-                print 'Test'
+                bat "robot -d reports emp-ecms.robot"
+                bat "robot -d reports hr-ecms.robot"
+            }
+            post {
+                always {
+                    publishHTML(target: [
+                        reportDir: 'reports',
+                        reportFiles: 'report.html',
+                        reportName: 'Robot Framework Report',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true
+                    ])
+                }
             }
         }
     }
