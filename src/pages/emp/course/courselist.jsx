@@ -7,6 +7,7 @@ import { Badge, Col, Container, Form, Row, Table } from "react-bootstrap";
 import { useEffect, useRef, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import axios from "axios";
+import { AlertToast } from "../../../components/toast";
 
 export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
   const navigate = useNavigate();
@@ -45,14 +46,14 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td className="text-center">{i + 1}</td>
-        <td id={"courseId-"+i}>{data.courseId}</td>
-        <td id={"courseName-"+i}>{data.courseName}</td>
+        <td id={"courseId-" + i}>{data.courseId}</td>
+        <td id={"courseName-" + i}>{data.courseName}</td>
         <td className="text-end">
           <Button
             variant="primary"
             size="sm"
             onClick={() => showCourseDetails(data.courseId)}
-            id={'open-'+i}
+            id={"open-" + i}
           >
             เลือก
           </Button>
@@ -84,7 +85,6 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
       const sessionId = newData.sessions.map((item) => item.sessionId);
       // console.log(sessions);
       setSessionsIdData(sessionId);
-
       setModalShow(true);
     } else {
       console.log("Course not found");
@@ -111,7 +111,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
                 size="sm"
                 variant="primary"
                 onClick={() => setSelectedSId(data)}
-                id={'select-'+i}
+                id={"select-" + i}
               >
                 {data}
               </Button>
@@ -123,7 +123,8 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
 
         <td>
           {sessionData
-            ? sessionData.trainingDate.toString().split('T')[0] : "ไม่มีข้อมูล"}
+            ? sessionData.trainingDate.toString().split("T")[0]
+            : "ไม่มีข้อมูล"}
         </td>
         <td className="text-center">
           {sessionData ? sessionData.periods : "ไม่มีข้อมูล"}
@@ -148,10 +149,11 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
       </tr>
     );
   });
+  const [toastText, setToastText] = useState("");
 
   const registerData = async (id, sid) => {
     if (selectedSessionId.current.value === "") {
-      alert("กรุณาเลือก Sessions");
+      setToastText("กรุณาเลือก Sessions");
     } else {
       const token = localStorage.getItem("token");
       const empId = localStorage.getItem("empId");
@@ -171,16 +173,21 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
           }
         );
         console.log(response.data);
-        navigate('/emp/dashboard')
-        window.location.reload();
+        setToastText("ลงทะเบียนสำเร็จ!");
+
+        setTimeout(() => {
+          navigate("/emp/dashboard");
+          window.location.reload();
+        }, 1500);
       } catch (error) {
         if (error.response && error.response.status === 403) {
-          alert("เวลาอบรมซ้ำหรือลงคอร์สอบรมเดิม");
+          setToastText("เวลาอบรมซ้ำหรือลงคอร์สอบรมเดิม");
         } else {
           console.error("Error fetching employee data:", error);
+          setToastText("เกิดข้อผิดพลาดบางอย่าง");
         }
       }
-    };
+    }
   };
 
   const registerCourse = (id, sid) => {
@@ -350,6 +357,10 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
           </Card>
         </div>
       </div>
+      <AlertToast
+        text={toastText}
+        onClose={() => setToastText("")}
+      />
     </div>
   );
 };
