@@ -3,28 +3,30 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                print 'Checkout'
+                echo 'Checkout frontend'
                 checkout([
-                $class: 'GitSCM',
-                branches: [[name: '*/master']],
-                userRemoteConfigs: [ [
-                    credentialsId: 'jirawatchn',
-                    url: 'https://github.com/JirawatChn/ecms-frontend.git'
-                ] ]
+                    $class: 'GitSCM',
+                    branches: [[name: '*/master']],
+                    userRemoteConfigs: [[
+                        credentialsId: 'jirawatchn',
+                        url: 'https://github.com/JirawatChn/ecms-frontend.git'
+                    ]]
                 ])
-                print "Checkout done"
             }
         }
-         stage('Build') {
+
+        stage('Build') {
             steps {
                 bat "docker build -t ecmsfrontend ."
-                bat "docker rm -f ecmsfrontendrun || true" // Remove existing container if it exists
+                bat "docker rm -f ecmsfrontendrun || true"
                 bat "docker run -d --name ecmsfrontendrun -p 54100:3000 ecmsfrontend:latest"
-                echo 'Building Docker'
+                echo 'Docker is running'
             }
         }
-        stage('Test') {
+
+        stage('Checkout Test Repo') {
             steps {
+                echo 'Checkout autotest'
                 checkout([
                     $class: 'GitSCM',
                     branches: [[name: '*/main']],
@@ -33,17 +35,42 @@ pipeline {
                         url: 'https://github.com/JirawatChn/ecms-autotest'
                     ]]
                 ])
-                bat "pip install robotframework"
-                bat "pip install robotframework-seleniumlibrary"
-                bat "robot -d reports emp-ecms.robot"
-                bat "robot -d reports hr-ecms.robot"
+            }
+        }
+
+        stage('Run EMP Test') {
+            steps {
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    bat "pip install robotframework"
+                    bat "pip install robotframework-seleniumlibrary"
+                    bat "robot -d reports/emp emp-ecms.robot"
+                }
             }
             post {
                 always {
                     publishHTML(target: [
-                        reportDir: 'reports',
+                        reportDir: 'reports/emp',
                         reportFiles: 'report.html',
-                        reportName: 'Robot Framework Report',
+                        reportName: 'EMP Test Report',
+                        keepAll: true,
+                        alwaysLinkToLastBuild: true
+                    ])
+                }
+            }
+        }
+
+        stage('Run HR Test') {
+            steps {
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    bat "robot -d reports/hr hr-ecms.robot"
+                }
+            }
+            post {
+                always {
+                    publishHTML(target: [
+                        reportDir: 'reports/hr',
+                        reportFiles: 'report.html',
+                        reportName: 'HR Test Report',
                         keepAll: true,
                         alwaysLinkToLastBuild: true
                     ])
