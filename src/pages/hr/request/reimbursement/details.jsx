@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router";
 import { MdArrowBackIosNew } from "react-icons/md";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
+import { AlertToast } from "../../../../components/toast";
 
 export const RequestReimbursementDetails = () => {
   const { reqId } = useParams();
@@ -79,10 +80,13 @@ export const RequestReimbursementDetails = () => {
     }
     setModalShow(false);
   };
+  const [toastText, setToastText] = useState("");
+  const [toastVariant, setToastVariant] = useState("");
 
   const deniedRequest = async () => {
     if (remark.current.value === "") {
-      alert("กรุณากรอกหมายเหตุ");
+      setToastText("กรุณากรอกหมายเหตุ");
+      setToastVariant("warning");
     } else {
       const token = localStorage.getItem("token");
       try {
@@ -445,6 +449,11 @@ export const RequestReimbursementDetails = () => {
           </div>
         </div>
       </div>
+      <AlertToast
+        text={toastText}
+        variant={toastVariant}
+        onClose={() => setToastText("")}
+      />
     </div>
   );
 };

@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import { MdCheck, MdClear } from "react-icons/md";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { AlertToast } from "../../../../components/toast";
 
 export const ReimbursementRequestsList = ({
   itemsPerPage,
@@ -81,21 +82,20 @@ export const ReimbursementRequestsList = ({
       }
       return status.pending === data.status;
     });
-  
+
     const priority = {
       pending: 0,
       approved: 1,
       denied: 2,
     };
-  
+
     const sortedItem = selectedItem.sort(
       (a, b) => priority[a.status] - priority[b.status]
     );
-  
+
     setReimbursementRequestData(sortedItem);
     setAmount(sortedItem.length);
   }, [reimbursementRequestDataRaw, status]);
-  
 
   useEffect(() => {
     setCurrentLenght(reimbursementRequestData.length);
@@ -121,7 +121,7 @@ export const ReimbursementRequestsList = ({
     const start = (curPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
 
-    if (start <= i && i < end) {      
+    if (start <= i && i < end) {
       return (
         <tr key={i + 1} className="tr-cell">
           <td className="text-center">{i + 1}</td>
@@ -129,7 +129,9 @@ export const ReimbursementRequestsList = ({
           <td>{data.courseId}</td>
           <td>{data.empId}</td>
           <td>{data.empName}</td>
-          <td className="text-center">{data.createdAt.toString().split('T')[0]}</td>
+          <td className="text-center">
+            {data.createdAt.toString().split("T")[0]}
+          </td>
           <td className="text-center">{data.amount}</td>
           <td className="text-center">
             {data.status === "pending" ? (
@@ -154,7 +156,7 @@ export const ReimbursementRequestsList = ({
                 variant="success"
                 size="sm"
                 onClick={() => requestModal(data.reqId, "approved")}
-                id={'approve-'+i}
+                id={"approve-" + i}
               >
                 <MdCheck />
               </Button>
@@ -168,7 +170,7 @@ export const ReimbursementRequestsList = ({
                 variant="danger"
                 size="sm"
                 onClick={() => requestModal(data.reqId, "denied")}
-                id={"deny-"+i}
+                id={"deny-" + i}
               >
                 <MdClear />
               </Button>
@@ -181,7 +183,7 @@ export const ReimbursementRequestsList = ({
               variant="link"
               size="sm"
               onClick={() => sendData(data.reqId)}
-              id={'open-'+i}
+              id={"open-" + i}
             >
               เปิด
             </Button>
@@ -190,11 +192,11 @@ export const ReimbursementRequestsList = ({
       );
     }
     return null;
-  });    
+  });
 
   const [reqId, setRequestId] = useState({});
   const [modalStatus, setModalStatus] = useState("");
-  const remark = useRef()
+  const remark = useRef();
 
   const requestModal = (id, status) => {
     setModalShow(true);
@@ -223,9 +225,13 @@ export const ReimbursementRequestsList = ({
     setModalShow(false);
   };
 
+  const [toastText, setToastText] = useState("");
+  const [toastVariant, setToastVariant] = useState("");
+
   const deniedRequest = async () => {
     if (remark.current.value === "") {
-      alert("กรุณากรอกหมายเหตุ");
+      setToastText("กรุณากรอกหมายเหตุ");
+      setToastVariant("warning");
     } else {
       const token = localStorage.getItem("token");
       try {
@@ -291,9 +297,7 @@ export const ReimbursementRequestsList = ({
             <Modal.Body>
               <div>
                 <h4>ยืนยันหรือไม่</h4>
-                <p>
-                  คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {reqId}
-                </p>
+                <p>คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {reqId}</p>
                 <Form.Group className="mb-3">
                   <Form.Label>หมายเหตุ</Form.Label>
                   <Form.Control
@@ -425,6 +429,11 @@ export const ReimbursementRequestsList = ({
           </div>
         </div>
       </div>
+      <AlertToast
+        text={toastText}
+        variant={toastVariant}
+        onClose={() => setToastText("")}
+      />
     </div>
   );
 };

@@ -17,6 +17,7 @@ import { ButtonPage } from "../../../../components/buttonpages";
 import { MdCheck, MdClear } from "react-icons/md";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { AlertToast } from "../../../../components/toast";
 
 export const CourseRequestsList = ({
   itemsPerPage,
@@ -79,21 +80,20 @@ export const CourseRequestsList = ({
       }
       return status.pending === data.status;
     });
-  
+
     const priority = {
       pending: 0,
       approved: 1,
       denied: 2,
     };
-  
+
     const sortedItem = selectedItem.sort(
       (a, b) => priority[a.status] - priority[b.status]
     );
-  
+
     setRequestCourseData(sortedItem);
     setAmount(sortedItem.length);
   }, [requestCourseDataRaw, status]);
-  
 
   useEffect(() => {
     setCurrentLenght(requestCourseData.length);
@@ -223,10 +223,13 @@ export const CourseRequestsList = ({
     }
     setModalShow(false);
   };
+  const [toastText, setToastText] = useState("");
+  const [toastVariant, setToastVariant] = useState("");
 
   const deniedRequest = async () => {
     if (remark.current.value === "") {
-      alert("กรุณากรอกหมายเหตุ");
+      setToastText("กรุณากรอกหมายเหตุ");
+      setToastVariant("warning");
     } else {
       const token = localStorage.getItem("token");
       try {
@@ -295,7 +298,7 @@ export const CourseRequestsList = ({
                 <p>คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {reqId}</p>
                 <Form.Group className="mb-3">
                   <Form.Label>หมายเหตุ</Form.Label>
-                  <Form.Control type="text" ref={remark} required id="remark"/>
+                  <Form.Control type="text" ref={remark} required id="remark" />
                 </Form.Group>
               </div>
             </Modal.Body>
@@ -419,6 +422,11 @@ export const CourseRequestsList = ({
           </div>
         </div>
       </div>
+      <AlertToast
+        text={toastText}
+        variant={toastVariant}
+        onClose={() => setToastText("")}
+      />
     </div>
   );
 };

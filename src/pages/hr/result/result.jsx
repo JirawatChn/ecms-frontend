@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from "react";
 import { MdCheck, MdClear } from "react-icons/md";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { AlertToast } from "../../../components/toast";
 
 export const Results = ({
   itemsPerPage,
@@ -79,22 +80,21 @@ export const Results = ({
       }
       return status.pending === data.status;
     });
-  
+
     // 🟢 เรียงตาม priority: pending > pass > fail
     const priority = {
       pending: 0,
       pass: 1,
       fail: 2,
     };
-  
+
     const sortedItem = selectedItem.sort(
       (a, b) => priority[a.status] - priority[b.status]
     );
-  
+
     setResultsData(sortedItem);
     setAmount(sortedItem.length);
   }, [resultsDataRaw, status]);
-  
 
   useEffect(() => {
     setCurrentLenght(resultsData.length);
@@ -129,7 +129,9 @@ export const Results = ({
           <td>{data.sessionId}</td>
           <td>{data.empId}</td>
           <td>{data.empName}</td>
-          <td className="text-center">{data.trainingDate.toString().split('T')[0]}</td>
+          <td className="text-center">
+            {data.trainingDate.toString().split("T")[0]}
+          </td>
           <td className="text-center">
             {data.status === "pending" ? (
               <Badge pill bg="warning">
@@ -152,10 +154,8 @@ export const Results = ({
               <Button
                 variant="success"
                 size="sm"
-                onClick={() =>
-                  requestModal(data.reqId, "pass")
-                }
-                id={'pass-'+i}
+                onClick={() => requestModal(data.reqId, "pass")}
+                id={"pass-" + i}
               >
                 <MdCheck />
               </Button>
@@ -168,10 +168,8 @@ export const Results = ({
               <Button
                 variant="danger"
                 size="sm"
-                onClick={() =>
-                  requestModal(data.reqId, "fail")
-                }
-                id={'fail-'+i}
+                onClick={() => requestModal(data.reqId, "fail")}
+                id={"fail-" + i}
               >
                 <MdClear />
               </Button>
@@ -184,7 +182,7 @@ export const Results = ({
               variant="link"
               size="sm"
               onClick={() => sendData(data.reqId)}
-              id={'open-'+i}
+              id={"open-" + i}
             >
               เปิด
             </Button>
@@ -196,7 +194,6 @@ export const Results = ({
   });
 
   // console.log(resultsData);
-  
 
   const [reqId, setReqId] = useState({});
   const [modalStatus, setModalStatus] = useState("");
@@ -207,7 +204,7 @@ export const Results = ({
     setModalStatus(status);
   };
 
-  const remark = useRef()
+  const remark = useRef();
 
   const passRequest = async () => {
     const token = localStorage.getItem("token");
@@ -229,10 +226,13 @@ export const Results = ({
     }
     setModalShow(false);
   };
+  const [toastText, setToastText] = useState("");
+  const [toastVariant, setToastVariant] = useState("");
 
   const failRequest = async () => {
     if (remark.current.value === "") {
-      alert("กรุณากรอกหมายเหตุ");
+      setToastText("กรุณากรอกหมายเหตุ");
+      setToastVariant("warning");
     } else {
       const token = localStorage.getItem("token");
       try {
@@ -247,7 +247,7 @@ export const Results = ({
               authorization: token,
             },
           }
-        );        
+        );
         window.location.reload();
       } catch (error) {
         console.error("Error fetching employee data:", error);
@@ -267,9 +267,7 @@ export const Results = ({
           >
             <Modal.Body>
               <h4>ยืนยันหรือไม่</h4>
-              <p>
-                คุณแน่ใจหรือไม่ที่จะให้ผ่านรายการ รหัส {reqId} 
-              </p>
+              <p>คุณแน่ใจหรือไม่ที่จะให้ผ่านรายการ รหัส {reqId}</p>
             </Modal.Body>
             <Modal.Footer className="d-flex justify-content-between">
               <Button
@@ -300,9 +298,7 @@ export const Results = ({
             <Modal.Body>
               <div>
                 <h4>ยืนยันหรือไม่</h4>
-                <p>
-                  คุณแน่ใจหรือไม่ที่จะให้ไม่ผ่านรายการ รหัส {reqId} 
-                </p>
+                <p>คุณแน่ใจหรือไม่ที่จะให้ไม่ผ่านรายการ รหัส {reqId}</p>
                 <Form.Group className="mb-3">
                   <Form.Label>หมายเหตุ</Form.Label>
                   <Form.Control type="text" ref={remark} required />
@@ -424,6 +420,11 @@ export const Results = ({
           </div>
         </div>
       </div>
+      <AlertToast
+        text={toastText}
+        variant={toastVariant}
+        onClose={() => setToastText("")}
+      />
     </div>
   );
 };

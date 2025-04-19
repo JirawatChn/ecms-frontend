@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { Sidebar } from "../../../../components/sidebar";
 import { Topbar } from "../../../../components/topbar";
 import axios from "axios";
+import { AlertToast } from "../../../../components/toast";
 
 export const RequestWithdrawCourseDetails = () => {
   const { reqId } = useParams();
@@ -78,9 +79,13 @@ export const RequestWithdrawCourseDetails = () => {
     setModalShow(false);
   };
 
+  const [toastText, setToastText] = useState("");
+  const [toastVariant, setToastVariant] = useState("");
+
   const deniedRequest = async () => {
     if (remark.current.value === "") {
-      alert("กรุณากรอกหมายเหตุ");
+      setToastText("กรุณากรอกหมายเหตุ");
+      setToastVariant("warning");
     } else {
       const token = localStorage.getItem("token");
       try {
@@ -151,7 +156,12 @@ export const RequestWithdrawCourseDetails = () => {
                 <p>คุณแน่ใจหรือไม่ที่จะไม่อนุมัติรายการ รหัสคำร้อง {reqId}</p>
                 <Form.Group className="mb-3">
                   <Form.Label>หมายเหตุ</Form.Label>
-                  <Form.Control type="text" ref={remark} required id="modal-remark"/>
+                  <Form.Control
+                    type="text"
+                    ref={remark}
+                    required
+                    id="modal-remark"
+                  />
                 </Form.Group>
               </div>
             </Modal.Body>
@@ -425,6 +435,11 @@ export const RequestWithdrawCourseDetails = () => {
           </div>
         </div>
       </div>
+      <AlertToast
+        text={toastText}
+        variant={toastVariant}
+        onClose={() => setToastText("")}
+      />
     </div>
   );
 };

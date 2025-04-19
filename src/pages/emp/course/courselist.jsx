@@ -85,6 +85,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
       const sessionId = newData.sessions.map((item) => item.sessionId);
       // console.log(sessions);
       setSessionsIdData(sessionId);
+
       setModalShow(true);
     } else {
       console.log("Course not found");
@@ -150,10 +151,12 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
     );
   });
   const [toastText, setToastText] = useState("");
+  const [toastVariant, setToastVariant] = useState("danger");
 
   const registerData = async (id, sid) => {
     if (selectedSessionId.current.value === "") {
       setToastText("กรุณาเลือก Sessions");
+      setToastVariant("warning");
     } else {
       const token = localStorage.getItem("token");
       const empId = localStorage.getItem("empId");
@@ -174,6 +177,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
         );
         console.log(response.data);
         setToastText("ลงทะเบียนสำเร็จ!");
+        setToastVariant("success");
 
         setTimeout(() => {
           navigate("/emp/dashboard");
@@ -182,9 +186,11 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
       } catch (error) {
         if (error.response && error.response.status === 403) {
           setToastText("เวลาอบรมซ้ำหรือลงคอร์สอบรมเดิม");
+          setToastVariant("danger");
         } else {
           console.error("Error fetching employee data:", error);
           setToastText("เกิดข้อผิดพลาดบางอย่าง");
+          setToastVariant("danger");
         }
       }
     }
@@ -359,6 +365,7 @@ export const CourseList = ({ empDataRaw, setEmpDataRaw }) => {
       </div>
       <AlertToast
         text={toastText}
+        variant={toastVariant}
         onClose={() => setToastText("")}
       />
     </div>

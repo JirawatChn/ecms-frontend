@@ -14,6 +14,7 @@ import { Topbar } from "../../../components/topbar";
 import { Sidebar } from "../../../components/sidebar";
 import { MdArrowBackIosNew } from "react-icons/md";
 import axios from "axios";
+import { AlertToast } from "../../../components/toast";
 
 export const TrainingResultDetails = () => {
   const { reqId } = useParams();
@@ -95,9 +96,13 @@ export const TrainingResultDetails = () => {
     setModalShow(false);
   };
 
+  const [toastText, setToastText] = useState("");
+  const [toastVariant, setToastVariant] = useState("");
+
   const failRequest = async () => {
     if (remark.current.value === "") {
-      alert("กรุณากรอกหมายเหตุ");
+      setToastText("กรุณากรอกหมายเหตุ");
+      setToastVariant("warning");
     } else {
       const token = localStorage.getItem("token");
       try {
@@ -385,7 +390,9 @@ export const TrainingResultDetails = () => {
                                   type="text"
                                   disabled
                                   value={
-                                    requestResultData.createdAt.toString().split("T")[0] || "ไม่มีข้อมูล"
+                                    requestResultData.createdAt
+                                      .toString()
+                                      .split("T")[0] || "ไม่มีข้อมูล"
                                   }
                                 />
                               </Form.Group>
@@ -438,7 +445,9 @@ export const TrainingResultDetails = () => {
                                   type="text"
                                   disabled
                                   value={
-                                    requestResultData.createdAt.toString().split('T')[0] || "ไม่มีข้อมูล"
+                                    requestResultData.createdAt
+                                      .toString()
+                                      .split("T")[0] || "ไม่มีข้อมูล"
                                   }
                                 />
                               </Form.Group>
@@ -456,6 +465,11 @@ export const TrainingResultDetails = () => {
           </div>
         </div>
       </div>
+      <AlertToast
+        text={toastText}
+        variant={toastVariant}
+        onClose={() => setToastText("")}
+      />
     </div>
   );
 };
