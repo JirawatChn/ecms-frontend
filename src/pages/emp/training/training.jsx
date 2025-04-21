@@ -114,7 +114,7 @@ export const Training = ({ empDataRaw, enrollmentDataRaw}) => {
                 ) : (
                   <tr>
                     <td colSpan="9" className="text-center">
-                      ไม่มีคอร์สที่เคยอบรม
+                      ไม่มีคอร์สที่ลงทะเบียนไว้
                     </td>
                   </tr>
                 )}

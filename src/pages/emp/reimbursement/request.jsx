@@ -54,15 +54,16 @@ export const RequestReimbursement = ({
           },
         }
       );
-      setEnrollmentData(response.data.data || []);      
+      setEnrollmentData(response.data.data || []);
+      console.log(response.data.data);
     } catch (error) {
       console.error("Error fetching employee data:", error);
     }
   };
 
   const filteredData = Array.isArray(enrollmentData)
-  ? enrollmentData.map((item) => item.courseId)
-  : [];
+    ? enrollmentData.map((item) => item.courseId)
+    : [];
 
   const findRequestLenght = reimbursementData.map((item) => item.reqId);
   const reqIdLenght = findRequestLenght.length;
@@ -178,13 +179,26 @@ export const RequestReimbursement = ({
                             />
                           </Col>
                           <Col md={3}>
-                            <Form.Label>รหัสคอร์ส</Form.Label>  
-                            <Form.Select ref={courseId} id="courseId" required>
-                              {filteredData.map((data, i) => (
-                                <option key={i} value={data ?? "ไม่มีข้อมูล"} id={"courseId-"+i}>
-                                  {data}
-                                </option>
-                              ))}
+                            <Form.Label>รหัสคอร์ส</Form.Label>
+                            <Form.Select
+                              ref={courseId}
+                              id="courseId"
+                              required
+                              disabled={filteredData.length === 0}
+                            >
+                              {filteredData.length === 0 ? (
+                                <option value="">ไม่มีคอร์สที่ผ่าน</option>
+                              ) : (
+                                filteredData.map((data, i) => (
+                                  <option
+                                    key={i}
+                                    value={data ?? "ไม่มีข้อมูล"}
+                                    id={"courseId-" + i}
+                                  >
+                                    {data}
+                                  </option>
+                                ))
+                              )}
                             </Form.Select>
                           </Col>
                           <Col md={3}>
@@ -282,7 +296,13 @@ export const RequestReimbursement = ({
                               className="mt-3 d-flex justify-content-end"
                               md={6}
                             >
-                              <Button type="submit" id="submit">ส่งคำร้อง</Button>
+                              <Button
+                                type="submit"
+                                id="submit"
+                                disabled={filteredData.length === 0}
+                              >
+                                ส่งคำร้อง
+                              </Button>
                             </Row>
                           </Container>
                         </Col>
