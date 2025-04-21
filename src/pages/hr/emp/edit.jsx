@@ -204,6 +204,7 @@ export const EditEmp = () => {
                         <Form.Group className="mb-3">
                           <Form.Label>วันที่อบรมครั้งแรก</Form.Label>
                           <Form.Control
+                          disabled
                             type="date"
                             onChange={(e) =>
                               setFirstTrainingDate(e.target.value)
