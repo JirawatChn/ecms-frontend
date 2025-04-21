@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router";
 import { EmpDashboard } from "./pages/emp/dashboard";
-import { BrowserRouter } from "react-router-dom";
 import "./bootstrap.min.css";
 import { CourseList } from "./pages/emp/course/courselist";
 import { ManageCourse } from "./pages/emp/course/managecourse";
@@ -105,7 +104,14 @@ function App() {
       );
       setEmpDataRaw(response.data.data || []);
     } catch (error) {
-      console.error("Error fetching employee data:", error);
+      if (axios.isAxiosError(error) && error.response?.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("roles");
+        localStorage.removeItem("empId");
+        sessionStorage.removeItem("hasRefreshed")
+      } else {
+        console.error("Error fetching employee data:", error);
+      }
     }
   };
 
@@ -113,14 +119,16 @@ function App() {
     const token = localStorage.getItem("token");
     const roles = localStorage.getItem("roles");
     if (token) {
-      if (roles === "Emp") {
-        fetchEnrollmentData();
-        fetchReimbursementData();
-        fetchCourseResultData();
-      }
-      fetchEmpData();
+      fetchEmpData().then(() => {
+        if (roles === "Emp") {
+          fetchEnrollmentData();
+          fetchReimbursementData();
+          fetchCourseResultData();
+        }
+      });
     }
   }, []);
+  
 
   const fetchEnrollmentData = async () => {
     const token = localStorage.getItem("token");
@@ -151,7 +159,6 @@ function App() {
 
   return (
     <div>
-      <BrowserRouter basename="ecms">
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/aboutus" element={<Aboutus />} />
@@ -409,7 +416,6 @@ function App() {
             />
           </Route>
         </Routes>
-      </BrowserRouter>
     </div>
   );
 }

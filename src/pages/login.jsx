@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { AuthContext } from "../context/AuthContext";
 import { Container, Nav, Navbar } from "react-bootstrap";
@@ -8,7 +8,9 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const { setToken, setRoles, setEmpId } = useContext(AuthContext);
+  const { setToken, setRoles, setEmpId, token, roles } =
+    useContext(AuthContext);
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   const login = async (username, pwd) => {
     try {
@@ -29,22 +31,29 @@ export const Login = () => {
 
       const newData = await response.json();
       const { token, roles, empId } = newData.data;
+
       setToken(token);
       setRoles(roles);
       setEmpId(empId);
-
       localStorage.setItem("token", token);
       localStorage.setItem("roles", roles);
+      localStorage.setItem("empId", empId);
 
+      setShouldRedirect(true);
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (shouldRedirect && token && roles) {
       if (roles === "Hr") {
         navigate("/hr/dashboard");
       } else if (roles === "Emp") {
         navigate("/emp/dashboard");
       }
-    } catch (error) {
-      setErrorMessage(error.message);
     }
-  };
+  }, [shouldRedirect, token, roles, navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -102,7 +111,7 @@ export const Login = () => {
               </div>
             )}
             <div className="field">
-              <input type="submit" value="Login" className="mt-3" id="submit"/>
+              <input type="submit" value="Login" className="mt-3" id="submit" />
             </div>
           </form>
         </div>
