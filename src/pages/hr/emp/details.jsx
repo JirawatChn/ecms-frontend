@@ -150,14 +150,20 @@ export const EmpDetails = () => {
     return (
       <tr key={i + 1} className="tr-cell">
         <td>{i + 1}</td>
-        <td id={"courseId-"+i}>{data.courseId}</td>
-        <td id={"sessionId-"+i}>{data.sessionId}</td>
-        <td id={"courseName-"+i}>{data.courseName}</td>
-        <td id={"trainingDate-"+i} className="text-center" >
+        <td id={"courseId-" + i}>{data.courseId}</td>
+        <td id={"sessionId-" + i}>{data.sessionId}</td>
+        <td id={"courseName-" + i}>
+          {data.courseName.length > 30
+            ? data.courseName.slice(0, 30) + "..."
+            : data.courseName}
+        </td>
+        <td id={"trainingDate-" + i} className="text-center">
           {data.trainingDate.toString().split("T")[0]}
         </td>
-        <td id={"periods-"+i} className="text-center">{data.periods}</td>
-        <td id={"trainingLocation-"+i}>{data.trainingLocation}</td>
+        <td id={"periods-" + i} className="text-center">
+          {data.periods}
+        </td>
+        <td id={"trainingLocation-" + i}>{data.trainingLocation}</td>
       </tr>
     );
   });
